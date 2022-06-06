@@ -1,110 +1,62 @@
 <template>
-  <div id="login">
-    <!-- <div class="signIn"> -->
+  <form @submit.prevent="signSubmit">
     <span id="wback">Welcome back!</span>
     <div style="input">
       <label id="labelId">E-mail</label>
-      <input id="rectangle1" type="email">
+      <input v-model="signInForm.login" id="rectangle1" type="email">
     </div>
 
     <label>Password</label>
-    <input type="password">
+    <input v-model="signInForm.password" type="password" required>
     <button type="submit">Login</button>
+  </form>
   <div id="reglink">
     <span>Need an account?</span>
     <router-link to="/reg">SIGN UP HERE</router-link>
   </div>
-  </div>
-  <!-- </div> -->
+  <!-- <p>{{signInForm.login}}+{{signInForm.password}}</p> -->
 </template>
 
 
 <script>
 export default {
-  name: 'SignIn'
+  name: 'SignIn',
+  data() {
+    return {
+      signInForm: {
+        login: "",
+        password: "",
+      },
+    }
+  },
+  methods: {
+    async signSubmit() {
+      try {
+        await fetch('https://93e46479-d19c-41a8-83b3-9c33e3dbaeea.mock.pstmn.io/login', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(this.signInForm)
+        })
+          .then((response => response.json()))
+          .then((json => {
+            console.log(json)
+            if (json.response === "OK") {
+              this.$router.push("/main");
+            } else {
+              this.$router.push("/");
+            }
+          }
+          ))
+      }
+      catch { }
+
+    },
+  },
 }
 </script>
 
 <style>
-#login {
-  position: relative;
-  width: 1440px;
-  height: 1488px;
-
-  background: #FFFFFF;
-}
-
-#wback {
-  /* Welcome back! */
-  position: absolute;
-  width: 287px;
-  height: 48px;
-  left: 539px;
-  top: 276px;
-
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 40px;
-  line-height: 48px;
-
-  color: #000000;
-}
-.input{
-  /* Input / text */
-
-
-/* Auto layout */
-
-display: flex;
-flex-direction: column;
-align-items: flex-start;
-padding: 0px;
-gap: 9px;
-
-position: absolute;
-width: 212px;
-height: 57px;
-left: 592px;
-top: 396px;
-}
-
-#labelId {
-  /* Label */
-  width: 36px;
-  height: 17px;
-
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 17px;
-  /* identical to box height */
-
-  text-align: center;
-
-  color: #000000;
-
-
-  /* Inside auto layout */
-  flex: none;
-  order: 0;
-  flex-grow: 0;
-}
-
-#rectangle1 {
-  /* Rectangle 1 */
-  width: 212px;
-  height: 31px;
-
-  background: #EDEDED;
-  border: 1px solid #918F8F;
-  border-radius: 4px;
-
-  /* Inside auto layout */
-  flex: none;
-  order: 1;
-  align-self: stretch;
-  flex-grow: 0;
-}
 </style>
