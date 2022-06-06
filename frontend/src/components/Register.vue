@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="submit">
+    <form @submit.prevent="submitRegData">
         <div id="frame1">
             <div id="frame3">
                 <div id="email-input">
@@ -28,7 +28,8 @@
                 </div>
                 <div id="avatar-input">
                     <label class="label" placeholder="avatar">Avatar</label>
-                    <input @change="" class="rectangle1" type="file" accept="image/png, image/gif, image/jpeg">
+                    <input @change="checkPicture" class="rectangle1" type="file"
+                        accept="image/png, image/gif, image/jpeg">
                 </div>
                 <div id="about-me-input">
                     <label class="label">About me</label>
@@ -58,22 +59,39 @@ export default {
         }
     },
     methods: {
-        async submit() {
-            console.log("Reg data JSON sended to backend.")
+        async submitRegData() {            
             try {
                 await fetch('https://d0eb791a-34e8-410a-afb4-595a0ed0c134.mock.pstmn.io/reg', {
                     method: 'POST',
                     headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json;charset=utf-8'
+                        // 'Accept': 'application/json',
+                        "Content-Type": "multipart/form-data"
                     },
-                    body: JSON.stringify(this.form)
+                    body: this.form
                 })
-                    .then((response => response.json()))
-                    .then((json => console.log(json)))
+                    // .then((response => response.json()))
+                    // .then((json => console.log(json)))
             }
             catch { }
+            this.$router.push("/");
+        },
+        checkPicture(e) {
+            let files = e.target.files
+            if (!files.length) {
+                return;
+            }
+            const file = files[0]
 
+            const [extension] = file.type.split("/")
+            if ((!(extension == "image"))) {
+                console.log('File is not an image.');
+                return
+            }
+            if (file.size > 2048000) {
+                console.log('File size is more than 2 MB.');
+                return
+            }
+            this.form.avatar = file;
         }
     }
 }
