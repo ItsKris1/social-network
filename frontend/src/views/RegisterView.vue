@@ -1,5 +1,5 @@
 <template>
-<NavBarOff />
+    <NavBarOff />
     <Register />
 </template>
 
