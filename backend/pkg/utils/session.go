@@ -3,9 +3,19 @@ package utils
 import (
 	"net/http"
 	"social-network/pkg/models"
-
-	uuid "github.com/satori/go.uuid"
+	. "social-network/pkg/models"
+	"time"
 )
+
+type contextKey string
+// key for using context / accessing user_id
+var UserKey = contextKey("UserID")
+
+// session cookie name
+const sessionCookie = "session-id"
+
+// Standart cookie lifespan
+const cookieLifespan = 3600 * 12 // 12h
 
 /* ---- session and cookie funcionality communicating with client request --- */
 /* -------------------------------------------------------------------------- */
@@ -14,14 +24,14 @@ import (
 
 // Creates creates sid, http cookie, sends it to client and returns session
 func SessionStart(w http.ResponseWriter, r *http.Request, userID string) models.Session {
-	sessionID := CreateSessionId()
+	sessionID := UniqueId()
 	// create cookie
-	cookie := CreateCookie(sessionID)
+	cookie := CreateCookie(sessionID, cookieLifespan)
 	// create session
-	session := models.Session{
-		ID:     sessionID,
-		UserID: userID,
-		// TimeAccessed: time.Now(),
+	session := Session{
+		ID:             sessionID,
+		UserID:         userID,
+		ExpirationTime: time.Now().Add(30 * time.Minute),
 	}
 	// Send cookie to client
 	http.SetCookie(w, &cookie)
@@ -29,21 +39,41 @@ func SessionStart(w http.ResponseWriter, r *http.Request, userID string) models.
 	return session
 }
 
+// Returns true if session time is  not expired
+func CheckSessionExpiration(session Session) bool {
+	return session.ExpirationTime.After(time.Now())
+}
+
 /* -------------------------------------------------------------------------- */
 /*                                   cookie                                   */
 /* -------------------------------------------------------------------------- */
 
 // session cookie blueprint
-func CreateCookie(sessionID string)http.Cookie{
+func CreateCookie(sessionID string, lifespan int) http.Cookie {
 	return http.Cookie{
-		Name:     "session-id",
+		Name:     sessionCookie,
 		Value:    sessionID,
 		Path:     "/",
 		HttpOnly: false,
-		MaxAge:   3600, //1h
+		MaxAge:   lifespan, //1h * 12
 	}
 }
 
-func CreateSessionId() string {
-	return uuid.NewV4().String()
+// get cookie from web
+func GetCookie(r *http.Request) (string, error) {
+	cookieFromWeb, err := r.Cookie(sessionCookie)
+	if err != nil {
+		return "", err
+	}
+	cookieValue := cookieFromWeb.Value
+	if len(cookieValue) == 0 {
+		return "", err
+	}
+	return cookieValue, nil
+}
+
+// Delete cookie
+func DeleteCookie(w http.ResponseWriter) {
+	cookie := CreateCookie("", -1)
+	http.SetCookie(w, &cookie)
 }
