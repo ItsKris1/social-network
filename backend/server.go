@@ -32,9 +32,9 @@ func main() {
 // Set up all routes
 func setRoutes(handler *handlers.Handler) http.Handler {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", handler.Home)
-	mux.HandleFunc("/secret", handler.Auth(handler.Secret))
-	mux.HandleFunc("/register", handler.Register)
-	mux.HandleFunc("/logout", handler.Auth(handler.Logout))
+	mux.HandleFunc("/", handler.Home) //TEST ROUTE
+	mux.HandleFunc("/secret", handler.Auth(handler.Secret))//TEST ROUTE
+	mux.HandleFunc("/register", handler.Register) //TEST ROUTE
+	mux.HandleFunc("/logout", handler.Auth(handler.Logout)) //TEST ROUTE
 	return mux
 }

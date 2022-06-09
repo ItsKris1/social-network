@@ -7,7 +7,7 @@ type Session struct {
 	UserID         string
 	ExpirationTime time.Time
 }
-
+// repository represent functions that communicate with sessions table in db
 type SessionRepository interface {
 	// save new session to db
 	Set(Session) error
