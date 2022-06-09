@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"social-network/pkg/utils"
 	"time"
@@ -17,13 +16,13 @@ func (handler *Handler) Auth(next http.HandlerFunc) http.HandlerFunc {
 		// Get cookie value from request
 		sessionId, errCookie := utils.GetCookie(r)
 		if errCookie != nil {
-			fmt.Println("User not authorized: ", errCookie)
+			w.Write([]byte("No cookie"))
 			return
 		}
 		// Get session based on session id
 		session, errSession := handler.repos.SessionRepo.Get(sessionId)
 		if errSession != nil {
-			fmt.Println("Error on getting session: ", errSession)
+			w.Write([]byte("No session"))
 			return
 		}
 		// check if session not expired
@@ -33,12 +32,14 @@ func (handler *Handler) Auth(next http.HandlerFunc) http.HandlerFunc {
 			handler.repos.SessionRepo.Delete(session)
 			// Delete from client browser
 			utils.DeleteCookie(w)
+			w.Write([]byte("Session expired"))
 			return
 		} else {
 			// Session stil valid -> prolong it by 30 min
 			session.ExpirationTime = time.Now().Add(30 * time.Minute)
 			handler.repos.SessionRepo.Update(session)
 		}
+		w.Write([]byte("Auth successful --- "))
 		// Auth successful, continue with adding User_id to request context
 		ctx := context.WithValue(r.Context(), utils.UserKey, session.UserID)
 		next(w, r.WithContext(ctx))

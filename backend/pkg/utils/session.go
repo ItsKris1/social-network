@@ -8,6 +8,7 @@ import (
 )
 
 type contextKey string
+
 // key for using context / accessing user_id
 var UserKey = contextKey("UserID")
 
@@ -55,7 +56,7 @@ func CreateCookie(sessionID string, lifespan int) http.Cookie {
 		Value:    sessionID,
 		Path:     "/",
 		HttpOnly: false,
-		MaxAge:   lifespan, //1h * 12
+		MaxAge:   lifespan,
 	}
 }
 
@@ -74,6 +75,6 @@ func GetCookie(r *http.Request) (string, error) {
 
 // Delete cookie
 func DeleteCookie(w http.ResponseWriter) {
-	cookie := CreateCookie("", -1)
+	cookie := CreateCookie(" ", -1)
 	http.SetCookie(w, &cookie)
 }
