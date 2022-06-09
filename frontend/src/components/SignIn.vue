@@ -1,9 +1,9 @@
 <template>
   <form @submit.prevent="signSubmit">
-    <span id="wback">Welcome back!</span>
+    <span>Welcome back!</span>
     <div style="input">
-      <label id="labelId">E-mail</label>
-      <input v-model="signInForm.login" id="rectangle1" type="email">
+      <label>E-mail</label>
+      <input v-model="signInForm.login" id="rectangle1" type="email" required>
     </div>
 
     <label>Password</label>
@@ -13,6 +13,7 @@
   <div id="reglink">
     <span>Need an account?</span>
     <router-link to="/reg">SIGN UP HERE</router-link>
+    <b-icon-door-closed> </b-icon-door-closed>
   </div>
   <!-- <p>{{signInForm.login}}+{{signInForm.password}}</p> -->
 </template>
@@ -34,7 +35,7 @@ export default {
       /*---------------           Here is toast example             --------------------*/
       // 
       this.$toast.open({
-          message: 'Example text!',
+          message: 'Data sent!',
           type: 'default', //One of success, info, warning, error, default
 
           //optional options

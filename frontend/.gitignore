@@ -2,6 +2,7 @@
 node_modules
 /dist
 run.go
+# .dockerignore
 
 
 # local env files

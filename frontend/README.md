@@ -1,6 +1,13 @@
 # frontend
 
-## Project setup
+### Build and Run Docker Container (Only Frontend), you need Docker installed :)
+Check you are in frontend directory.
+Build image with 'sn-front' name:  `docker build -t sn-front . `
+Run docker container and open ports: `docker run -p 8080:8080 sn-front`
+Open Browser @ http://localhost:8080
+
+
+## Project setup(for developing, needs once)
 ```
 npm install
 ```
@@ -14,6 +21,3 @@ npm run serve
 ```
 npm run build
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
