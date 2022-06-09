@@ -12,8 +12,8 @@
 
 #### pkg/handlers
 
-- [ ] Midlleware - check functionality after real request from front-end
-- [ ] Midlleware - Handle errors and responses
+- [ ] Middleware - check functionality after real request from front-end
+- [ ] Middleware - Handle errors and responses
 - [ ] register.go - delete test handlers
 - [ ] register.go - handle errors and responses
 - [ ] user.go - delete temp function - Add(User)error
