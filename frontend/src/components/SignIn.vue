@@ -1,110 +1,80 @@
 <template>
-  <div id="login">
-    <!-- <div class="signIn"> -->
-    <span id="wback">Welcome back!</span>
+  <form @submit.prevent="signSubmit">
+    <span>Welcome back!</span>
     <div style="input">
-      <label id="labelId">E-mail</label>
-      <input id="rectangle1" type="email">
+      <label>E-mail</label>
+      <input v-model="signInForm.login" id="rectangle1" type="email" required>
     </div>
 
     <label>Password</label>
-    <input type="password">
-    <button type="submit">Login</button>
+    <input v-model="signInForm.password" type="password" required>
+    <button @click="toast">Login</button>
+  </form>
   <div id="reglink">
     <span>Need an account?</span>
     <router-link to="/reg">SIGN UP HERE</router-link>
+    <b-icon-door-closed> </b-icon-door-closed>
   </div>
-  </div>
-  <!-- </div> -->
+  <!-- <p>{{signInForm.login}}+{{signInForm.password}}</p> -->
 </template>
 
 
 <script>
 export default {
-  name: 'SignIn'
+  name: 'SignIn',
+  data() {
+    return {
+      signInForm: {
+        login: "",
+        password: "",
+      },
+    }
+  },
+  methods: {
+    toast(){
+      /*---------------           Here is toast example             --------------------*/
+      // 
+      this.$toast.open({
+          message: 'Data sent!',
+          type: 'default', //One of success, info, warning, error, default
+
+          //optional options
+          position: 'bottom-right', //One of top, bottom, top-right, bottom-right,top-left, bottom-left
+          duration: 3000, //Visibility duration in milliseconds, set to 0 to keep toast visible
+          dismissible: true, //Allow user dismiss by clicking
+          onClick: null, //Do something when user clicks(function)
+          onDismiss: null, //Do something after toast gets dismissed(function)
+          queue: false, // Wait for existing to dismiss before showing new
+          pauseOnHover: true, //Pause the timer when mouse on over a toast
+        });
+    },
+    async signSubmit() {
+      try {
+        await fetch('https://93e46479-d19c-41a8-83b3-9c33e3dbaeea.mock.pstmn.io/login', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(this.signInForm)
+        })
+          .then((response => response.json()))
+          .then((json => {
+            console.log(json)
+            if (json.response === "OK") {
+              this.$router.push("/main");
+            } else {
+              this.$router.push("/");
+            }
+          }
+          ))
+      }
+      catch { }
+
+    },
+  },
 }
 </script>
 
 <style>
-#login {
-  position: relative;
-  width: 1440px;
-  height: 1488px;
-
-  background: #FFFFFF;
-}
-
-#wback {
-  /* Welcome back! */
-  position: absolute;
-  width: 287px;
-  height: 48px;
-  left: 539px;
-  top: 276px;
-
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 40px;
-  line-height: 48px;
-
-  color: #000000;
-}
-.input{
-  /* Input / text */
-
-
-/* Auto layout */
-
-display: flex;
-flex-direction: column;
-align-items: flex-start;
-padding: 0px;
-gap: 9px;
-
-position: absolute;
-width: 212px;
-height: 57px;
-left: 592px;
-top: 396px;
-}
-
-#labelId {
-  /* Label */
-  width: 36px;
-  height: 17px;
-
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 17px;
-  /* identical to box height */
-
-  text-align: center;
-
-  color: #000000;
-
-
-  /* Inside auto layout */
-  flex: none;
-  order: 0;
-  flex-grow: 0;
-}
-
-#rectangle1 {
-  /* Rectangle 1 */
-  width: 212px;
-  height: 31px;
-
-  background: #EDEDED;
-  border: 1px solid #918F8F;
-  border-radius: 4px;
-
-  /* Inside auto layout */
-  flex: none;
-  order: 1;
-  align-self: stretch;
-  flex-grow: 0;
-}
 </style>
