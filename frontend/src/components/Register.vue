@@ -60,18 +60,21 @@ export default {
         }
     },
     methods: {
-        async submitRegData() {            
+        async submitRegData() {
             try {
-                await fetch('https://d0eb791a-34e8-410a-afb4-595a0ed0c134.mock.pstmn.io/reg', {
+                // await fetch('https://d0eb791a-34e8-410a-afb4-595a0ed0c134.mock.pstmn.io/reg', {
+                await fetch('http://localhost:8081/register', {
+
                     method: 'POST',
                     headers: {
                         // 'Accept': 'application/json',
+                        "Access-Control-Allow-Origin": "http://localhost:8081",
                         "Content-Type": "multipart/form-data"
                     },
                     body: this.form
                 })
-                    // .then((response => response.json()))
-                    // .then((json => console.log(json)))
+                // .then((response => response.json()))
+                // .then((json => console.log(json)))
             }
             catch { }
             this.$router.push("/");
