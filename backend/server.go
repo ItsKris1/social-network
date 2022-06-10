@@ -11,7 +11,7 @@ func main() {
 	// initialize database
 	db := sqlite.InitDB()
 	defer db.Close()
-
+	// temp
 	// initialize repositories
 	repos := sqlite.InitRepositories(db)
 	// initialize handlers with connection to repositories
@@ -32,6 +32,9 @@ func main() {
 // Set up all routes
 func setRoutes(handler *handlers.Handler) http.Handler {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", handler.Add)
+	mux.HandleFunc("/", handler.Home) //TEST ROUTE
+	mux.HandleFunc("/secret", handler.Auth(handler.Secret))//TEST ROUTE
+	mux.HandleFunc("/register", handler.Register) //TEST ROUTE
+	mux.HandleFunc("/logout", handler.Auth(handler.Logout)) //TEST ROUTE
 	return mux
 }
