@@ -43,6 +43,10 @@ export default {
     display: grid;
 }
 
+#profileSettings{
+    margin-left: auto;
+}
+
 #followBtn {
     height: 37px;
     width: 92px;
@@ -50,8 +54,5 @@ export default {
     top: 0px;
     border-radius: 8px;
     padding: 10px, 15px, 10px, 15px;
-}
-#profileSettings{
-    margin-left: auto;
 }
 </style>
