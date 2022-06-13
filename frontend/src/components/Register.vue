@@ -62,19 +62,25 @@ export default {
     methods: {
         async submitRegData() {
             try {
+                // for multipart form to work body should be of FormData type
+                let formData = new FormData();
+                formData.set('avatar', this.form.avatar);
+                formData.set('email', this.form.email);
+                formData.set('password', this.form.password);
+                formData.set('firstname', this.form.firstname);
+                formData.set('lastname', this.form.lastname);
+                formData.set('dateofbirth', this.form.dateofbirth);
+                formData.set('nickname', this.form.nickname);
+                formData.set('aboutme', this.form.aboutme);
+
                 // await fetch('https://d0eb791a-34e8-410a-afb4-595a0ed0c134.mock.pstmn.io/reg', {
                 await fetch('http://localhost:8081/register', {
-
+                    credentials: 'include',
                     method: 'POST',
-                    headers: {
-                        // 'Accept': 'application/json',
-                        "Access-Control-Allow-Origin": "http://localhost:8081",
-                        "Content-Type": "multipart/form-data"
-                    },
-                    body: this.form
+                    body: formData
                 })
-                // .then((response => response.json()))
-                // .then((json => console.log(json)))
+                .then((response => response.json()))
+                .then((json => console.log(json)))
             }
             catch { }
             this.$router.push("/");
