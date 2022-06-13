@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 /* -------------------------------------------------------------------------- */
@@ -32,25 +34,22 @@ func (handler *Handler) Secret(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(userId, "User validated")
 }
 
-// TEST handler for registering user
+// Register user endpont -> validate inputs / save in db / start session
 func (handler *Handler) Register(w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)
 
 	if r.Method != "POST" {
-		w.WriteHeader(http.StatusBadRequest)
+		utils.RespondWithError(w, "Error on form submittion", 400)
 		return
 	}
 	err := r.ParseMultipartForm(3145728) // 3MB
-
 	if err != nil {
-		fmt.Println("Error in parsing", err)
-		w.WriteHeader(http.StatusBadRequest)
+		utils.RespondWithError(w, "Error in form validation", 400)
 		return
 	}
+
 	// Create new user instance
-	userID := utils.UniqueId()
 	newUser := models.User{
-		ID:          userID,
 		Email:       r.PostFormValue("email"),
 		FirstName:   r.PostFormValue("firstname"),
 		LastName:    r.PostFormValue("lastname"),
@@ -59,37 +58,48 @@ func (handler *Handler) Register(w http.ResponseWriter, r *http.Request) {
 		About:       r.PostFormValue("aboutme"),
 		DateOfBirth: r.PostFormValue("dateofbirth"),
 	}
-
-	fmt.Println("User: ", newUser)
-
-	image, h, err := r.FormFile("avatar")
-	if err != nil {
-		fmt.Println("Error in geting avatar", err)
-		w.WriteHeader(http.StatusBadRequest)
+	// Validate all user fields
+	errValid := utils.ValidateNewUser(newUser)
+	if errValid != nil {
+		utils.RespondWithError(w, "Error in validation", 400)
 		return
 	}
-	w.WriteHeader(http.StatusOK)
-	fmt.Println("avatar: ", h.Filename, image)
 
-	// crete new user instance
-	// userID := utils.UniqueId()
-	// newUser := models.User{Name: "User1", ID: userID}
-
-	// Add user in database
-	// err := handler.repos.UserRepo.Add(newUser)
-	// if err != nil {
-	// 	http.Error(w, "Something went wrong", http.StatusBadRequest)
-	// }
-
+	// Check if email alredy taken
+	if emailUnique, _ := handler.repos.UserRepo.EmailNotTaken(newUser.Email); !emailUnique {
+		utils.RespondWithError(w, "Email already taken", 409)
+		return
+	}
+	// Hash password
+	hashedPwd, _ := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.DefaultCost)
+	newUser.Password = string(hashedPwd)
+	// create user id
+	// check if avater added / save in filesystem
+	userID := utils.UniqueId()
+	newUser.ID = userID
+	// Save user in db
+	errSave := handler.repos.UserRepo.Add(newUser)
+	if errSave != nil {
+		utils.RespondWithError(w, "Couldn't save new user", 500)
+		return
+	}
 	// Start new session for user (Including cookies)
-	// session := utils.SessionStart(w, r, userID)
+	session := utils.SessionStart(w, r, userID)
 	// Save session in database
-	// errSession := handler.repos.SessionRepo.Set(session)
-	// if errSession != nil {
-	// 	fmt.Println("error on saving cookie in db", errSession)
+	errSession := handler.repos.SessionRepo.Set(session)
+	if errSession != nil {
+		utils.RespondWithError(w, "Error on creating new session", 500)
+		return
+	}
+	/* ------------------------- // Handle image upload ------------------------- */
+	// image, h, err := r.FormFile("avatar")
+	// if err != nil {
+	// 	fmt.Println("Error in geting avatar", err)
+	// 	w.WriteHeader(http.StatusBadRequest)
 	// 	return
 	// }
-	// w.Write([]byte("Registered successfully"))
+	// w.WriteHeader(http.StatusOK)
+	// fmt.Println("avatar: ", h.Filename, image)
 }
 
 // TEST  handler for logout

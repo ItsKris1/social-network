@@ -17,4 +17,5 @@ type User struct {
 type UserRepository interface {
 	// example code
 	Add(User) error // TEST
+	EmailNotTaken(email string) (bool, error) //returns true if not taken
 }
