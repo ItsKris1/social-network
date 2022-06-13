@@ -11,18 +11,29 @@ type UserRepository struct {
 
 /* --------------- functions that interact with with database --------------- */
 
-// TEST FUNCTION
 // Insert new user in db
 func (repo *UserRepository) Add(user models.User) error {
 	// example code
-	/*
-		stmt, err := repo.DB.Prepare("INSERT INTO users(username) values(?)")
-		if err != nil{
-			return err
-		}
-		if _, err := stmt.Exec(user.Name) ; err!=nil{
-			return err
-		}
-	*/
+	stmt, err := repo.DB.Prepare("INSERT INTO users(user_id, email,first_name, last_name, nickname, about, password, birthday) values(?,?,?,?,?,?,?,?)")
+	if err != nil {
+		return err
+	}
+	if _, err := stmt.Exec(user.ID, user.Email, user.FirstName, user.LastName, user.Nickname, user.About, user.Password, user.DateOfBirth); err != nil {
+		return err
+	}
 	return nil
+}
+
+func (repo *UserRepository) EmailNotTaken(email string) (bool, error) {
+	row := repo.DB.QueryRow("SELECT COUNT(*) FROM users WHERE email = ? LIMIT 1", email)
+	var result int
+	if err := row.Scan(&result); err != nil {
+		if err == sql.ErrNoRows {
+			return false, err
+		}
+	}
+	if result != 0 {
+		return false, nil
+	}
+	return true, nil
 }
