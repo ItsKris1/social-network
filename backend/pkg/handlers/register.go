@@ -34,25 +34,62 @@ func (handler *Handler) Secret(w http.ResponseWriter, r *http.Request) {
 
 // TEST handler for registering user
 func (handler *Handler) Register(w http.ResponseWriter, r *http.Request) {
-	// crete new user instance
-	userID := utils.UniqueId()
-	newUser := models.User{Name: "User1", ID: userID}
+	w = utils.ConfigHeader(w)
 
-	// Add user in database
-	err := handler.repos.UserRepo.Add(newUser)
-	if err != nil {
-		http.Error(w, "Something went wrong", http.StatusBadRequest)
-	}
-
-	// Start new session for user (Including cookies)
-	session := utils.SessionStart(w, r, userID)
-	// Save session in database
-	errSession := handler.repos.SessionRepo.Set(session)
-	if errSession != nil {
-		fmt.Println("error on saving cookie in db", errSession)
+	if r.Method != "POST" {
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	w.Write([]byte("Registered successfully"))
+	err := r.ParseMultipartForm(3145728) // 3MB
+
+	if err != nil {
+		fmt.Println("Error in parsing", err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	// Create new user instance
+	userID := utils.UniqueId()
+	newUser := models.User{
+		ID:          userID,
+		Email:       r.PostFormValue("email"),
+		FirstName:   r.PostFormValue("firstname"),
+		LastName:    r.PostFormValue("lastname"),
+		Password:    r.PostFormValue("password"),
+		Nickname:    r.PostFormValue("nickname"),
+		About:       r.PostFormValue("aboutme"),
+		DateOfBirth: r.PostFormValue("dateofbirth"),
+	}
+
+	fmt.Println("User: ", newUser)
+
+	image, h, err := r.FormFile("avatar")
+	if err != nil {
+		fmt.Println("Error in geting avatar", err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	fmt.Println("avatar: ", h.Filename, image)
+
+	// crete new user instance
+	// userID := utils.UniqueId()
+	// newUser := models.User{Name: "User1", ID: userID}
+
+	// Add user in database
+	// err := handler.repos.UserRepo.Add(newUser)
+	// if err != nil {
+	// 	http.Error(w, "Something went wrong", http.StatusBadRequest)
+	// }
+
+	// Start new session for user (Including cookies)
+	// session := utils.SessionStart(w, r, userID)
+	// Save session in database
+	// errSession := handler.repos.SessionRepo.Set(session)
+	// if errSession != nil {
+	// 	fmt.Println("error on saving cookie in db", errSession)
+	// 	return
+	// }
+	// w.Write([]byte("Registered successfully"))
 }
 
 // TEST  handler for logout

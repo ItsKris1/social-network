@@ -2,8 +2,14 @@ package models
 
 // defines  User data type
 type User struct {
-	Name string `json:"name"`
-	ID   string `json:"user_id"`
+	ID          string
+	Email       string
+	FirstName   string
+	LastName    string
+	Password    string
+	Nickname    string
+	About       string
+	DateOfBirth string
 }
 
 // Repository represent all possible actions availible to deal with User

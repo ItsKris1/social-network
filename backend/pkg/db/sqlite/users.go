@@ -19,7 +19,7 @@ func (repo *UserRepository) Add(user models.User) error {
 	if err != nil {
 		return err
 	}
-	if _, err := stmt.Exec(user.Name, user.ID); err != nil {
+	if _, err := stmt.Exec(user.Nickname, user.ID); err != nil {
 		return err
 	}
 	return nil
