@@ -3,11 +3,11 @@
     <span>Welcome back!</span>
     <div style="input">
       <label>E-mail</label>
-      <input v-model="signInForm.login" id="rectangle1" type="email" required>
+      <input v-model="signInForm.login" id="rectangle1" type="email" >
     </div>
 
     <label>Password</label>
-    <input v-model="signInForm.password" type="password" required>
+    <input v-model="signInForm.password" type="password" >
     <button @click="toast">Login</button>
   </form>
   <div id="reglink">
