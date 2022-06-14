@@ -4,10 +4,7 @@
         <div>
             <a href="/" id="logo">Social Network</a>
         </div>
-        <div id="searchDiv">
-            <input id="inputBox" type="text" placeholder="Search for user or group">
-            <img id="glass" src="../assets/glass.png" alt="glass.png">
-        </div>
+        <Search />
         <!-- <router-link to="/"><img src="../assets/home.png" alt="home.png"><span>Home</span></router-link> -->
         <Notifications />
         <div id="a">
@@ -23,7 +20,9 @@
 
 
 <script>
+import Search from './Search.vue';
 import Notifications from './Notifications.vue'
+import Search1 from './Search.vue';
 export default {
     name: 'NavBarOn',
     methods: {
@@ -32,7 +31,7 @@ export default {
             this.$router.push("/");
         }
     },
-    components: { Notifications, }
+    components: { Notifications, Search, Search1 }
 }
 
 </script>
@@ -45,9 +44,6 @@ export default {
     align-items: center;
 }
 
-/* #searchDiv{
-margin-right: auto;
-} */
 #logo {
     font-family: Inter;
     font-size: 24px;
@@ -57,7 +53,6 @@ margin-right: auto;
     text-align: center;
     font-variation-settings: 'slnt' 0;
     text-decoration: none;
-
 }
 
 #logoutBtn {
@@ -73,44 +68,8 @@ margin-right: auto;
     margin-right: 8px;
 }
 
-/* #navBarName {
-    font-family: Inter;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 19px;
-    letter-spacing: 0em;
-    text-align: center;
-} */
 #a {
     display: flex;
     align-items: center;
-}
-
-#searchDiv {
-    display: flex;
-    flex-direction: row;
-    /* justify-content: space-between; */
-    align-items: center;
-    padding: 10px;
-    /* gap: 53px; */
-
-    width: 257px;
-    height: 15px;
-
-    background: #FFFFFF;
-    border: 1px solid #706A6A;
-    border-radius: 3px;
-    border: 1px solid #706A6A;
-}
-
-#inputBox {
-    border: none;
-    width: 230px;
-}
-*:focus {
-    outline: none;
-}
-#glass{
-    margin-left: auto;
 }
 </style>
