@@ -76,7 +76,7 @@ func (handler *Handler) Register(w http.ResponseWriter, r *http.Request) {
 	// create user id
 	userID := utils.UniqueId()
 	newUser.ID = userID
-	// check if avater added / save in filesystem
+	// check if avatar added / save in filesystem
 	newUser.ImagePath = utils.SaveImage(r)
 	// Save user in db
 	errSave := handler.repos.UserRepo.Add(newUser)
@@ -90,17 +90,7 @@ func (handler *Handler) Register(w http.ResponseWriter, r *http.Request) {
 	errSession := handler.repos.SessionRepo.Set(session)
 	if errSession != nil {
 		utils.RespondWithError(w, "Error on creating new session", 500)
-		return
 	}
-	/* ------------------------- // Handle image upload ------------------------- */
-	// image, h, err := r.FormFile("avatar")
-	// if err != nil {
-	// 	fmt.Println("Error in geting avatar", err)
-	// 	w.WriteHeader(http.StatusBadRequest)
-	// 	return
-	// }
-	// w.WriteHeader(http.StatusOK)
-	// fmt.Println("avatar: ", h.Filename, image)
 }
 
 // TEST  handler for logout

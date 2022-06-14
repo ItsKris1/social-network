@@ -16,7 +16,6 @@ type User struct {
 // Repository represent all possible actions availible to deal with User
 // all db packages(in case of different db) should implement those function
 type UserRepository interface {
-	// example code
-	Add(User) error                           // TEST
+	Add(User) error //save new user in db
 	EmailNotTaken(email string) (bool, error) //returns true if not taken
 }
