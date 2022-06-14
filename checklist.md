@@ -9,13 +9,14 @@
 - [ ] sqlite.go - Finalize InitDB() function (db name)
 - [ ] sqlite.go - Add function for creating tables if not exist
 - [x] users.go - Delete Test function
+- [ ] sqlite.go - delete temporery database function
 
 #### pkg/handlers
 
-- [ ] Middleware - check functionality after real request from front-end
+- [x] Middleware - check functionality after real request from front-end
 - [ ] Middleware - Handle errors and responses
 - [ ] register.go - delete test handlers
-- [ ] register.go - handle errors and responses
+- [x] register.go - handle errors and responses
 - [x] user.go - delete temp function - Add(User)error
 
 #### pkg/utils

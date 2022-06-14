@@ -14,11 +14,11 @@ type UserRepository struct {
 // Insert new user in db
 func (repo *UserRepository) Add(user models.User) error {
 	// example code
-	stmt, err := repo.DB.Prepare("INSERT INTO users(user_id, email,first_name, last_name, nickname, about, password, birthday) values(?,?,?,?,?,?,?,?)")
+	stmt, err := repo.DB.Prepare("INSERT INTO users(user_id, email,first_name, last_name, nickname, about, password, birthday, image) values(?,?,?,?,?,?,?,?,?)")
 	if err != nil {
 		return err
 	}
-	if _, err := stmt.Exec(user.ID, user.Email, user.FirstName, user.LastName, user.Nickname, user.About, user.Password, user.DateOfBirth); err != nil {
+	if _, err := stmt.Exec(user.ID, user.Email, user.FirstName, user.LastName, user.Nickname, user.About, user.Password, user.DateOfBirth, user.ImagePath); err != nil {
 		return err
 	}
 	return nil
