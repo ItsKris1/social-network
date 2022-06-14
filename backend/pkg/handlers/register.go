@@ -74,9 +74,10 @@ func (handler *Handler) Register(w http.ResponseWriter, r *http.Request) {
 	hashedPwd, _ := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.DefaultCost)
 	newUser.Password = string(hashedPwd)
 	// create user id
-	// check if avater added / save in filesystem
 	userID := utils.UniqueId()
 	newUser.ID = userID
+	// check if avater added / save in filesystem
+	newUser.ImagePath = utils.SaveImage(r)
 	// Save user in db
 	errSave := handler.repos.UserRepo.Add(newUser)
 	if errSave != nil {
