@@ -52,6 +52,7 @@ export default {
       try {
         // await fetch('https://93e46479-d19c-41a8-83b3-9c33e3dbaeea.mock.pstmn.io/login', {
         await fetch('http://localhost:8081/signin', {
+          credentials: 'include',
           method: 'POST',
           headers: {
             'Accept': 'application/json',

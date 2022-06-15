@@ -26,7 +26,17 @@ import Search1 from './Search.vue';
 export default {
     name: 'NavBarOn',
     methods: {
-        logout() {
+        async logout() {
+            // Test code
+            await fetch('http://localhost:8081/logout', {
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json',
+                }
+            })
+                .then((response => response.json()))
+                .then((json => {console.log(json)}))
+            // end of test code
             console.log("logout")
             this.$router.push("/");
         }

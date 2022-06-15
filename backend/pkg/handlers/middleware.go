@@ -13,16 +13,17 @@ import (
 // also update expiration time in database
 func (handler *Handler) Auth(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w = utils.ConfigHeader(w)
 		// Get cookie value from request
 		sessionId, errCookie := utils.GetCookie(r)
 		if errCookie != nil {
-			w.Write([]byte("No cookie"))
+			utils.RespondWithError(w, "Error on getting cookie", 200)
 			return
 		}
 		// Get session based on session id
 		session, errSession := handler.repos.SessionRepo.Get(sessionId)
 		if errSession != nil {
-			w.Write([]byte("No session"))
+			utils.RespondWithError(w, "Error on getting session", 200)
 			return
 		}
 		// check if session not expired
@@ -32,14 +33,13 @@ func (handler *Handler) Auth(next http.HandlerFunc) http.HandlerFunc {
 			handler.repos.SessionRepo.Delete(session)
 			// Delete from client browser
 			utils.DeleteCookie(w)
-			w.Write([]byte("Session expired"))
+			utils.RespondWithError(w, "Session is not valid", 200)
 			return
 		} else {
 			// Session stil valid -> prolong it by 30 min
 			session.ExpirationTime = time.Now().Add(30 * time.Minute)
 			handler.repos.SessionRepo.Update(session)
 		}
-		w.Write([]byte("Auth successful --- "))
 		// Auth successful, continue with adding User_id to request context
 		ctx := context.WithValue(r.Context(), utils.UserKey, session.UserID)
 		next(w, r.WithContext(ctx))
