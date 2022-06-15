@@ -46,11 +46,22 @@ func (repo *SessionRepository) Delete(session models.Session) error {
 	return nil
 }
 
-// Update sessions expiration time
+// Update session based on user_id
 func (repo *SessionRepository) Update(session models.Session) error {
-	_, err := repo.DB.Exec("UPDATE sessions SET expiration_time = ? WHERE session_id=?", session.ExpirationTime, session.ID)
+	_, err := repo.DB.Exec("UPDATE sessions SET expiration_time = ?, session_id = ? WHERE user_id=?", session.ExpirationTime, session.ID, session.UserID)
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+// Check if session exist based on user id
+func (repo *SessionRepository) GetByUser(userID string) (models.Session, error) {
+	row := repo.DB.QueryRow("SELECT session_id, expiration_time FROM sessions where user_id = ? LIMIT 1", userID)
+	var session models.Session
+	if err := row.Scan(&session.ID, &session.ExpirationTime); err != nil {
+		return session, err
+	}
+	session.UserID = userID
+	return session, nil
 }

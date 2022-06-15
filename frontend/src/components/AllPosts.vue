@@ -1,5 +1,14 @@
-<template></template>
+<template>
 
-<script></script>
+</template>
 
-<style></style>
+
+<script>
+export default {
+    name: '',
+}
+</script>
+
+
+<style>
+</style>

@@ -13,6 +13,8 @@ type SessionRepository interface {
 	Set(Session) error
 	// Gets session from db based on session id
 	Get(sID string) (Session, error)
+	// Gets session from db based on user id
+	GetByUser(userID string) (Session, error)
 	// Update sessions expiration time
 	Update(Session) error
 	// Delete session 
