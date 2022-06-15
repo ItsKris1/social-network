@@ -50,9 +50,9 @@ export default {
     },
     async signSubmit() {
       try {
-        // await fetch('https://93e46479-d19c-41a8-83b3-9c33e3dbaeea.mock.pstmn.io/login', {
-        await fetch('http://localhost:8081/signin', {
-          credentials: 'include',
+        await fetch('https://c3343708-9c1d-4e81-9e99-dbc4b6130a63.mock.pstmn.io/signin', {
+        // await fetch('http://localhost:8081/signin', {
+          // credentials: 'include',  // Uncomment when testing on real-server
           method: 'POST',
           headers: {
             'Accept': 'application/json',
