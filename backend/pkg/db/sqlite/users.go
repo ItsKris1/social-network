@@ -49,3 +49,33 @@ func (repo *UserRepository) FindUserByEmail(email string) (models.User, error) {
 	}
 	return user, nil
 }
+
+// Return list of all users except current and following/follower info
+func (repo *UserRepository) GetAllAndFollowing(userID string) ([]models.User, error) {
+	var users []models.User
+
+	rows, err := repo.DB.Query("SELECT user_id, first_name || ' ' || last_name as full_name, (SELECT COUNT(*) FROM followers WHERE followers.user_id = "+userID+" AND follower_id = users.user_id) as follower,(SELECT COUNT(*) FROM followers WHERE followers.user_id = users.user_id AND follower_id = "+userID+") as following, nickname FROM users WHERE user_id != ? GROUP BY user_id;", userID)
+	if err != nil {
+		return users, err
+	}
+	for rows.Next() {
+		var user models.User
+		var fullName string
+		var follower int
+		var following int
+		rows.Scan(&user.ID, &fullName, &follower, &following, &user.Nickname)
+		// Replace nickname with fumm name if nickname not provided
+		if len(user.Nickname) == 0 {
+			user.Nickname = fullName
+		}
+		// configure followers
+		if follower == 1 {
+			user.Follower = true
+		}
+		if following == 1 {
+			user.Following = true
+		}
+		users = append(users, user)
+	}
+	return users, nil
+}
