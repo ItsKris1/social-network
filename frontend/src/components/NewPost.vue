@@ -1,8 +1,26 @@
+
+
 <template>
     <div @click="toggle">Start a post</div>
     <div v-show="isOpen">
         <form @submit.prevent="submitPost" id="newpost">
-            <span><u>Create a post</u></span>
+            <span><b>Create a post</b></span>
+            <div>Post privacy</div>
+            <select v-model="newpost.privacy" name="post_privacy" @change="getFollowers">
+                <option value="public">Everyone</option>
+                <option value="private">Followers</option>
+                <option value="almost-private">Choosen followers</option>
+            </select>
+            <div v-if="newpost.privacy === 'almost-private'">
+
+                <div v-for="follower in fetchedFollowers.followers">
+                    <input type="checkbox" :id="follower" name="privacy" :value="follower" v-model="checkedFollowers" />
+                    <label :for="follower">{{follower}}</label>
+                </div>
+                <div>Checked names: {{ checkedFollowers }}</div>
+
+            </div>
+
             <div>Body</div>
             <input v-model="newpost.body" type="text">
             <div class="image-upload">
@@ -25,9 +43,11 @@ export default {
         return {
             isOpen: false,
             newpost: {
+                privacy: "",
                 body: "",
                 image: null,
-            }
+            },
+            fetchedFollowers: [],
         }
     },
     methods: {
@@ -62,24 +82,41 @@ export default {
             this.newpost.image = file;
 
         },
-        async submitPost() {            
+
+        async getFollowers() {
+            // console.log('fetching followers');
+            await fetch('https://9ec93652-e031-4f3e-a558-86f8ed7d624a.mock.pstmn.io/getfollowers')
+                .then((response => response.json()))
+                .then((json) => {
+                    this.fetchedFollowers = json
+                })
+                // .then((json => console.log(json)))
+        },
+
+        async submitPost() {
 
             let formData = new FormData();
+            formData.set('privacy', this.newpost.privacy);
             formData.set('body', this.newpost.body);
             formData.set('image', this.newpost.image);
+            // console.log('checkedFollowers: ', this.checkedFollowers);
+            formData.set('checkedfollowers', this.checkedFollowers)
 
             await fetch('', {
                 method: 'POST',
-                body: formData
+                body: formData,
             })
 
-            console.log('Post submitted');
+            // console.log('Post submitted');
         }
     },
 }
 </script>
 
-
+<script setup>
+import { ref } from 'vue'
+const checkedFollowers = ref([])
+</script>
 
 <style>
 #newpost {
