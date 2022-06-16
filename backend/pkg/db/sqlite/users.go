@@ -21,6 +21,7 @@ func (repo *UserRepository) Add(user models.User) error {
 	}
 	return nil
 }
+
 // check if email already registered -> must be  unique
 func (repo *UserRepository) EmailNotTaken(email string) (bool, error) {
 	row := repo.DB.QueryRow("SELECT COUNT(*) FROM users WHERE email = ? LIMIT 1", email)
@@ -84,4 +85,19 @@ func (repo *UserRepository) GetDataMin(userID string) (models.User, error) {
 		}
 	}
 	return user, nil
+}
+
+func (repo *UserRepository) GetFollowers(userID string) ([]models.User, error) {
+	var users []models.User
+
+	rows, err := repo.DB.Query("SELECT user_id, IFNULL(nickname, first_name || ' ' || last_name) FROM users WHERE (SELECT COUNT(*) FROM followers WHERE followers.user_id = '"+userID+"' AND follower_id = users.user_id) = 1 ;", userID)
+	if err != nil {
+		return users, err
+	}
+	for rows.Next() {
+		var user models.User
+		rows.Scan(&user.ID, &user.Nickname)
+		users = append(users, user)
+	}
+	return users, nil
 }

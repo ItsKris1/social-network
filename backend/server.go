@@ -43,6 +43,7 @@ func setRoutes(handler *handlers.Handler) http.Handler {
 
 	/* ---------------------------------- users --------------------------------- */
 	mux.HandleFunc("/allUsers", handler.Auth(handler.AllUsers))
+	mux.HandleFunc("/getFollowers", handler.Auth(handler.GetFollowers))
 	mux.HandleFunc("/currentUser", handler.Auth(handler.CurrentUser))
 
 	/* ---------------------------------- posts --------------------------------- */
