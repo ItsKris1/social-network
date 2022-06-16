@@ -1,7 +1,10 @@
 
 
 <template>
-    <div @click="toggle">Start a post</div>
+    <div id="postBtn" @click="toggle">
+    <span>Start a post</span>
+    <img src="../assets/writepost.png" alt="">
+    </div>
     <div v-show="isOpen">
         <form @submit.prevent="submitPost" id="newpost">
             <span><b>Create a post</b></span>
@@ -126,5 +129,13 @@ const checkedFollowers = ref([])
 
 .image-upload>input {
     display: none;
+}
+#postBtn{
+    width: 600px;
+    display: flex;
+    justify-content: center;
+    border: 1px solid #706A6A;
+    border-radius: 3px;
+    border: 1px solid #706A6A;
 }
 </style>
