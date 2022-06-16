@@ -1,9 +1,9 @@
 package models
 
-
 // Repositories contains all the repo structs
 type Repositories struct {
-	UserRepo UserRepository
+	UserRepo    UserRepository
 	SessionRepo SessionRepository
-	// PostRepo PostRepository
+	GroupRepo   GroupRepository
+	PostRepo    PostRepository
 }

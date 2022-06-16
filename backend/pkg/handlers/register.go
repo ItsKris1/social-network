@@ -51,7 +51,7 @@ func (handler *Handler) Register(w http.ResponseWriter, r *http.Request) {
 	userID := utils.UniqueId()
 	newUser.ID = userID
 	// check if avatar added / save in filesystem
-	newUser.ImagePath = utils.SaveImage(r)
+	newUser.ImagePath = utils.SaveAvatar(r)
 	// Save user in db
 	errSave := handler.repos.UserRepo.Add(newUser)
 	if errSave != nil {
