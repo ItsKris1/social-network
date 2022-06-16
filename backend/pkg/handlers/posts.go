@@ -16,7 +16,7 @@ func (handler *Handler) AllPosts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	for i := 0; i < len(posts); i++ {
-		author, err := handler.repos.UserRepo.GetDataForPost(posts[i].AuthorID)
+		author, err := handler.repos.UserRepo.GetDataMin(posts[i].AuthorID)
 		if err != nil {
 			utils.RespondWithError(w, "Error on getting data", 200)
 			return

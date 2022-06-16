@@ -9,12 +9,10 @@ type UserRepository struct {
 	DB *sql.DB
 }
 
-/* --------------- functions that interact with with database --------------- */
-
 // Insert new user in db
 func (repo *UserRepository) Add(user models.User) error {
 	// example code
-	stmt, err := repo.DB.Prepare("INSERT INTO users(user_id, email,first_name, last_name, nickname, about, password, birthday, image) values(?,?,?,?,?,?,?,?,?)")
+	stmt, err := repo.DB.Prepare("INSERT INTO users(user_id, email, first_name, last_name, nickname, about, password, birthday, image) values(?,?,?,?,(NULLIF(?,'')),(NULLIF(?,'')),?,?,?)")
 	if err != nil {
 		return err
 	}
@@ -23,7 +21,7 @@ func (repo *UserRepository) Add(user models.User) error {
 	}
 	return nil
 }
-
+// check if email already registered -> must be  unique
 func (repo *UserRepository) EmailNotTaken(email string) (bool, error) {
 	row := repo.DB.QueryRow("SELECT COUNT(*) FROM users WHERE email = ? LIMIT 1", email)
 	var result int
@@ -54,7 +52,7 @@ func (repo *UserRepository) FindUserByEmail(email string) (models.User, error) {
 func (repo *UserRepository) GetAllAndFollowing(userID string) ([]models.User, error) {
 	var users []models.User
 
-	rows, err := repo.DB.Query("SELECT user_id, IFNULL(nickname, first_name || ' ' || last_name), (SELECT COUNT(*) FROM followers WHERE followers.user_id = "+userID+" AND follower_id = users.user_id) as follower,(SELECT COUNT(*) FROM followers WHERE followers.user_id = users.user_id AND follower_id = "+userID+") as following FROM users WHERE user_id != ? GROUP BY user_id;", userID)
+	rows, err := repo.DB.Query("SELECT user_id, IFNULL(nickname, first_name || ' ' || last_name), (SELECT COUNT(*) FROM followers WHERE followers.user_id = '"+userID+"' AND follower_id = users.user_id) as follower,(SELECT COUNT(*) FROM followers WHERE followers.user_id = users.user_id AND follower_id = '"+userID+"') as following, image FROM users WHERE user_id != ? ;", userID)
 	if err != nil {
 		return users, err
 	}
@@ -62,7 +60,7 @@ func (repo *UserRepository) GetAllAndFollowing(userID string) ([]models.User, er
 		var user models.User
 		var follower int
 		var following int
-		rows.Scan(&user.ID, &user.Nickname, &follower, &following)
+		rows.Scan(&user.ID, &user.Nickname, &follower, &following, &user.ImagePath)
 		// configure followers
 		if follower == 1 {
 			user.Follower = true
@@ -76,10 +74,11 @@ func (repo *UserRepository) GetAllAndFollowing(userID string) ([]models.User, er
 }
 
 // returns id, nickname and image
-func (repo *UserRepository) GetDataForPost(userID string) (models.User, error) {
-	row := repo.DB.QueryRow("SELECT user_id, IFNULL(nickname, first_name || ' ' || last_name) FROM users WHERE user_id = ? LIMIT 1", userID)
+// min package for returning user data
+func (repo *UserRepository) GetDataMin(userID string) (models.User, error) {
+	row := repo.DB.QueryRow("SELECT user_id, IFNULL(nickname, first_name || ' ' || last_name), image FROM users WHERE user_id = ? LIMIT 1", userID)
 	var user models.User
-	if err := row.Scan(&user.ID, &user.Nickname); err != nil {
+	if err := row.Scan(&user.ID, &user.Nickname, &user.ImagePath); err != nil {
 		if err != nil {
 			return user, err
 		}

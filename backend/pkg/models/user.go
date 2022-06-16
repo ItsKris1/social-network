@@ -23,5 +23,5 @@ type UserRepository interface {
 	EmailNotTaken(email string) (bool, error) //returns true if not taken
 	FindUserByEmail(email string) (User, error)
 	GetAllAndFollowing(userID string) ([]User, error) //all users and follow info
-	GetDataForPost(userID string) (User, error)       // returns id, nickname and image
+	GetDataMin(userID string) (User, error)       // returns id, nickname and image
 }

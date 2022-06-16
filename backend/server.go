@@ -5,6 +5,7 @@ import (
 	"net/http"
 	sqlite "social-network/pkg/db/sqlite"
 	"social-network/pkg/handlers"
+	"social-network/pkg/utils"
 )
 
 func main() {
@@ -32,6 +33,9 @@ func main() {
 // Set up all routes
 func setRoutes(handler *handlers.Handler) http.Handler {
 	mux := http.NewServeMux()
+	/* ------------------------------ image server ------------------------------ */
+	fs := http.FileServer(http.Dir("./imageUpload"))
+	mux.Handle("/imageUpload/", http.StripPrefix("/imageUpload/", utils.ConfigFSHeader(fs)))
 	/* ------------------------------- auth route ------------------------------- */
 	mux.HandleFunc("/register", handler.Register)
 	mux.HandleFunc("/signin", handler.Signin)
@@ -39,6 +43,7 @@ func setRoutes(handler *handlers.Handler) http.Handler {
 
 	/* ---------------------------------- users --------------------------------- */
 	mux.HandleFunc("/allUsers", handler.Auth(handler.AllUsers))
+	mux.HandleFunc("/currentUser", handler.Auth(handler.CurrentUser))
 
 	/* ---------------------------------- posts --------------------------------- */
 	mux.HandleFunc("/allPosts", handler.Auth(handler.AllPosts))

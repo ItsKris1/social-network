@@ -1,11 +1,11 @@
 package models
 
 type Post struct {
-	ID      string `json:"id"`
-	Content string `json:"content,omitempty"`
-	// Image
-	AuthorID string
-	Author User `json:"author,omitempty"`
+	ID        string `json:"id"`
+	Content   string `json:"content,omitempty"`
+	ImagePath string `json:"image,omitempty"`
+	AuthorID  string
+	Author    User `json:"author,omitempty"`
 }
 
 type PostRepository interface {
