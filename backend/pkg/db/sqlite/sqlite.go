@@ -27,7 +27,7 @@ func InitRepositories(db *sql.DB) *models.Repositories {
 		UserRepo:    &UserRepository{DB: db},
 		SessionRepo: &SessionRepository{DB: db},
 		GroupRepo:   &GroupRepository{DB: db},
-		// PostRepo: &PostRepository{DB: db}
+		PostRepo: &PostRepository{DB: db},
 	}
 }
 
@@ -60,7 +60,7 @@ func createTables(db *sql.DB) {
 			"created_by" varchar(255) not null,
 			"content" TEXT null,
 			"image" varchar(255) null,
-			"visibilitY" varchar(255) null default PUBLIC,
+			"visibility" varchar(255) null default PUBLIC,
 			primary key ("post_id")
  		)`,
 		`

@@ -12,8 +12,8 @@ type User struct {
 	DateOfBirth string `json:"date-of-birth,omitempty"`
 	ImagePath   string `json:"avatar,omitempty"`
 
-	Follower  bool `json:"follower"`  //if this user is following another user
-	Following bool `json:"following"` //if curr user is following this one
+	Follower  bool `json:"follower,omitempty"`  //if this user is following another user
+	Following bool `json:"following,omitempty"` //if curr user is following this one
 }
 
 // Repository represent all possible actions availible to deal with User
@@ -23,4 +23,5 @@ type UserRepository interface {
 	EmailNotTaken(email string) (bool, error) //returns true if not taken
 	FindUserByEmail(email string) (User, error)
 	GetAllAndFollowing(userID string) ([]User, error) //all users and follow info
+	GetDataForPost(userID string) (User, error)       // returns id, nickname and image
 }

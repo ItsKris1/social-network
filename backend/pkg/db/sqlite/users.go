@@ -54,20 +54,15 @@ func (repo *UserRepository) FindUserByEmail(email string) (models.User, error) {
 func (repo *UserRepository) GetAllAndFollowing(userID string) ([]models.User, error) {
 	var users []models.User
 
-	rows, err := repo.DB.Query("SELECT user_id, first_name || ' ' || last_name as full_name, (SELECT COUNT(*) FROM followers WHERE followers.user_id = "+userID+" AND follower_id = users.user_id) as follower,(SELECT COUNT(*) FROM followers WHERE followers.user_id = users.user_id AND follower_id = "+userID+") as following, nickname FROM users WHERE user_id != ? GROUP BY user_id;", userID)
+	rows, err := repo.DB.Query("SELECT user_id, IFNULL(nickname, first_name || ' ' || last_name), (SELECT COUNT(*) FROM followers WHERE followers.user_id = "+userID+" AND follower_id = users.user_id) as follower,(SELECT COUNT(*) FROM followers WHERE followers.user_id = users.user_id AND follower_id = "+userID+") as following FROM users WHERE user_id != ? GROUP BY user_id;", userID)
 	if err != nil {
 		return users, err
 	}
 	for rows.Next() {
 		var user models.User
-		var fullName string
 		var follower int
 		var following int
-		rows.Scan(&user.ID, &fullName, &follower, &following, &user.Nickname)
-		// Replace nickname with fumm name if nickname not provided
-		if len(user.Nickname) == 0 {
-			user.Nickname = fullName
-		}
+		rows.Scan(&user.ID, &user.Nickname, &follower, &following)
 		// configure followers
 		if follower == 1 {
 			user.Follower = true
@@ -78,4 +73,16 @@ func (repo *UserRepository) GetAllAndFollowing(userID string) ([]models.User, er
 		users = append(users, user)
 	}
 	return users, nil
+}
+
+// returns id, nickname and image
+func (repo *UserRepository) GetDataForPost(userID string) (models.User, error) {
+	row := repo.DB.QueryRow("SELECT user_id, IFNULL(nickname, first_name || ' ' || last_name) FROM users WHERE user_id = ? LIMIT 1", userID)
+	var user models.User
+	if err := row.Scan(&user.ID, &user.Nickname); err != nil {
+		if err != nil {
+			return user, err
+		}
+	}
+	return user, nil
 }
