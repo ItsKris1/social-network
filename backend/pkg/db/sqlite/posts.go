@@ -28,3 +28,14 @@ func (repo *PostRepository) GetAll(userID string) ([]models.Post, error) {
 	}
 	return posts, nil
 }
+
+func (repo *PostRepository) New(post models.Post) error {
+	stmt, err := repo.DB.Prepare("INSERT INTO posts (post_id, group_id, created_by, content,image,visibility) values (?,?,?,?,?)")
+	if err != nil {
+		return err
+	}
+	if _, err := stmt.Exec(post.ID, post.GroupID, post.AuthorID, post.Content, post.ImagePath, post.Visibility); err != nil {
+		return err
+	}
+	return nil
+}

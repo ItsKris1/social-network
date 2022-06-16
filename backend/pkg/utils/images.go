@@ -11,7 +11,8 @@ const defaultImage = "imageUpload\\default.png"
 
 // Creates new file and reads image bytes into it
 // returns path to new image
-func SaveImage(r *http.Request) string {
+//returns default avatar or provided one
+func SaveAvatar(r *http.Request) string {
 	// Read data from request
 	file, fileHeader, errRead := r.FormFile("avatar")
 	if errRead != nil {
@@ -32,6 +33,36 @@ func SaveImage(r *http.Request) string {
 	fileData, err := ioutil.ReadAll(file)
 	if err != nil {
 		return defaultImage
+	}
+	localFile.Write(fileData)
+	return localFile.Name()
+}
+
+/* ------------------------- for posts and comments ------------------------- */
+// Creates new file and reads image bytes into it
+// returns path to new image
+// returns no path if not exist
+func SaveImage(r *http.Request) string {
+	// Read data from request
+	file, fileHeader, errRead := r.FormFile("image")
+	if errRead != nil {
+		return ""
+	}
+	defer file.Close()
+	// get content type -> png, gif or jpeg
+	contentType := fileHeader.Header["Content-Type"][0]
+	// Create empty local file with correct file extension
+	localFile, err := createTempFile(contentType)
+	// If type not ecognized return default image path
+	if err != nil {
+		return ""
+	}
+	defer localFile.Close()
+
+	// read data in new file
+	fileData, err := ioutil.ReadAll(file)
+	if err != nil {
+		return ""
 	}
 	localFile.Write(fileData)
 	return localFile.Name()
