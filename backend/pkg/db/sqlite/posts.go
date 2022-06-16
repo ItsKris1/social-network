@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"fmt"
 	"social-network/pkg/models"
 )
 
@@ -30,8 +31,9 @@ func (repo *PostRepository) GetAll(userID string) ([]models.Post, error) {
 }
 
 func (repo *PostRepository) New(post models.Post) error {
-	stmt, err := repo.DB.Prepare("INSERT INTO posts (post_id, group_id, created_by, content,image,visibility) values (?,?,?,?,?)")
+	stmt, err := repo.DB.Prepare("INSERT INTO posts (post_id, group_id, created_by, content,image,visibilitY) values (?,?,?,?,?,?)")
 	if err != nil {
+		fmt.Println("Wrong statement", err)
 		return err
 	}
 	if _, err := stmt.Exec(post.ID, post.GroupID, post.AuthorID, post.Content, post.ImagePath, post.Visibility); err != nil {
