@@ -2,8 +2,8 @@
 
 <template>
     <div id="postBtn" @click="toggle">
-    <span>Start a post</span>
-    <img src="../assets/writepost.png" alt="">
+        <span>Start a post</span>
+        <img src="../assets/writepost.png" alt="">
     </div>
     <div v-show="isOpen">
         <form @submit.prevent="submitPost" id="newpost">
@@ -18,7 +18,7 @@
 
                 <div v-for="follower in fetchedFollowers.followers">
                     <input type="checkbox" :id="follower" name="privacy" :value="follower" v-model="checkedFollowers" />
-                    <label :for="follower">{{follower}}</label>
+                    <label :for="follower">{{ follower }}</label>
                 </div>
                 <div>Checked names: {{ checkedFollowers }}</div>
 
@@ -93,7 +93,7 @@ export default {
                 .then((json) => {
                     this.fetchedFollowers = json
                 })
-                // .then((json => console.log(json)))
+            // .then((json => console.log(json)))
         },
 
         async submitPost() {
@@ -105,9 +105,10 @@ export default {
             // console.log('checkedFollowers: ', this.checkedFollowers);
             formData.set('checkedfollowers', this.checkedFollowers)
 
-            await fetch('', {
+            await fetch('http://localhost:8081/newPost', {
                 method: 'POST',
-                body: formData,
+                credentials: 'include',
+                body: formData
             })
 
             // console.log('Post submitted');
@@ -130,7 +131,8 @@ const checkedFollowers = ref([])
 .image-upload>input {
     display: none;
 }
-#postBtn{
+
+#postBtn {
     width: 600px;
     display: flex;
     justify-content: center;
