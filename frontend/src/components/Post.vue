@@ -1,11 +1,11 @@
 <template>
     <div id="post">
         <div>
-            <img id="post_image" src="../assets/nouserimg.png" alt="user-avatar">
+            <img id="post_image" :src="'http://localhost:8081/' + postData.author.avatar" alt="user-avatar">
         </div>
         <div>
-            <div><b>{{ postData.Author.nickname }}</b></div>
-            <div>{{ postData.Content }}</div>
+            <div><b>{{ postData.author.nickname }}</b></div>
+            <div>{{ postData.content }}</div>
             <button v-if="!isCommentsOpen" @click="toggleComments">View comments</button>
             <div v-if="isCommentsOpen">
             <textarea name="" id="" cols="30" rows="5" placeholder="Add your comment here"></textarea>
