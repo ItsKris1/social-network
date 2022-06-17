@@ -9,9 +9,9 @@
         <Notifications />
         <div id="a">
             <router-link to="/profile">
-                <img id="navbarUserPic" src="../assets/nouserimg.png" alt="profilePic">
+                <img id="navbarUserPic" :src="'http://localhost:8081/' + user.avatar" alt="profilePic">
             </router-link>
-            <span id="navBarName">James Brown</span>
+            <span id="navBarName">{{ user.nickname }}</span>
         </div>
         <img @click="logout" id="logoutBtn" src="../assets/logout.png">
     </div>
@@ -22,10 +22,28 @@
 <script>
 import Search from './Search.vue';
 import Notifications from './Notifications.vue'
-import Search1 from './Search.vue';
 export default {
     name: 'NavBarOn',
+    data() {
+        return {
+            user: {}
+        }
+    },
+    created() {
+        this.getUserInfo()
+    },
     methods: {
+        async getUserInfo() {
+            await fetch("http://localhost:8081/currentUser", {
+                credentials: 'include',
+            })
+                .then((r => r.json()))
+                .then((json => {
+                    console.log(json)
+                    this.user = json.users[0]
+                }))
+
+        },
         async logout() {
             // Test code
             await fetch('http://localhost:8081/logout', {
@@ -35,13 +53,13 @@ export default {
                 }
             })
                 .then((response => response.json()))
-                .then((json => {console.log(json)}))
+                .then((json => { console.log(json) }))
             // end of test code
             console.log("logout")
             this.$router.push("/");
         }
     },
-    components: { Notifications, Search, Search1 }
+    components: { Notifications, Search, }
 }
 
 </script>

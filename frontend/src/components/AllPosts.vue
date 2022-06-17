@@ -15,48 +15,7 @@ export default {
     name: 'AllPosts',
     data() {
         return {
-            posts: []
-            // posts:
-
-            //     [{
-            //         "ID": 1,
-            //         "Content": "Hello Vue",
-            //         "Author": {
-            //             "nickname": "VanDamm",
-            //             "first-name": "Hola",
-            //             "last-name": "Hup"
-            //         },
-            //         "Comments": [{
-            //             "id": 1,
-            //             "author": "Mac Donald",
-            //             "content": "Its time to write comments."
-            //         },
-            //         {
-            //             "id": 2,
-            //             "author": "Jackie Chan Jr",
-            //             "content": "KiiYeeaaa."
-            //         }]
-            //     }
-            //         , {
-            //         "ID": 2,
-            //         "Content": "here is post body!",
-            //         "Author": {
-            //             "nickname": "",
-            //             "first-name": "Hell",
-            //             "last-name": "Angel"
-            //         }
-            //     }, {
-            //         "ID": 3,
-            //         "Content": "Another post!",
-            //         "Author": {
-            //             "nickname": "jackson",
-            //             "first-name": "five",
-            //             "last-name": "clowns"
-            //         }
-            //     }]
-
-
-
+            posts: []            
         }
     },
     created() {
