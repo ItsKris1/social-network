@@ -5,6 +5,10 @@
         </div>
         <div>
             <div><b>{{ postData.author.nickname }}</b></div>
+            <div v-if="postData.image">
+            <img  id="postImage" :src="'http://localhost:8081/' + postData.image" alt="">
+            </div>
+            
             <div>{{ postData.content }}</div>
             <button v-if="!isCommentsOpen" @click="toggleComments">View comments</button>
             <div v-if="isCommentsOpen">
@@ -61,5 +65,10 @@ export default {
 
 #post {
     display: flex;
+}
+
+#postImage{
+    height: 50%;
+    width: 50%;
 }
 </style>
