@@ -27,7 +27,7 @@ func InitRepositories(db *sql.DB) *models.Repositories {
 		UserRepo:    &UserRepository{DB: db},
 		SessionRepo: &SessionRepository{DB: db},
 		GroupRepo:   &GroupRepository{DB: db},
-		PostRepo: &PostRepository{DB: db},
+		PostRepo:    &PostRepository{DB: db},
 	}
 }
 
@@ -89,6 +89,11 @@ func createTables(db *sql.DB) {
 			"content" text null,
 			"image" varchar(255) null,
 			primary key ("comment_id")
+		)`,
+		`
+		CREATE TABLE IF NOT EXISTS almost_private (
+			"user_id" VARCHAR(255) not null,
+			"post_id" VARCHAR(255) not null
 		)`,
 	}
 	for _, table := range tables {
