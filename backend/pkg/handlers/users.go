@@ -1,5 +1,48 @@
 package handlers
 
-/* -------------------------------------------------------------------------- */
-/*                here shall be the handlers for user requests                */
-/* -------------------------------------------------------------------------- */
+import (
+	"net/http"
+	"social-network/pkg/models"
+	"social-network/pkg/utils"
+)
+
+// Find all users and they relation with current user
+func (handler *Handler) AllUsers(w http.ResponseWriter, r *http.Request) {
+	w = utils.ConfigHeader(w)
+	// access user id
+	userId := r.Context().Value(utils.UserKey).(string)
+	// request all users exccept current + relations
+	users, errUsers := handler.repos.UserRepo.GetAllAndFollowing(userId)
+	if errUsers != nil {
+		utils.RespondWithError(w, "Error on getting data", 200)
+		return
+	}
+	utils.RespondWithUsers(w, users, 200)
+}
+
+// Returns user nickname, id and path to avatar
+func (handler *Handler) CurrentUser(w http.ResponseWriter, r *http.Request) {
+	w = utils.ConfigHeader(w)
+	// access user id
+	userId := r.Context().Value(utils.UserKey).(string)
+	user, err := handler.repos.UserRepo.GetDataMin(userId)
+	if err != nil {
+		utils.RespondWithError(w, "Error on getting data", 200)
+		return
+	}
+	utils.RespondWithUsers(w, []models.User{user}, 200)
+}
+
+// Find all followers
+func (handler *Handler) GetFollowers(w http.ResponseWriter, r *http.Request) {
+	w = utils.ConfigHeader(w)
+	// access user id
+	userId := r.Context().Value(utils.UserKey).(string)
+	// request all  following users
+	followers, errUsers := handler.repos.UserRepo.GetFollowers(userId)
+	if errUsers != nil {
+		utils.RespondWithError(w, "Error on getting data", 200)
+		return
+	}
+	utils.RespondWithUsers(w, followers, 200)
+}

@@ -3,7 +3,6 @@
         <div>
             <img id="profileImg" src="../assets/nouserimg.png" alt="profilePic">
         </div>
-
         <div id="basicInformation">
             <span>James Brown</span>
             <span>e-mail</span>
@@ -14,12 +13,14 @@
             <span>Privacy change-button</span>
         </div>
     </div>
-
+    <AllMyPosts />
 </template>
 
 <script>
+import AllMyPosts from './AllMyPosts.vue'
 export default {
     name: 'Profile',
+    components:{AllMyPosts},
     methods: {
         follow() {
             console.log('subscribe function')

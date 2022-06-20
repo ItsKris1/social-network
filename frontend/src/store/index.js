@@ -3,9 +3,13 @@ import { createStore } from "vuex";
 export default createStore({
   // state is like a variables, which hold a values.
   state: {
+    user:{
+      
+    },
     notifications: {
       isNotificationsOpen: false,
     },
+
   },
   // getters is a way for check state values.
   getters: {

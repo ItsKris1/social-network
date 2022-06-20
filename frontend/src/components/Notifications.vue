@@ -1,7 +1,7 @@
 <template>
     <div @click="toggle" id="notificationsBtn">
-        <img src="../assets/bell.png" alt="bell.png">
-        Notifications
+        <!-- <img src="../assets/bell.png" alt="bell.png"> -->
+        <span id="notifications_text">Notifications</span>
         <div v-if="this.$store.state.isNotificationsOpen" id="notificationsContent">
             <div>1</div>
             <div>2</div>
@@ -30,6 +30,20 @@ export default {
     position: relative;
     cursor: pointer;
     user-select: none;
+}
+
+#notifications_text {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 146.02%;
+    /* or 23px */
+
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #E4E3E3;
 }
 
 #notificationsContent {
