@@ -97,7 +97,6 @@ export default {
         },
 
         async submitPost() {
-
             let formData = new FormData();
             formData.set('privacy', this.newpost.privacy);
             formData.set('body', this.newpost.body);
@@ -110,10 +109,10 @@ export default {
                 credentials: 'include',
                 body: formData
             })
-
-            // console.log('Post submitted');
-        }
-    },
+            this.$store.dispatch('fetchPosts')
+            console.log('Post submitted');
+        },
+    },    
 }
 </script>
 
