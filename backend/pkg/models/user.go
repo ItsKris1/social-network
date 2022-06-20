@@ -4,12 +4,12 @@ package models
 type User struct {
 	ID          string `json:"id"`
 	Email       string `json:"login,omitempty"`
-	FirstName   string `json:"first-name,omitempty"`
-	LastName    string `json:"last-name,omitempty"`
+	FirstName   string `json:"firstName,omitempty"`
+	LastName    string `json:"lastName,omitempty"`
 	Password    string `json:"password,omitempty"`
 	Nickname    string `json:"nickname,omitempty"`
 	About       string `json:"about,omitempty"`
-	DateOfBirth string `json:"date-of-birth,omitempty"`
+	DateOfBirth string `json:"dateOfBirth,omitempty"`
 	ImagePath   string `json:"avatar,omitempty"`
 
 	Follower  bool `json:"follower,omitempty"`  //if this user is following another user

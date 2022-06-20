@@ -28,6 +28,7 @@ func InitRepositories(db *sql.DB) *models.Repositories {
 		SessionRepo: &SessionRepository{DB: db},
 		GroupRepo:   &GroupRepository{DB: db},
 		PostRepo:    &PostRepository{DB: db},
+		CommentRepo: &CommentRepository{DB: db},
 	}
 }
 
@@ -84,6 +85,7 @@ func createTables(db *sql.DB) {
 		`
 		CREATE TABLE IF NOT EXISTS comments (
 			"comment_id" VARCHAR(255) not null,
+			"post_id" VARCHAR(255) not null,
 			"created_at" datetime not null default CURRENT_TIMESTAMP,
 			"created_by" varchar(255) not null,
 			"content" text null,
