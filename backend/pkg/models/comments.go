@@ -1,8 +1,9 @@
 package models
 
 type Comment struct {
-	ID string `json:"id"`
-
+	ID             string `json:"id"`
+	
+	PostID         string `json:"post-id,omitempty"`
 	Content        string `json:"content,omitempty"`
 	ImagePath      string `json:"image,omitempty"`
 	AuthorID       string `json:"author-id,omitempty"`
@@ -12,4 +13,5 @@ type Comment struct {
 type CommentRepository interface {
 	// get comment based on postID
 	Get(postID string) ([]Comment, error)
+	New(Comment) error
 }

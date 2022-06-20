@@ -22,3 +22,14 @@ func (repo *CommentRepository) Get(postID string) ([]models.Comment, error) {
 	}
 	return comments, nil
 }
+
+func (repo *CommentRepository) New(comment models.Comment) error {
+	stmt, err := repo.DB.Prepare("INSERT INTO comments (comment_id, post_id, created_by, content,image) values (?,?,?,?,?)")
+	if err != nil {
+		return err
+	}
+	if _, err := stmt.Exec(comment.ID, comment.PostID, comment.AuthorID, comment.Content, comment.ImagePath); err != nil {
+		return err
+	}
+	return nil
+}

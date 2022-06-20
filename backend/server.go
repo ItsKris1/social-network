@@ -51,6 +51,9 @@ func setRoutes(handler *handlers.Handler) http.Handler {
 	mux.HandleFunc("/allPosts", handler.Auth(handler.AllPosts))
 	mux.HandleFunc("/newPost", handler.Auth(handler.NewPost))
 
+	/* -------------------------------- comments -------------------------------- */
+	mux.HandleFunc("/newComment", handler.Auth(handler.NewComment))
+
 	/* --------------------------------- groups --------------------------------- */
 	mux.HandleFunc("/allGroups", handler.Auth(handler.AllGroups))
 	return mux

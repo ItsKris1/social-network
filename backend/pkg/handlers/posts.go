@@ -80,6 +80,5 @@ func (handler *Handler) NewPost(w http.ResponseWriter, r *http.Request) {
 		}
 
 	}
-	// save post in db
 	utils.RespondWithSuccess(w, "New post created", 200)
 }
