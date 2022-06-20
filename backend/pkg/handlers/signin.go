@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -52,4 +53,40 @@ func (handler *Handler) Signin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	utils.RespondWithSuccess(w, "Login successful", 200)
+}
+
+// endpoint for checking if user session is already in progress
+// responds with err if no session active
+// responds with success if session valid
+// updates session access time in db
+func (handler *Handler) SessionActive(w http.ResponseWriter, r *http.Request) {
+	w = utils.ConfigHeader(w)
+	// Get cookie value from request
+	sessionId, errCookie := utils.GetCookie(r)
+	if errCookie != nil {
+		utils.RespondWithError(w, "Session not active", 200)
+		return
+	}
+	// Get session based on session id
+	session, errSession := handler.repos.SessionRepo.Get(sessionId)
+	if errSession != nil {
+		utils.RespondWithError(w, "Session not active", 200)
+		return
+	}
+	// check if session not expired
+	sessionValid := utils.CheckSessionExpiration(session)
+	if !sessionValid {
+		// if not valid any more delete from db
+		handler.repos.SessionRepo.Delete(session)
+		// Delete from client browser
+		utils.DeleteCookie(w)
+		utils.RespondWithError(w, "Session not active", 200)
+		return
+	} else {
+		// Session stil valid -> prolong it by 30 min
+		session.ExpirationTime = time.Now().Add(30 * time.Minute)
+		handler.repos.SessionRepo.Update(session)
+		utils.RespondWithSuccess(w, "Session active", 200)
+		return
+	}
 }

@@ -6,4 +6,5 @@ type Repositories struct {
 	SessionRepo SessionRepository
 	GroupRepo   GroupRepository
 	PostRepo    PostRepository
+	CommentRepo CommentRepository
 }
