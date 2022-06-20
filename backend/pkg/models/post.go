@@ -4,9 +4,9 @@ type Post struct {
 	ID         string `json:"id"`
 	Content    string `json:"content,omitempty"`
 	ImagePath  string `json:"image,omitempty"`
-	AuthorID   string `json:"author-id,omitempty"`
+	AuthorID   string `json:"authorId,omitempty"`
 	Visibility string `json:"visibility,omitempty"`
-	GroupID    string `json:"group-id,omitempty"`
+	GroupID    string `json:"groupId,omitempty"`
 	// for sending back with author
 	Author   User      `json:"author,omitempty"`
 	Comments []Comment `json:"comments,omitempty"`
