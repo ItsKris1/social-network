@@ -8,7 +8,8 @@ type Post struct {
 	Visibility string `json:"visibility,omitempty"`
 	GroupID    string `json:"group-id,omitempty"`
 	// for sending back with author
-	Author User `json:"author,omitempty"`
+	Author   User      `json:"author,omitempty"`
+	Comments []Comment `json:"comments,omitempty"`
 }
 
 type PostRepository interface {
