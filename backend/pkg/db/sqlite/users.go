@@ -12,7 +12,7 @@ type UserRepository struct {
 // Insert new user in db
 func (repo *UserRepository) Add(user models.User) error {
 	// example code
-	stmt, err := repo.DB.Prepare("INSERT INTO users(user_id, email, first_name, last_name, nickname, about, password, birthday, image) values(?,?,?,?,(NULLIF(?,'')),(NULLIF(?,'')),?,?,?)")
+	stmt, err := repo.DB.Prepare("INSERT INTO users(user_id, email, first_name, last_name, nickname, about, password, birthday, image) values(?,?,?,?,(NULLIF(?,'')),?,?,?,?)")
 	if err != nil {
 		return err
 	}

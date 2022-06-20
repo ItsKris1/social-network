@@ -27,6 +27,14 @@ func (handler *Handler) AllPosts(w http.ResponseWriter, r *http.Request) {
 		}
 		posts[i].Author = author
 	}
+	for i := 0; i < len(posts); i++ {
+		comments, err := handler.repos.CommentRepo.Get(posts[i].ID)
+		if err != nil {
+			utils.RespondWithError(w, "Error on getting data", 200)
+			return
+		}
+		posts[i].Comments = comments
+	}
 	utils.RespondWithPosts(w, posts, 200)
 }
 
@@ -72,6 +80,5 @@ func (handler *Handler) NewPost(w http.ResponseWriter, r *http.Request) {
 		}
 
 	}
-	// save post in db
 	utils.RespondWithSuccess(w, "New post created", 200)
 }
