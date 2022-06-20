@@ -1,13 +1,13 @@
 package models
 
 type Comment struct {
-	ID             string `json:"id"`
-	
-	PostID         string `json:"post-id,omitempty"`
+	ID string `json:"id"`
+
+	PostID         string `json:"postId,omitempty"`
 	Content        string `json:"content,omitempty"`
 	ImagePath      string `json:"image,omitempty"`
-	AuthorID       string `json:"author-id,omitempty"`
-	AuthorNickname string `json:"author-nickname,omitempty"`
+	AuthorID       string `json:"authorId,omitempty"`
+	AuthorNickname string `json:"authorNickname,omitempty"`
 }
 
 type CommentRepository interface {
