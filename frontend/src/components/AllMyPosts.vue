@@ -24,7 +24,7 @@ export default {
     components: { Post },
     methods: {
         async getAllMyPosts() {
-            console.log('allposts');
+            // console.log('allposts');
             // await fetch("https://d1cd8cff-f1bc-4c79-913a-405f7cbbb7c3.mock.pstmn.io/allposts")
             await fetch("http://localhost:8081/allPosts", {
                 credentials: 'include',

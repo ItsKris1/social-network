@@ -1,8 +1,6 @@
 <template>
     <button @click="getAllPosts">get</button>
     <button @click="showAllPosts">show</button>
-    <br>
-    <span style="color: red;">NOW ITS WORKS WRONG(ITS GETTING ALL POSTS FROM LOGGED USER ONLY)</span>
     <div id="all_posts" v-if="this.posts !== undefined">
         <Post v-for="post in posts" :key="post.id" v-bind:postData="post" />
     </div>
@@ -25,7 +23,7 @@ export default {
     components: { Post },
     methods: {
         async getAllPosts() {
-            console.log('allposts');
+            // console.log('allposts');
             // await fetch("https://d1cd8cff-f1bc-4c79-913a-405f7cbbb7c3.mock.pstmn.io/allposts")
             await fetch("http://localhost:8081/allPosts", {
                 credentials: 'include',

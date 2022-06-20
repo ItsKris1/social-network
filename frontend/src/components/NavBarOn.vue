@@ -42,7 +42,7 @@ export default {
             })
                 .then((r => r.json()))
                 .then((json => {
-                    console.log(json)
+                    // console.log(json)
                     this.user = json.users[0]
                 }))
 

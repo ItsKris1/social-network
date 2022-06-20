@@ -15,5 +15,5 @@ services:
     command: [ "http-server", "dist" ]
     ports:
       - 8080:8080
-    # depends_on:
-    #   - backend
+    depends_on:
+      - backend
