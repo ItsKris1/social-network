@@ -1,6 +1,6 @@
  <template>
-    <!-- <button @click="getAllPosts">get</button>
-    <button @click="showAllPosts">show</button> -->
+    <!-- <button @click="getAllPosts">get</button> -->
+    <button @click="showAllPosts">showFetch</button>
     <div id="all_posts" v-if="allPosts !== undefined">
         <Post v-for="post in allPosts" :key="post.id" v-bind:postData="post" />
     </div>
@@ -18,7 +18,7 @@ export default {
     components: { Post },
     methods: {
         showAllPosts() {
-            console.log('All posts: ', this.allPosts);
+            console.log('All posts: ', this.allPosts[0]);
         },
     },
 }
