@@ -17,18 +17,22 @@
                 <textarea v-model="this.comment.body" name="" id="" cols="30" rows="5" placeholder="Add your comment here"></textarea>
                 <div>
                     <button @click="toggleComments">Hide comments</button>
-                    <div class="image-upload">
-                        <label for="file-input">
+                    <div class="comment-img">
+                        <label for="comment-image">
                             <img src="../assets/addimg.png" />
                         </label>
-                        <input @change="checkPicture" id="file-input" type="file"
+                        <input id="comment-image" @change="checkPicture" type="file"
                             accept="image/png, image/gif, image/jpeg" />
                     </div>
                     <button @click="submitComment(postData.id)">Add comment</button>
                 </div>
                 <div id="commentsDiv" v-for=" comment in postData.comments">
-                    <div><b>{{ comment.author }}</b></div>
+                    <div><b>{{ comment.authorNickname }}</b></div>
                     <div>{{ comment.content }}</div>
+
+                    <div v-if="comment.image">
+                        <img id="commentImage" :src="'http://localhost:8081/'+comment.image" alt="">
+                    </div>
                 </div>
             </div>
         </div>
@@ -122,11 +126,15 @@ export default {
     display: flex;
 }
 
-#postImage {
-    height: 50%;
-    width: 50%;
+#postImage, #commentImage {
+    height: 20%;
+    width: 20%;
 }
 #commentsDiv{
     border-top: double;
 }
+.comment-img>input{
+    display: none;
+}
+
 </style>
