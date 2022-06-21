@@ -117,9 +117,9 @@ func (repo *UserRepository) ProfileStatus(userID string) (string, error) {
 // if public profile -> returns full data set
 // if private profile and following- full data set
 func (repo *UserRepository) GetProfileMax(userID string) (models.User, error) {
-	row := repo.DB.QueryRow("SELECT  IFNULL(nickname, first_name || ' ' || last_name), image, email, about FROM users WHERE user_id = ? LIMIT 1", userID)
+	row := repo.DB.QueryRow("SELECT IFNULL(nickname, first_name || ' ' || last_name),first_name, last_name, image, email, strftime('%d.%m.%Y', birthday), about FROM users WHERE user_id = ? LIMIT 1", userID)
 	var user models.User
-	if err := row.Scan(&user.Nickname, &user.ImagePath, &user.Email, &user.About); err != nil {
+	if err := row.Scan(&user.Nickname, &user.FirstName, &user.LastName, &user.ImagePath, &user.Email, &user.DateOfBirth, &user.About); err != nil {
 		if err != nil {
 			return user, err
 		}
