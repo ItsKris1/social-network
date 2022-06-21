@@ -14,7 +14,7 @@
             <div>{{ postData.content }}</div>
             <button v-if="!isCommentsOpen" @click="toggleComments">View comments</button>
             <div v-if="isCommentsOpen">
-                <textarea name="" id="" cols="30" rows="5" placeholder="Add your comment here"></textarea>
+                <textarea v-model="this.comment.body" name="" id="" cols="30" rows="5" placeholder="Add your comment here"></textarea>
                 <div>
                     <button @click="toggleComments">Hide comments</button>
                     <div class="image-upload">
