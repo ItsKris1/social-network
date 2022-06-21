@@ -15,5 +15,7 @@ type Post struct {
 type PostRepository interface {
 	// Get all posts that user have access to
 	GetAll(userID string) ([]Post, error)
+	// get user posts that current user have access to
+	GetUserPosts(userID, currentUserID string) ([]Post, error)
 	New(Post) error
 }
