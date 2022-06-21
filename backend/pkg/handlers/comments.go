@@ -22,7 +22,7 @@ func (handler *Handler) NewComment(w http.ResponseWriter, r *http.Request) {
 	// create new comment instance
 	newComment := models.Comment{
 		ID:       utils.UniqueId(),
-		PostID:   r.PostFormValue("post-id"),
+		PostID:   r.PostFormValue("postid"),
 		Content:  r.PostFormValue("body"),
 		AuthorID: userId,
 	}
