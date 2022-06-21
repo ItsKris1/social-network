@@ -18,7 +18,8 @@ export default {
     components: { Post },
     methods: {
         showAllPosts() {
-            console.log('All posts: ', this.allPosts[0]);
+            this.$store.dispatch('fetchPosts')
+            console.log('All posts: ', this.allPosts);
         },
     },
 }

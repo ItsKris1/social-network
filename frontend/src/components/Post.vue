@@ -26,7 +26,7 @@
                     </div>
                     <button @click="submitComment(postData.id)">Add comment</button>
                 </div>
-                <div v-for=" comment in postData.Comments">
+                <div id="commentsDiv" v-for=" comment in postData.comments">
                     <div><b>{{ comment.author }}</b></div>
                     <div>{{ comment.content }}</div>
                 </div>
@@ -72,6 +72,7 @@ export default {
                 credentials: 'include',
                 body: commentData
             })
+            this.$store.dispatch('fetchPosts')
             console.log('Comment submitted.');
         },
         showPostId(postId) {
@@ -124,5 +125,8 @@ export default {
 #postImage {
     height: 50%;
     width: 50%;
+}
+#commentsDiv{
+    border-top: double;
 }
 </style>
