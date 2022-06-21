@@ -44,7 +44,8 @@ func setRoutes(handler *handlers.Handler) http.Handler {
 
 	/* ---------------------------------- users --------------------------------- */
 	mux.HandleFunc("/allUsers", handler.Auth(handler.AllUsers))
-	mux.HandleFunc("/getFollowers", handler.Auth(handler.GetFollowers))
+	mux.HandleFunc("/followers", handler.Auth(handler.GetFollowers))
+	mux.HandleFunc("/following", handler.Auth(handler.GetFollowing))
 	mux.HandleFunc("/currentUser", handler.Auth(handler.CurrentUser))
 	mux.HandleFunc("/userData", handler.Auth(handler.UserData))
 

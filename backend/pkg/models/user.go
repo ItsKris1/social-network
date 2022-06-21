@@ -24,12 +24,15 @@ type UserRepository interface {
 	Add(User) error                           //save new user in db
 	EmailNotTaken(email string) (bool, error) //returns true if not taken
 	FindUserByEmail(email string) (User, error)
+
 	GetAllAndFollowing(userID string) ([]User, error) //all users and follow info
-	GetDataMin(userID string) (User, error)           // returns id, nickname and image
 	GetFollowers(userId string) ([]User, error)       //get client followers
+	GetFollowing(userId string) ([]User, error)       //get who is following client
 
 	IsFollowing(userID, currentUserID string) (bool, error) //returns true if current is following
+	GetDataMin(userID string) (User, error)                 // returns id, nickname and image (for comment or post author)
 	ProfileStatus(userID string) (string, error)            //evaluates if profile public
-	GetProfileMax(userID string) (User, error)              //returns all data about user
-	GetProfileMin(userID string) (User, error)              //returns some data about user
+
+	GetProfileMax(userID string) (User, error) //returns all data about user
+	GetProfileMin(userID string) (User, error) //returns some data about user
 }

@@ -47,6 +47,20 @@ func (handler *Handler) GetFollowers(w http.ResponseWriter, r *http.Request) {
 	utils.RespondWithUsers(w, followers, 200)
 }
 
+// Find all who clinet is following
+func (handler *Handler) GetFollowing(w http.ResponseWriter, r *http.Request) {
+	w = utils.ConfigHeader(w)
+	// access user id
+	userId := r.Context().Value(utils.UserKey).(string)
+	// request all  following users
+	followers, errUsers := handler.repos.UserRepo.GetFollowing(userId)
+	if errUsers != nil {
+		utils.RespondWithError(w, "Error on getting data", 200)
+		return
+	}
+	utils.RespondWithUsers(w, followers, 200)
+}
+
 // Returns user data based on public / private profile and user_id from request
 // waits for GET request with query "userId" ->user client is looking for
 //  can be used both on own profile and other users

@@ -156,3 +156,18 @@ func (repo *UserRepository) GetFollowers(userID string) ([]models.User, error) {
 	}
 	return users, nil
 }
+
+func (repo *UserRepository) GetFollowing(userID string) ([]models.User, error) {
+	var users []models.User
+
+	rows, err := repo.DB.Query("SELECT user_id, IFNULL(nickname, first_name || ' ' || last_name) FROM users WHERE (SELECT COUNT(*) FROM followers WHERE followers.follower_id = '"+userID+"' AND user_id = users.user_id) = 1 ;", userID)
+	if err != nil {
+		return users, err
+	}
+	for rows.Next() {
+		var user models.User
+		rows.Scan(&user.ID, &user.Nickname)
+		users = append(users, user)
+	}
+	return users, nil
+}
