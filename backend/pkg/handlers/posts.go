@@ -38,6 +38,43 @@ func (handler *Handler) AllPosts(w http.ResponseWriter, r *http.Request) {
 	utils.RespondWithPosts(w, posts, 200)
 }
 
+func (handler *Handler) UserPosts(w http.ResponseWriter, r *http.Request) {
+	w = utils.ConfigHeader(w)
+	// access current user id
+	currentUserId := r.Context().Value(utils.UserKey).(string)
+
+	// get user id from request
+	query := r.URL.Query()
+	userId := query.Get("userId")
+
+	//request user posts
+	posts, errPosts := handler.repos.PostRepo.GetUserPosts(userId, currentUserId)
+	if errPosts != nil {
+		fmt.Println("Err: ", errPosts)
+		utils.RespondWithError(w, "Error on getting data", 200)
+		return
+	}
+	// Get post author info attached
+	for i := 0; i < len(posts); i++ {
+		author, err := handler.repos.UserRepo.GetDataMin(posts[i].AuthorID)
+		if err != nil {
+			utils.RespondWithError(w, "Error on getting data", 200)
+			return
+		}
+		posts[i].Author = author
+	}
+	// Get comment info for each post
+	for i := 0; i < len(posts); i++ {
+		comments, err := handler.repos.CommentRepo.Get(posts[i].ID)
+		if err != nil {
+			utils.RespondWithError(w, "Error on getting data", 200)
+			return
+		}
+		posts[i].Comments = comments
+	}
+	utils.RespondWithPosts(w, posts, 200)
+}
+
 /* ----------------------------- create new post ---------------------------- */
 func (handler *Handler) NewPost(w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)

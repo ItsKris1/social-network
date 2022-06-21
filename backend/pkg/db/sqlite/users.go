@@ -87,10 +87,80 @@ func (repo *UserRepository) GetDataMin(userID string) (models.User, error) {
 	return user, nil
 }
 
+// returns true if current user is following
+func (repo *UserRepository) IsFollowing(userID, currentUserID string) (bool, error) {
+	row := repo.DB.QueryRow("SELECT COUNT() FROM followers WHERE user_id = ? AND follower_id = ?;", userID, currentUserID)
+	var result int
+	if err := row.Scan(&result); err != nil {
+		return false, err
+	}
+	if result == 0 {
+		return false, nil
+	}
+	return true, nil
+}
+
+// returns true lif profile public
+func (repo *UserRepository) ProfileStatus(userID string) (string, error) {
+	row := repo.DB.QueryRow("SELECT status FROM users WHERE user_id = ?;", userID)
+	var status string
+	if err := row.Scan(&status); err != nil {
+		if err != nil {
+			return "", err
+		}
+	}
+	return status, nil
+}
+
+// returns user information evaluating propperties
+// if current user returns full data set
+// if public profile -> returns full data set
+// if private profile and following- full data set
+func (repo *UserRepository) GetProfileMax(userID string) (models.User, error) {
+	row := repo.DB.QueryRow("SELECT IFNULL(nickname, first_name || ' ' || last_name),first_name, last_name, image, email, strftime('%d.%m.%Y', birthday), about FROM users WHERE user_id = ? LIMIT 1", userID)
+	var user models.User
+	if err := row.Scan(&user.Nickname, &user.FirstName, &user.LastName, &user.ImagePath, &user.Email, &user.DateOfBirth, &user.About); err != nil {
+		if err != nil {
+			return user, err
+		}
+	}
+	user.ID = userID
+	return user, nil
+}
+
+// returns user information
+// if private profile and  current user not following -> small data set
+func (repo *UserRepository) GetProfileMin(userID string) (models.User, error) {
+	row := repo.DB.QueryRow("SELECT  IFNULL(nickname, first_name || ' ' || last_name), image FROM users WHERE user_id = ? LIMIT 1", userID)
+	var user models.User
+	if err := row.Scan(&user.Nickname, &user.ImagePath); err != nil {
+		if err != nil {
+			return user, err
+		}
+	}
+	user.ID = userID
+	return user, nil
+}
+
 func (repo *UserRepository) GetFollowers(userID string) ([]models.User, error) {
 	var users []models.User
 
 	rows, err := repo.DB.Query("SELECT user_id, IFNULL(nickname, first_name || ' ' || last_name) FROM users WHERE (SELECT COUNT(*) FROM followers WHERE followers.user_id = '"+userID+"' AND follower_id = users.user_id) = 1 ;", userID)
+	if err != nil {
+		return users, err
+	}
+	for rows.Next() {
+		var user models.User
+		rows.Scan(&user.ID, &user.Nickname)
+		users = append(users, user)
+	}
+	return users, nil
+}
+
+func (repo *UserRepository) GetFollowing(userID string) ([]models.User, error) {
+	var users []models.User
+
+	rows, err := repo.DB.Query("SELECT user_id, IFNULL(nickname, first_name || ' ' || last_name) FROM users WHERE (SELECT COUNT(*) FROM followers WHERE followers.follower_id = '"+userID+"' AND user_id = users.user_id) = 1 ;", userID)
 	if err != nil {
 		return users, err
 	}
