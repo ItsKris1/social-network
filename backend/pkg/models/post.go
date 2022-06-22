@@ -2,14 +2,14 @@ package models
 
 type Post struct {
 	ID         string `json:"id"`
-	Content    string `json:"content,omitempty"`
-	ImagePath  string `json:"image,omitempty"`
-	AuthorID   string `json:"authorId,omitempty"`
-	Visibility string `json:"visibility,omitempty"`
-	GroupID    string `json:"groupId,omitempty"`
+	Content    string `json:"content"`
+	ImagePath  string `json:"image"`
+	AuthorID   string `json:"authorId"`
+	Visibility string `json:"visibility"`
+	GroupID    string `json:"groupId"`
 	// for sending back with author
-	Author   User      `json:"author,omitempty"`
-	Comments []Comment `json:"comments,omitempty"`
+	Author   User      `json:"author"`
+	Comments []Comment `json:"comments"`
 }
 
 type PostRepository interface {
