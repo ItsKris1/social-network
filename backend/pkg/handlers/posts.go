@@ -45,8 +45,11 @@ func (handler *Handler) UserPosts(w http.ResponseWriter, r *http.Request) {
 
 	// get user id from request
 	query := r.URL.Query()
-	userId := query.Get("userId")
-
+	userId := query.Get("id")
+	if userId == "" {
+		utils.RespondWithError(w, "Error user id", 200)
+		return
+	}
 	//request user posts
 	posts, errPosts := handler.repos.PostRepo.GetUserPosts(userId, currentUserId)
 	if errPosts != nil {
