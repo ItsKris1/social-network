@@ -1,10 +1,10 @@
 <template>
     <div id="profile">
         <div>
-            <img id="profileImg" src="../assets/nouserimg.png" alt="profilePic">
+            <img id="profileImg" :src="'http://localhost:8081/'+this.user.avatar" alt="profilePic">
         </div>
         <div id="basicInformation">
-            <span>James Brown</span>
+            <span>{{this.user.nickname}}</span>
             <span>e-mail</span>
             <span>birthday date</span>
             <button id="followBtn" click="follow">Follow</button>
@@ -21,10 +21,32 @@ import AllMyPosts from './AllMyPosts.vue'
 export default {
     name: 'Profile',
     components:{AllMyPosts},
+    data(){
+        return{
+            user:{
+                avatar:"",
+                id:"",
+                nickname:""
+            }
+        }
+    },
+    created(){
+        this.fetchBaseInfo()
+    },
     methods: {
         follow() {
             console.log('subscribe function')
-        }
+        },
+        async fetchBaseInfo(){
+            await fetch("http://localhost:8081/currentUser", {
+                credentials: 'include',
+            })
+                .then((r => r.json()))
+                .then((json => {
+                    // console.log(json)
+                    this.user = json.users[0]
+                }))
+        },
     }
 }
 </script>
@@ -38,6 +60,8 @@ export default {
 #profileImg {
     border-radius: 50%;
     margin-right: 20px;
+    width: 200px;
+    height: 200px;
 }
 
 #basicInformation {

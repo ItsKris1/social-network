@@ -13,26 +13,18 @@ export default createStore({
   },
   // getters is a way for check state values.
   getters: {
-    NOTIFICATIONS_STATE(state) {
-      return state.notifications.isNotificationsOpen;
-    },
     allPosts(state) {
       return state.posts.allposts;
     },
   },
   // mutations is a way for change state.
   mutations: {
-    CHANGE_NOTIFICATIONS_STATE(state) {
-      state.isNotificationsOpen = !state.isNotificationsOpen;
-    },
     updatePosts(state, posts) {
       state.posts.allposts = posts;
     },
   },
   actions: {
-    TOGGLE_NOTIFICATIONS({ commit }) {
-      commit("CHANGE_NOTIFICATIONS_STATE");
-    },
+    //fetch all posts of all users.
     async fetchPosts() {
       await fetch("http://localhost:8081/allPosts", {
         credentials: "include",
@@ -44,6 +36,26 @@ export default createStore({
           const posts = json.posts;
           this.commit("updatePosts", posts);
         });
+    },
+    //fetch current logged in user posts.
+    async fetchMyPosts() {
+      let id = "";
+      await fetch("http://localhost:8081/currentUser", {
+        //first get my ID
+        credentials: "include",
+      })
+        .then((r) => r.json())
+        .then((json) => {
+          console.log("get id - ", json);
+          id = json.users[0].id;
+        });
+      await fetch("http://localhost:8081/userPosts?id=" + id, {
+        //then fetch all posts with this ID
+        credentials: "include",
+      })
+        .then((r) => r.json())
+        .then((json) => console.log("get posts -", json)); 
+        // BUT response is only 'success' type, without any data
     },
   },
   modules: {},
