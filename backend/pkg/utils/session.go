@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"net/http"
 	"social-network/pkg/models"
 	. "social-network/pkg/models"
@@ -37,7 +36,6 @@ func SessionStart(w http.ResponseWriter, r *http.Request, userID string) models.
 	}
 	// Send cookie to client
 	http.SetCookie(w, &cookie)
-	fmt.Println("Creating cookie")
 	// return session
 	return session
 }
