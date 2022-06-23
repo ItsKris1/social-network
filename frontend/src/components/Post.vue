@@ -77,6 +77,7 @@ export default {
                 body: commentData
             })
             this.$store.dispatch('fetchPosts')
+            this.$store.dispatch('fetchMyPosts')
             console.log('Comment submitted.');
         },
         showPostId(postId) {
