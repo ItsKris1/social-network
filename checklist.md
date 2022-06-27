@@ -14,7 +14,7 @@
 
 - [ ] Create new group route
 - [ ] Create /follow and /unfollow route
-- [ ] Create private / public switch route
+- [ ] Deal with pending follow requests after status change to PUBLIC
 
 #### Websockets
 
