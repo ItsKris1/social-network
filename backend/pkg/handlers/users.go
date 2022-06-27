@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
@@ -130,7 +129,6 @@ func (handler *Handler) UserStatus(w http.ResponseWriter, r *http.Request) {
 	} else if reqStatus == statusList[1] {
 		client.Status = statusList[1]
 	} else {
-		fmt.Println("Status read: ", reqStatus, "And we have: ", statusList)
 		utils.RespondWithError(w, "Requested status not valid", 200)
 		return
 	}
