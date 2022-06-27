@@ -3,19 +3,19 @@ package models
 // defines  User data type
 type User struct {
 	ID          string `json:"id"`
-	Email       string `json:"login,omitempty"`
-	FirstName   string `json:"firstName,omitempty"`
-	LastName    string `json:"lastName,omitempty"`
+	Email       string `json:"login"`
+	FirstName   string `json:"firstName"`
+	LastName    string `json:"lastName"`
 	Password    string `json:"password,omitempty"`
-	Nickname    string `json:"nickname,omitempty"`
-	About       string `json:"about,omitempty"`
-	DateOfBirth string `json:"dateOfBirth,omitempty"`
-	ImagePath   string `json:"avatar,omitempty"`
-	Status      string `json:"status,omitempty"`      // private / public
-	CurrentUser bool   `json:"currentUser,omitempty"` //returns true for current, false otherwise
+	Nickname    string `json:"nickname"`
+	About       string `json:"about"`
+	DateOfBirth string `json:"dateOfBirth"`
+	ImagePath   string `json:"avatar"`
+	Status      string `json:"status"`      // private / public
+	CurrentUser bool   `json:"currentUser"` //returns true for current, false otherwise
 
-	Follower  bool `json:"follower,omitempty"`  //if this user is following another user
-	Following bool `json:"following,omitempty"` //if curr user is following this one
+	Follower  bool `json:"follower"`  //if this user is following another user
+	Following bool `json:"following"` //if curr user is following this one
 }
 
 // Repository represent all possible actions availible to deal with User
@@ -35,4 +35,7 @@ type UserRepository interface {
 
 	GetProfileMax(userID string) (User, error) //returns all data about user
 	GetProfileMin(userID string) (User, error) //returns some data about user
+
+	GetStatus(userID string) (string,error)//get current status
+	SetStatus(User)error // change status (needs id and new status)
 }
