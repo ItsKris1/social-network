@@ -30,7 +30,7 @@
                 <label for="file-input">
                     <img src="../assets/addimg.png" />
                 </label>
-                <input @change="checkPicture" id="file-input" type="file" accept="image/png, image/gif, image/jpeg" />
+                <input id="file-input" @change="checkPicture" type="file" accept="image/png, image/gif, image/jpeg" />
             </div>
             <button type="submit">Post</button>
         </form>
