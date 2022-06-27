@@ -1,9 +1,11 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
+	"strings"
 )
 
 // Find all users and they relation with current user
@@ -107,4 +109,49 @@ func (handler *Handler) UserData(w http.ResponseWriter, r *http.Request) {
 	user.Status = status
 
 	utils.RespondWithUsers(w, []models.User{user}, 200)
+}
+
+// changes user status in db return status
+// in case of turning to PUBLIC -> also accept follow requests
+func (handler *Handler) UserStatus(w http.ResponseWriter, r *http.Request) {
+	statusList := []string{"PUBLIC", "PRIVATE"} //possible status
+	var client models.User
+
+	w = utils.ConfigHeader(w)
+	// access user id
+	client.ID = r.Context().Value(utils.UserKey).(string)
+	// get status from request
+	query := r.URL.Query()
+	reqStatus := strings.ToUpper(query.Get("status"))
+
+	// check if valid value and asign to user
+	if reqStatus == statusList[0] {
+		client.Status = statusList[0]
+	} else if reqStatus == statusList[1] {
+		client.Status = statusList[1]
+	} else {
+		fmt.Println("Status read: ", reqStatus, "And we have: ", statusList)
+		utils.RespondWithError(w, "Requested status not valid", 200)
+		return
+	}
+	// request current status from db
+	currentStatus, err := handler.repos.UserRepo.GetStatus(client.ID)
+	if err != nil {
+		utils.RespondWithError(w, "Error on getting data", 200)
+		return
+	}
+	// check if requested status is not the same as current
+	if currentStatus == client.Status {
+		utils.RespondWithError(w, "Status change not valid", 200)
+		return
+	}
+	// Set new status
+	err = handler.repos.UserRepo.SetStatus(client)
+	if err != nil {
+		utils.RespondWithError(w, "Error on saving status", 200)
+		return
+	}
+	// if new status is public -> also accept pending follow requests
+	// responds with success and newly created status
+	utils.RespondWithSuccess(w, client.Status, 200)
 }

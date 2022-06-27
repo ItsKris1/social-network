@@ -171,3 +171,26 @@ func (repo *UserRepository) GetFollowing(userID string) ([]models.User, error) {
 	}
 	return users, nil
 }
+
+// get current user status
+func (repo *UserRepository) GetStatus(userID string) (string, error) {
+	row := repo.DB.QueryRow("SELECT status FROM users WHERE user_id = ? LIMIT 1", userID)
+	var status string
+	if err := row.Scan(&status); err != nil {
+		return "", err
+	}
+	return status, nil
+}
+
+// set new status
+func (repo *UserRepository) SetStatus(user models.User) error {
+	stmt, err := repo.DB.Prepare("UPDATE USERS SET (status) = ? WHERE user_id = (?)")
+	if err != nil {
+		return err
+	}
+	_, err = stmt.Exec(user.Status, user.ID)
+	if err != nil {
+		return err
+	}
+	return nil
+}

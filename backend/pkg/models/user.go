@@ -35,4 +35,7 @@ type UserRepository interface {
 
 	GetProfileMax(userID string) (User, error) //returns all data about user
 	GetProfileMin(userID string) (User, error) //returns some data about user
+
+	GetStatus(userID string) (string,error)//get current status
+	SetStatus(User)error // change status (needs id and new status)
 }
