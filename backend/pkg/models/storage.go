@@ -7,4 +7,5 @@ type Repositories struct {
 	GroupRepo   GroupRepository
 	PostRepo    PostRepository
 	CommentRepo CommentRepository
+	NotifRepo   NotifRepository
 }

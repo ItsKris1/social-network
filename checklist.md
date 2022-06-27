@@ -13,7 +13,7 @@
 #### To-do
 
 - [ ] Create new group route
-- [ ] Create /follow and /unfollow route
+- [ ] For /follow route - save nofification for private profile
 - [ ] Deal with pending follow requests after status change to PUBLIC
 
 #### Websockets

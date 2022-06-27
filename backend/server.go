@@ -50,6 +50,9 @@ func setRoutes(handler *handlers.Handler) http.Handler {
 	mux.HandleFunc("/userData", handler.Auth(handler.UserData)) //userd data based on following status
 	mux.HandleFunc("/changeStatus", handler.Auth(handler.UserStatus)) //change status
 
+	mux.HandleFunc("/follow", handler.Auth(handler.Follow)) //follow user
+	mux.HandleFunc("/unfollow", handler.Auth(handler.Unfollow)) 
+
 	/* ---------------------------------- posts --------------------------------- */
 	mux.HandleFunc("/allPosts", handler.Auth(handler.AllPosts)) // all posts- main page
 	mux.HandleFunc("/userPosts", handler.Auth(handler.UserPosts)) // all user posts - user page

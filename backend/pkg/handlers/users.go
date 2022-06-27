@@ -7,6 +7,9 @@ import (
 	"strings"
 )
 
+/* -------------------------------------------------------------------------- */
+/*                                    users                                   */
+/* -------------------------------------------------------------------------- */
 // Find all users and they relation with current user
 func (handler *Handler) AllUsers(w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)
@@ -32,34 +35,6 @@ func (handler *Handler) CurrentUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	utils.RespondWithUsers(w, []models.User{user}, 200)
-}
-
-// Find all followers
-func (handler *Handler) GetFollowers(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
-	// access user id
-	userId := r.Context().Value(utils.UserKey).(string)
-	// request all  following users
-	followers, errUsers := handler.repos.UserRepo.GetFollowers(userId)
-	if errUsers != nil {
-		utils.RespondWithError(w, "Error on getting data", 200)
-		return
-	}
-	utils.RespondWithUsers(w, followers, 200)
-}
-
-// Find all who clinet is following
-func (handler *Handler) GetFollowing(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
-	// access user id
-	userId := r.Context().Value(utils.UserKey).(string)
-	// request all  following users
-	followers, errUsers := handler.repos.UserRepo.GetFollowing(userId)
-	if errUsers != nil {
-		utils.RespondWithError(w, "Error on getting data", 200)
-		return
-	}
-	utils.RespondWithUsers(w, followers, 200)
 }
 
 // Returns user data based on public / private profile and user_id from request
@@ -152,4 +127,83 @@ func (handler *Handler) UserStatus(w http.ResponseWriter, r *http.Request) {
 	// if new status is public -> also accept pending follow requests
 	// responds with success and newly created status
 	utils.RespondWithSuccess(w, client.Status, 200)
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                  followers                                 */
+/* -------------------------------------------------------------------------- */
+// Find all followers
+func (handler *Handler) GetFollowers(w http.ResponseWriter, r *http.Request) {
+	w = utils.ConfigHeader(w)
+	// access user id
+	userId := r.Context().Value(utils.UserKey).(string)
+	// request all  following users
+	followers, errUsers := handler.repos.UserRepo.GetFollowers(userId)
+	if errUsers != nil {
+		utils.RespondWithError(w, "Error on getting data", 200)
+		return
+	}
+	utils.RespondWithUsers(w, followers, 200)
+}
+
+// Find all who clinet is following
+func (handler *Handler) GetFollowing(w http.ResponseWriter, r *http.Request) {
+	w = utils.ConfigHeader(w)
+	// access user id
+	userId := r.Context().Value(utils.UserKey).(string)
+	// request all  following users
+	followers, errUsers := handler.repos.UserRepo.GetFollowing(userId)
+	if errUsers != nil {
+		utils.RespondWithError(w, "Error on getting data", 200)
+		return
+	}
+	utils.RespondWithUsers(w, followers, 200)
+}
+
+func (handler *Handler) Follow(w http.ResponseWriter, r *http.Request) {
+	w = utils.ConfigHeader(w)
+	// access user id
+	currentUserId := r.Context().Value(utils.UserKey).(string)
+	// get status from request
+	query := r.URL.Query()
+	reqUserId := query.Get("userId")
+
+	// get target user profile status -> public or private
+	reqUserStatus, err := handler.repos.UserRepo.GetStatus(reqUserId)
+	if err != nil {
+		utils.RespondWithError(w, "Error on getting data", 200)
+		return
+	}
+	if reqUserStatus == "PUBLIC" {
+		//SAVE AS FOLLOWER
+		err := handler.repos.UserRepo.SaveFollower(reqUserId, currentUserId)
+		if err != nil {
+			utils.RespondWithError(w, "Error on saving follower", 200)
+			return
+		}
+	} else if reqUserStatus == "PRIVATE" {
+		//SAVE IN NOTIFICATIONS as pending folllow request
+		notification := models.Notification{ID: utils.UniqueId(), TargetID: reqUserId, Type: "FOLLOW", Content: currentUserId}
+		err := handler.repos.NotifRepo.Save(notification)
+		if err != nil {
+			utils.RespondWithError(w, "Error on save", 200)
+			return
+		}
+	}
+	utils.RespondWithSuccess(w, "Following successful", 200)
+}
+
+func (handler *Handler) Unfollow(w http.ResponseWriter, r *http.Request) {
+	w = utils.ConfigHeader(w)
+	// access user id
+	currentUserId := r.Context().Value(utils.UserKey).(string)
+	// get status from request
+	query := r.URL.Query()
+	reqUserId := query.Get("userId")
+
+	if err := handler.repos.UserRepo.DeleteFollower(reqUserId, currentUserId); err != nil {
+		utils.RespondWithError(w, "Error on deleting follower", 200)
+		return
+	}
+	utils.RespondWithSuccess(w, "Unfollowing successful", 200)
 }

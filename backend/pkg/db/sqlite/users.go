@@ -194,3 +194,25 @@ func (repo *UserRepository) SetStatus(user models.User) error {
 	}
 	return nil
 }
+
+// save new follower
+func (repo *UserRepository) SaveFollower(userId, followerId string) error {
+	stmt, err := repo.DB.Prepare("INSERT INTO followers(user_id, follower_id) VALUES (?,?)")
+	if err != nil {
+		return err
+	}
+	_, err = stmt.Exec(userId, followerId)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// delete follower
+func (repo *UserRepository) DeleteFollower(userId, followerId string) error {
+	_, err := repo.DB.Exec("DELETE FROM followers WHERE (user_id = ? AND follower_id = ?)", userId, followerId)
+	if err != nil {
+		return err
+	}
+	return nil
+}

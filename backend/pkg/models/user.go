@@ -28,6 +28,8 @@ type UserRepository interface {
 	GetAllAndFollowing(userID string) ([]User, error) //all users and follow info
 	GetFollowers(userId string) ([]User, error)       //get client followers
 	GetFollowing(userId string) ([]User, error)       //get who is following client
+	SaveFollower(userId, followerId string) error      //save new follower
+	DeleteFollower(userId, followerId string) error
 
 	IsFollowing(userID, currentUserID string) (bool, error) //returns true if current is following
 	GetDataMin(userID string) (User, error)                 // returns id, nickname and image (for comment or post author)
@@ -36,6 +38,6 @@ type UserRepository interface {
 	GetProfileMax(userID string) (User, error) //returns all data about user
 	GetProfileMin(userID string) (User, error) //returns some data about user
 
-	GetStatus(userID string) (string,error)//get current status
-	SetStatus(User)error // change status (needs id and new status)
+	GetStatus(userID string) (string, error) //get current status
+	SetStatus(User) error                    // change status (needs id and new status)
 }
