@@ -13,11 +13,11 @@
 #### To-do
 
 - [ ] Create new group route
-- [ ] For /follow route - save nofification for private profile
+- [ ] For /follow route - save notification for private profile
 - [ ] Deal with pending follow requests after status change to PUBLIC
 
 #### Websockets
 
 - [ ] Plan out notification table (db)
-- [ ] Plan chat message hadling
+- [ ] Plan chat message handling
 

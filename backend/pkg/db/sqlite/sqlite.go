@@ -17,7 +17,7 @@ func InitDB() *sql.DB {
 	}
 	createTables(db) // temporary code
 	return db
-	// return nil // delete this line whern return db conn
+	// return nil // delete this line where return db conn
 }
 
 // InitRepositories should be called in server.go
@@ -36,53 +36,38 @@ func InitRepositories(db *sql.DB) *models.Repositories {
 func createTables(db *sql.DB) {
 	tables := []string{
 		`CREATE TABLE IF NOT EXISTS users (
-			"user_id" VARCHAR(255) not null,
+			"user_id" varchar(255) not null,
 			"created_at" datetime not null default CURRENT_TIMESTAMP,
 			"email" varchar(255) not null,
 			"first_name" varchar(255) not null,
 			"last_name" varchar(255) not null,
 			"nickname" varchar(255) null,
+			"birthday" datetime not null,
 			"image" varchar(255) null,
 			"about" TEXT null,
 			"status" varchar(255) not null default PUBLIC,
 			"password" varchar(255) not null,
-			"birthday" DATETIME not null,
 			primary key ("user_id")
 		)`,
-		`CREATE TABLE IF NOT EXISTS sessions (
-			"user_id" VARCHAR(255) NOT NULL,
-			"session_id" VARCHAR(255) NOT NULL PRIMARY KEY,
-			"expiration_time" DATETIME NOT NULL
+		`
+		 CREATE TABLE IF NOT EXISTS groups (
+			"group_id" VARCHAR(255) not null,
+			"administrator" VARCHAR(255) not null,
+			"name" VARCHAR(255) not null,
+			"description" VARCHAR(255) null,
+			primary key ("group_id")
 		)`,
 		`
 		CREATE TABLE IF NOT EXISTS posts (
 			"post_id" VARCHAR(255) not null,
-			"created_at" datetime not null default CURRENT_TIMESTAMP,
 			"group_id" varchar(255) null,
 			"created_by" varchar(255) not null,
+			"created_at" datetime not null default CURRENT_TIMESTAMP,
 			"content" TEXT null,
 			"image" varchar(255) null,
 			"visibility" varchar(255) null default PUBLIC,
 			primary key ("post_id")
  		)`,
-		`
-		 CREATE TABLE IF NOT EXISTS groups (
-			"group_id" VARCHAR(255) not null,
-			"name" VARCHAR(255) not null,
-			"description" VARCHAR(255) null,
-			"administrator" VARCHAR(255) not null,
-			primary key ("group_id")
-		)`,
-		`
-		CREATE TABLE IF NOT EXISTS group_users (
-			"group_id" VARCHAR(255) not null,
-			"user_id" VARCHAR(255) not null
-		)`,
-		`
-		CREATE TABLE IF NOT EXISTS followers (
-			"user_id" VARCHAR(255) not null,
-			"follower_id" VARCHAR(255) not null
-		)`,
 		`
 		CREATE TABLE IF NOT EXISTS comments (
 			"comment_id" VARCHAR(255) not null,
@@ -94,9 +79,50 @@ func createTables(db *sql.DB) {
 			primary key ("comment_id")
 		)`,
 		`
+		CREATE TABLE IF NOT EXISTS event (
+			"event_id" VARCHAR(255) not null,
+			"group_id" VARCHAR(255) not null,
+			"created_by" VARCHAR(255) not null,
+			"created_at" DATETIME not null default CURRENT_TIMESTAMP,
+			"title" VARCHAR(255) not null,
+			"content" VARCHAR(255) not null,
+			"date" DATETIME not null,
+			primary key ("event_id")
+		)`,
+		`
+		CREATE TABLE IF NOT EXISTS messages (
+			"message_id" VARCHAR(255) not null,
+			"sender_id" VARCHAR(255) not null,
+			"receiver_id" DATETIME not null default CURRENT_TIMESTAMP,
+			"type" VARCHAR(255) not null,
+			"created_at" VARCHAR(255) not null,
+			"content" VARCHAR(255) not null,
+			primary key ("message_id")
+		)`,
+		`CREATE TABLE IF NOT EXISTS sessions (
+			"session_id" VARCHAR(255) NOT NULL PRIMARY KEY,
+			"user_id" VARCHAR(255) NOT NULL,
+			"expiration_time" DATETIME NOT NULL
+		)`,
+		`
 		CREATE TABLE IF NOT EXISTS almost_private (
 			"user_id" VARCHAR(255) not null,
 			"post_id" VARCHAR(255) not null
+		)`,
+		`
+		CREATE TABLE IF NOT EXISTS event_users (
+			"event_id" VARCHAR(255) not null,
+			"user_id" VARCHAR(255) not null,
+		)`,
+		`
+		CREATE TABLE IF NOT EXISTS group_users (
+			"group_id" VARCHAR(255) not null,
+			"user_id" VARCHAR(255) not null,
+		)`,
+		`
+		CREATE TABLE IF NOT EXISTS followers (
+			"follower_id" VARCHAR(255) not null,
+			"user_id" VARCHAR(255) not null,
 		)`,
 	}
 	for _, table := range tables {
