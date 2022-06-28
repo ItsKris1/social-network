@@ -32,19 +32,7 @@ export default {
     user-select: none;
 }
 
-#notifications_text {
-    font-family: 'Poppins';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 146.02%;
-    /* or 23px */
 
-    display: flex;
-    align-items: center;
-    text-align: center;
-    color: #E4E3E3;
-}
 
 #notificationsContent {
     cursor: default;
