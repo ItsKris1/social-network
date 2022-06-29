@@ -7,6 +7,7 @@
     --color-lg-black: rgba(0, 0, 0, 0.9);
     --color-blue: #4B5283;
     --button-content: #D7D7D7;
+    --container-shadow: 0px 0px 2px rgba(0, 0, 0, 0.27);
 
 }
 
@@ -19,9 +20,7 @@ body {
 
 }
 
-body>* {
-    margin-bottom: 20px;
-}
+
 
 ul {
     padding: 0;
@@ -58,12 +57,14 @@ p {
 
 .user-picture {
 
-    border: none;
-    border-radius: 50%;
+    border: 0;
     background-image: url(../default-profile.svg);
+    /* background-image: url(../pexels-jack-winbow-1559486.jpg); */
     background-size: cover;
     background-position: center;
     flex-shrink: 0;
+
+    border-radius: 50%;
 
 }
 
@@ -140,11 +141,10 @@ p {
 .comment {
     display: flex;
     gap: 10px;
-    padding: 30px;
-    background-color: var(--color-white);
-    max-width: 600px;
-    border-radius: 10px;
+
 }
+
+.post {}
 
 .post-author,
 .comment-author {
@@ -170,4 +170,26 @@ p {
     max-height: 250px;
     margin: 10px 0 10px 0;
     border-radius: 5px;
+}
+
+.post-wrapper {
+    display: inline-block;
+    box-shadow: var(--container-shadow);
+    padding: 30px;
+    background-color: var(--color-white);
+    max-width: 600px;
+    border-radius: 10px;
+}
+
+.comments {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-top: 30px;
+    /* display: none; */
+}
+
+.comment {
+    border-top: 1px solid #DDDDDD;
+    padding-top: 30px;
 }

@@ -1,7 +1,7 @@
 <template>
 
-    <div id="post">
-        <!-- <button @click="showPostId(postData.id)">Show post id!</button> -->
+    <!-- <div id="post">
+        <button @click="showPostId(postData.id)">Show post id!</button>
         <div>
             <img id="post_image" :src="'http://localhost:8081/' + postData.author.avatar" alt="user-avatar">
         </div>
@@ -14,7 +14,8 @@
             <div>{{ postData.content }}</div>
             <button v-if="!isCommentsOpen" @click="toggleComments">View comments</button>
             <div v-if="isCommentsOpen">
-                <textarea v-model="this.comment.body" name="" id="" cols="30" rows="5" placeholder="Add your comment here"></textarea>
+                <textarea v-model="this.comment.body" name="" id="" cols="30" rows="5"
+                    placeholder="Add your comment here"></textarea>
                 <div>
                     <button @click="toggleComments">Hide comments</button>
                     <div class="comment-img">
@@ -31,12 +32,25 @@
                     <div>{{ comment.content }}</div>
 
                     <div v-if="comment.image">
-                        <img id="commentImage" :src="'http://localhost:8081/'+comment.image" alt="">
+                        <img id="commentImage" :src="'http://localhost:8081/' + comment.image" alt="">
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
+
+
+    <!-- <div class="post">
+        <div class="user-picture medium" :style="{ backgroundImage: 'url('http://localhost:8081/' + postData.author.avatar')'}"></div>
+        <div class="post-content">
+            <p class="post-author">{{ postData.author.nickname }}</p>
+            <p class="post-body">{{ postData.content }}</p>
+            <img v-if="postData.image" class="post-image" :src="'http://localhost:8081/' + postData.image" alt="">
+            <button v-if="!isCommentsOpen" @click="toggleComments" class="btn">Comments</button>
+        </div>
+    </div> -->
+
+
 </template>
 
 
@@ -127,15 +141,17 @@ export default {
     display: flex;
 }
 
-#postImage, #commentImage {
+#postImage,
+#commentImage {
     height: 20%;
     width: 20%;
 }
-#commentsDiv{
+
+#commentsDiv {
     border-top: double;
 }
-.comment-img>input{
+
+.comment-img>input {
     display: none;
 }
-
 </style>

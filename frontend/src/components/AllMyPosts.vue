@@ -3,7 +3,7 @@
     <!-- <button @click="getAllMyPosts">get</button>
     <button @click="showAllMyPosts">show</button> -->
     <!-- <div v-if="this.myposts !== undefined"> -->
-        <Post v-for="post in myPosts" :key="post.id" v-bind:postData="post" />
+    <Post v-for="post in myPosts" :key="post.id" v-bind:postData="post" />
     <!-- </div> -->
 
 </template>

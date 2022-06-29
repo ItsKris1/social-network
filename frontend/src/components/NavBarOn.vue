@@ -78,6 +78,7 @@ export default {
     justify-content: space-between;
     font-weight: 300;
     color: var(--color-white);
+    margin-bottom: 50px;
 
 }
 
