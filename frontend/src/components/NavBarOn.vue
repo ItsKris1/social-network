@@ -50,7 +50,6 @@ export default {
 
         },
         async logout() {
-            // Test code
             await fetch('http://localhost:8081/logout', {
                 credentials: 'include',
                 headers: {
@@ -59,7 +58,6 @@ export default {
             })
                 .then((response => response.json()))
                 .then((json => { console.log(json) }))
-            // end of test code
             console.log("logout")
             this.$router.push("/");
         }

@@ -3,7 +3,7 @@ import { createStore } from "vuex";
 export default createStore({
   // state is like a variables, which hold a values.
   state: {
-    user: {},
+    profileInfo: {},
     notifications: {
       isNotificationsOpen: false,
     },
@@ -17,8 +17,11 @@ export default createStore({
     allPosts(state) {
       return state.posts.allposts;
     },
-    myPosts(state){
+    myPosts(state) {
       return state.posts.myposts;
+    },
+    userInfo(state){
+      return state.profileInfo
     }
   },
   // mutations is a way for change state.
@@ -29,6 +32,9 @@ export default createStore({
     updateMyPosts(state, myposts) {
       state.posts.myposts = myposts;
     },
+    updateProfileInfo(state, userinfo){
+      state.profileInfo = userinfo
+    }
   },
   actions: {
     //fetch all posts of all users.
@@ -61,11 +67,32 @@ export default createStore({
         credentials: "include",
       })
         .then((r) => r.json())
-        .then((r=>{
-          const myposts = r.posts
+        .then((r) => {
+          const myposts = r.posts;
           this.commit("updateMyPosts", myposts);
-        }))
-        // .then((json) => console.log("get posts -", json));
+        });
+      // .then((json) => console.log("get posts -", json));
+    },
+    async getMyProfileInfo() {
+      let id = "";
+      await fetch("http://localhost:8081/currentUser", {
+        credentials: "include",
+      })
+        .then((r) => r.json())
+        .then((json) => {
+          id = json.users[0].id;
+        });
+
+      await fetch("http://localhost:8081/userData?userId=" + id, {
+        credentials: "include",
+      })
+        .then((r) => r.json())        
+        .then((json) => {
+          let userInfo = json.users[0]
+          console.log(userInfo);
+          this.commit("updateProfileInfo", userInfo);
+          console.log("userinfo -", json)
+        });
     },
   },
   modules: {},

@@ -2,6 +2,7 @@
     <NavBarOn />
     <NewPost />
     <AllPosts />
+<<<<<<< HEAD
 
 
     <div class="item-list">
@@ -52,16 +53,24 @@
         </ul>
         <button class="btn">Button<i class="uil uil-arrow-circle-right"></i></button>
     </div>
+=======
+    <Groups />
+>>>>>>> origin/vue
 </template>
 
 <script>
 import NavBarOn from '@/components/NavBarOn.vue'
 import NewPost from '@/components/NewPost.vue'
 import AllPosts from '@/components/AllPosts.vue'
+import Groups from '@/components/Groups.vue'
 
 export default {
     name: 'MainView',
+<<<<<<< HEAD
     components: { NavBarOn, AllPosts },
+=======
+    components: { NavBarOn, NewPost, AllPosts, Groups },
+>>>>>>> origin/vue
 }
 </script>
 
