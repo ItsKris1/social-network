@@ -39,16 +39,32 @@
         </div>
     </div> -->
 
-
-    <!-- <div class="post">
-        <div class="user-picture medium" :style="{ backgroundImage: 'url('http://localhost:8081/' + postData.author.avatar')'}"></div>
-        <div class="post-content">
-            <p class="post-author">{{ postData.author.nickname }}</p>
-            <p class="post-body">{{ postData.content }}</p>
-            <img v-if="postData.image" class="post-image" :src="'http://localhost:8081/' + postData.image" alt="">
-            <button v-if="!isCommentsOpen" @click="toggleComments" class="btn">Comments</button>
+    <div class="post-wrapper">
+        <div class="post">
+            <div class="user-picture medium"
+                :style="{ backgroundImage: `url(http://localhost:8081/${postData.author.avatar})` }"></div>
+            <div class="post-content">
+                <p class="post-author">{{ postData.author.nickname }}</p>
+                <p class="post-body">{{ postData.content }}</p>
+                <img v-if="postData.image" class="post-image" :src="'http://localhost:8081/' + postData.image" alt="">
+                <button v-if="!isCommentsOpen" @click="toggleComments" class="btn">Comments</button>
+            </div>
         </div>
-    </div> -->
+
+        <div class="comments">
+            <div class="comment" v-for="comment in postData.comments">
+                <div class="user-picture medium"
+                    :style="{ backgroundImage: `url(http://localhost:8081/${comment.author.avatar})` }"></div>
+                <div class="comment-content">
+                    <p class="comment-author">{{ comment.authorNickname }}</p>
+                    <p class="comment-body">{{ comment.content }}</p>
+                    <img class="comment-image" v-if="comment.image" :src="'http://localhost:8081/' + comment.image"
+                        alt="">
+                </div>
+            </div>
+        </div>
+
+    </div>
 
 
 </template>
