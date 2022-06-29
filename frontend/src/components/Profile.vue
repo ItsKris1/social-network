@@ -1,18 +1,22 @@
 <template>
     <div id="profile">
-        <!-- {{userInfo}} -->
+        {{ userInfo }}
         <div>
-            <img id="profileImg" :src="'http://localhost:8081/'+userInfo.avatar" alt="profilePic">
+            <img id="profileImg" :src="'http://localhost:8081/' + userInfo.avatar" alt="profilePic">
         </div>
         <div id="basicInformation">
-            <span>{{userInfo.nickname}}</span>
-            <span>{{userInfo.login}}</span>
-            <span>{{userInfo.dateOfBirth}}</span>
+            <span>{{ userInfo.nickname }}</span>
+            <span>{{ userInfo.login }}</span>
+            <span>{{ userInfo.dateOfBirth }}</span>
             <button id="followBtn" click="follow">Follow</button>
         </div>
         <div id="profileSettings">
             <span>Privacy change-button</span>
         </div>
+    </div>
+    <div v-if="userInfo.about !== ''">
+        <span>ABOUT ME<br></span>
+        <span>{{ userInfo.about }}</span>
     </div>
     <AllMyPosts />
 </template>
@@ -22,8 +26,8 @@ import AllMyPosts from './AllMyPosts.vue'
 import { mapGetters } from 'vuex'
 export default {
     name: 'Profile',
-    components:{AllMyPosts},
-    created(){
+    components: { AllMyPosts },
+    created() {
         this.getUserInfo()
     },
     computed: mapGetters(['userInfo']),
@@ -31,9 +35,9 @@ export default {
         follow() {
             console.log('subscribe function')
         },
-        getUserInfo(){
+        getUserInfo() {
             this.$store.dispatch('getMyProfileInfo')
-        }    
+        }
     }
 }
 </script>
@@ -55,7 +59,7 @@ export default {
     display: grid;
 }
 
-#profileSettings{
+#profileSettings {
     margin-left: auto;
 }
 
