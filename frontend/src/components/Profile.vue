@@ -1,12 +1,13 @@
 <template>
     <div id="profile">
+        <!-- {{userInfo}} -->
         <div>
-            <img id="profileImg" :src="'http://localhost:8081/'+this.user.avatar" alt="profilePic">
+            <img id="profileImg" :src="'http://localhost:8081/'+userInfo.avatar" alt="profilePic">
         </div>
         <div id="basicInformation">
-            <span>{{this.user.nickname}}</span>
-            <span>e-mail</span>
-            <span>birthday date</span>
+            <span>{{userInfo.nickname}}</span>
+            <span>{{userInfo.login}}</span>
+            <span>{{userInfo.dateOfBirth}}</span>
             <button id="followBtn" click="follow">Follow</button>
         </div>
         <div id="profileSettings">
@@ -18,35 +19,21 @@
 
 <script>
 import AllMyPosts from './AllMyPosts.vue'
+import { mapGetters } from 'vuex'
 export default {
     name: 'Profile',
     components:{AllMyPosts},
-    data(){
-        return{
-            user:{
-                avatar:"",
-                id:"",
-                nickname:""
-            }
-        }
-    },
     created(){
-        this.fetchBaseInfo()
+        this.getUserInfo()
     },
+    computed: mapGetters(['userInfo']),
     methods: {
         follow() {
             console.log('subscribe function')
         },
-        async fetchBaseInfo(){
-            await fetch("http://localhost:8081/currentUser", {
-                credentials: 'include',
-            })
-                .then((r => r.json()))
-                .then((json => {
-                    // console.log(json)
-                    this.user = json.users[0]
-                }))
-        },
+        getUserInfo(){
+            this.$store.dispatch('getMyProfileInfo')
+        }    
     }
 }
 </script>
