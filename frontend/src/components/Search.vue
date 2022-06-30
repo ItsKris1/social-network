@@ -8,7 +8,7 @@
         <img id="glass" src="../assets/glass.png" alt="glass.png">
     </div>
     <div id="dropdownlist" v-if="this.dropdownList.length !== 0">
-        <div id="dropdownitem" v-for="user in dropdownList">
+        <div @click="goToUserProfile(user.id)" id="dropdownitem" v-for="user in dropdownList">
             <img id="dropdownimage" :src="'http://localhost:8081/' + user.avatar" alt="dropdownimage">
             {{ user.nickname }}
         </div>
@@ -34,6 +34,8 @@ export default {
     methods: {
         filtered() {
             this.dropdownList = this.$store.getters.filterUsers(this.searchQuery)
+        }, goToUserProfile(userid) {
+            this.$router.push({ path: '/profile', query: { id: userid } , replace:true})
         }
     },
 }
@@ -55,7 +57,8 @@ export default {
     border-radius: 3px;
     border: 1px solid #706A6A;
 }
-#dropdownlist{
+
+#dropdownlist {
     cursor: default;
     margin-left: 20px;
     display: block;
@@ -66,6 +69,7 @@ export default {
     padding: 12px 16px;
     z-index: 1;
 }
+
 #dropdownitem {
     font-family: 'Poppins';
     font-style: normal;
@@ -78,7 +82,8 @@ export default {
     text-align: center;
     color: #141111;
 }
-#dropdownimage{
+
+#dropdownimage {
     width: 20px;
     height: 20px;
 }

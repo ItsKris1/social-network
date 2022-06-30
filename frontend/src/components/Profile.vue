@@ -1,42 +1,63 @@
 <template>
     <div id="profile">
-        <!-- {{ userInfo }} -->
+        <!-- {{ user }} -->
         <div>
-            <img id="profileImg" :src="'http://localhost:8081/' + userInfo.avatar" alt="profilePic">
+            <img id="profileImg" :src="'http://localhost:8081/' + user.avatar" alt="profilePic">
         </div>
         <div id="basicInformation">
-            <span>{{ userInfo.nickname }}</span>
-            <span>{{ userInfo.login }}</span>
-            <span>{{ userInfo.dateOfBirth }}</span>
+            <span>{{ user.nickname }}</span>
+            <span>{{ user.login }}</span>
+            <span>{{ user.dateOfBirth }}</span>
             <button id="followBtn" click="follow">Follow</button>
         </div>
         <div id="profileSettings">
             <span>Privacy change-button</span>
         </div>
     </div>
-    <div v-if="userInfo.about !== ''">
+    <div v-if="user.about !== ''">
         <span>ABOUT ME<br></span>
-        <span>{{ userInfo.about }}</span>
+        <span>{{ user.about }}</span>
     </div>
     <AllMyPosts />
 </template>
 
 <script>
 import AllMyPosts from './AllMyPosts.vue'
-import { mapGetters } from 'vuex'
+// import { mapGetters } from 'vuex'
 export default {
     name: 'Profile',
     components: { AllMyPosts },
-    created() {
-        this.getUserInfo()
+    data() {
+        return {
+            user: {}
+        }
     },
-    computed: mapGetters(['userInfo']),
+    created() {
+        // this.getUserInfo()
+        this.getUserId()
+    },
+    computed: {
+        // ...mapGetters(['userInfo']),
+        // ...getUserId()
+    },
     methods: {
         follow() {
             console.log('subscribe function')
         },
         getUserInfo() {
             this.$store.dispatch('getMyProfileInfo')
+        },
+        async getUserId() {
+            await fetch("http://localhost:8081/userData?userId=" + this.$route.query.id, {
+                credentials: "include",
+            })
+                .then((r) => r.json())
+                .then((json) => {
+                    this.user = json.users[0];
+                    // console.log(userInfo);
+                    // this.commit("updateProfileInfo", userInfo);
+                    console.log("user profile info -", json);
+                });
         }
     }
 }

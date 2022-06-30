@@ -37,7 +37,7 @@ export default createStore({
         }
       });
 
-      console.log("arr", arr);
+      // console.log("arr", arr);
       return arr;
     },
   },
@@ -66,7 +66,7 @@ export default createStore({
         // .then((r=>console.log(r)))
         .then((res) => res.json())
         .then((json) => {
-          console.log(json);
+          // console.log(json);
           const posts = json.posts;
           this.commit("updatePosts", posts);
         });
@@ -110,9 +110,9 @@ export default createStore({
         .then((r) => r.json())
         .then((json) => {
           let userInfo = json.users[0];
-          console.log(userInfo);
+          // console.log(userInfo);
           this.commit("updateProfileInfo", userInfo);
-          console.log("userinfo -", json);
+          // console.log("userinfo -", json);
         });
     },
     async getAllUsers() {
@@ -123,7 +123,7 @@ export default createStore({
         .then((json) => {
           let users = json.users;
           this.commit("updateAllUsers", users);
-          console.log("allUsers:", json.users);
+          // console.log("allUsers:", json.users);
         });
     },
   },
