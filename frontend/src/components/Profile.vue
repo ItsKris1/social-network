@@ -1,6 +1,6 @@
 <template>
     <div id="profile">
-        {{ userInfo }}
+        <!-- {{ userInfo }} -->
         <div>
             <img id="profileImg" :src="'http://localhost:8081/' + userInfo.avatar" alt="profilePic">
         </div>

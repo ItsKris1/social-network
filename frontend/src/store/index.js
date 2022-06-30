@@ -1,7 +1,7 @@
 import { createStore } from "vuex";
 
 export default createStore({
-  // state is like a variables, which hold a values.
+  //------------------------------------- state is like a variables, which hold a values.
   state: {
     profileInfo: {},
     notifications: {
@@ -11,8 +11,11 @@ export default createStore({
       allposts: [],
       myposts: [],
     },
+    users: {
+      allusers: [],
+    },
   },
-  // getters is a way for check state values.
+  //------------------------------------ getters is a way for check state values.
   getters: {
     allPosts(state) {
       return state.posts.allposts;
@@ -20,11 +23,25 @@ export default createStore({
     myPosts(state) {
       return state.posts.myposts;
     },
-    userInfo(state){
-      return state.profileInfo
-    }
+    userInfo(state) {
+      return state.profileInfo;
+    },
+    allUsers(state) {
+      return state.users.allusers;
+    },
+    filterUsers: (state) => (searchquery) => {
+      let arr = [];
+      state.users.allusers.filter((user) => {
+        if (user.nickname.includes(searchquery)) {
+          arr.push(user);
+        }
+      });
+
+      console.log("arr", arr);
+      return arr;
+    },
   },
-  // mutations is a way for change state.
+  //-------------------------------------- mutations is a way for change state.
   mutations: {
     updatePosts(state, posts) {
       state.posts.allposts = posts;
@@ -32,10 +49,14 @@ export default createStore({
     updateMyPosts(state, myposts) {
       state.posts.myposts = myposts;
     },
-    updateProfileInfo(state, userinfo){
-      state.profileInfo = userinfo
-    }
+    updateProfileInfo(state, userinfo) {
+      state.profileInfo = userinfo;
+    },
+    updateAllUsers(state, users) {
+      state.users.allusers = users;
+    },
   },
+  //------------------------------------------Actions
   actions: {
     //fetch all posts of all users.
     async fetchPosts() {
@@ -86,12 +107,23 @@ export default createStore({
       await fetch("http://localhost:8081/userData?userId=" + id, {
         credentials: "include",
       })
-        .then((r) => r.json())        
+        .then((r) => r.json())
         .then((json) => {
-          let userInfo = json.users[0]
+          let userInfo = json.users[0];
           console.log(userInfo);
           this.commit("updateProfileInfo", userInfo);
-          console.log("userinfo -", json)
+          console.log("userinfo -", json);
+        });
+    },
+    async getAllUsers() {
+      await fetch("http://localhost:8081/allUsers", {
+        credentials: "include",
+      })
+        .then((r) => r.json())
+        .then((json) => {
+          let users = json.users;
+          this.commit("updateAllUsers", users);
+          console.log("allUsers:", json.users);
         });
     },
   },
