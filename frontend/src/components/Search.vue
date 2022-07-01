@@ -35,7 +35,7 @@ export default {
         filtered() {
             this.dropdownList = this.$store.getters.filterUsers(this.searchQuery)
         }, goToUserProfile(userid) {
-            this.$router.push({ path: '/profile', query: { id: userid } , replace:true})
+            this.$router.push({ name: 'Profile', params: { id: userid }})
         }
     },
 }

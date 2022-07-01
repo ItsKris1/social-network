@@ -7,7 +7,7 @@
         <Search />
         <Notifications />
         <div id="a">
-            <router-link to="/profile">
+            <router-link v-if="typeof user.id !== 'undefined'" :to="{ name: 'Profile', params: { id: user.id }}">
                 <!-- <img id="navbarUserPic" :src="'http://localhost:8081/' + user.avatar" alt="profilePic"> -->
 
                 <!-- <span id="navBarName">{{ user.nickname }}</span> -->

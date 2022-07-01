@@ -48,7 +48,7 @@ export default {
             this.$store.dispatch('getMyProfileInfo')
         },
         async getUserId() {
-            await fetch("http://localhost:8081/userData?userId=" + this.$route.query.id, {
+            await fetch("http://localhost:8081/userData?userId=" + this.$route.params.id, {
                 credentials: "include",
             })
                 .then((r) => r.json())
@@ -58,6 +58,11 @@ export default {
                     // this.commit("updateProfileInfo", userInfo);
                     console.log("user profile info -", json);
                 });
+        }
+    },
+    watch: { //watching changes in route
+        $route(){
+            this.getUserId()
         }
     }
 }
