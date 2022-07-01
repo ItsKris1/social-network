@@ -88,37 +88,3 @@ i {
     color: var(--button-content);
     background-color: var(--color-blue);
 }
-
-
-
-
-.item-list {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-    padding: 25px 30px 25px 30px;
-    background-color: var(--color-white);
-    width: max-content;
-    max-width: 250px;
-    box-shadow: var(--container-shadow);
-    border-radius: 10px;
-
-}
-
-
-.item-list__item {
-    display: flex;
-    gap: 7.5px;
-    align-items: center;
-
-}
-
-.item-list__item:nth-child(1)~* {
-    margin-top: 15px;
-}
-
-.item-list__text {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
