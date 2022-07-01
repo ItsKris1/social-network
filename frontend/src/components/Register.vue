@@ -197,8 +197,11 @@ export default {
     display: flex;
     align-items: center;
     height: 80vh;
+    min-height: 650px;
     max-height: 700px;
-    width: max-content;
+    width: 80vw;
+    min-width: min-content;
+    max-width: max-content;
     margin: auto;
     background-color: var(--color-white);
     box-shadow: var(--container-shadow);
@@ -208,6 +211,7 @@ export default {
 }
 
 .register {
+    flex: 0 1 50%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -216,10 +220,13 @@ export default {
 
 }
 
+.register__wrapper img {
+    height: 100%;
+}
+
 .register form {
     display: flex;
     gap: 40px;
-    /* width: 100%; */
 }
 
 .register form>* {
