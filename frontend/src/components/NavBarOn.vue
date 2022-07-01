@@ -11,7 +11,7 @@
                 <Notifications />
             </li>
             <li>
-                <router-link to="/profile">
+                <router-link v-if="typeof user.id !== 'undefined'" :to="{ name: 'Profile', params: { id: user.id } }">
                     My profile
                 </router-link>
             </li>
