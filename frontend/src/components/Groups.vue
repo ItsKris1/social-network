@@ -1,19 +1,27 @@
 <template>
-<div>
-    <img src="../assets/group.png" alt="group_img">
-    group 1<br>
-    <img src="../assets/group.png" alt="group_img">
-    group 2<br>
-    <button>New group+</button>
-</div>
+    <div class="item-list">
+        <h3>My groups</h3>
+        <ul class="item-list__items">
+            <li class="item-list__item">
+                <i class="uil uil-users-alt"></i>
+                <div class="item-list__text">Group 1</div>
+            </li>
+            <li class="item-list__item">
+                <i class="uil uil-users-alt"></i>
+                <div class="item-list__text">Group 2</div>
+            </li>
+        </ul>
+        <button class="btn">New group<i class="uil uil-plus"></i></button>
+    </div>
+
 </template>
 
 
 <script>
 export default {
     name: 'Groups',
-    methods:{
-        createNewGroup(){
+    methods: {
+        createNewGroup() {
 
         }
     }

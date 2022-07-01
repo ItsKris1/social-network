@@ -31,5 +31,6 @@ export default {
     font-size: 24px;
     color: var(--color-white);
     text-decoration: none;
+    font-weight: 400;
 }
 </style>

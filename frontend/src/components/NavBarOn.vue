@@ -70,7 +70,7 @@ export default {
 <style scoped>
 #navbar {
     display: flex;
-    padding: 10px 40px 10px 60px;
+    padding: 10px 40px;
     background-color: var(--color-blue);
     align-items: center;
     justify-content: space-between;
@@ -86,6 +86,7 @@ export default {
 
 #nav-title {
     font-size: 24px;
+    font-weight: 400;
 }
 
 

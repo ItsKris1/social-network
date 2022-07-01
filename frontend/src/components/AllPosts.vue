@@ -1,10 +1,10 @@
  <template>
     <!-- <button @click="showAllPosts">showFetch</button> -->
-    <!-- <div id="all_posts" v-if="allPosts !== undefined">
-           <Post v-for="post in allPosts" :key="post.id" v-bind:postData="post" />
-       </div> -->
+    <div id="all_posts" v-if="allPosts !== undefined">
+        <Post v-for="post in allPosts" :key="post.id" v-bind:postData="post" />
+    </div>
 
-    <div class="post-wrapper">
+    <!-- <div class="post-wrapper">
         <div class="post">
             <div class="user-picture medium"></div>
             <div class="post-content">
@@ -13,7 +13,7 @@
                     incididunt
                     ut labore et dolore magna
                     aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
-                <!-- <img class="post-image"> -->
+                <img class="post-image">
                 <button class="btn">Comments</button>
             </div>
         </div>
@@ -28,7 +28,7 @@
                         incididunt
                         ut labore et dolore magna
                         aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
-                    <!-- <img class="comment-image" src="../assets/pexels-phil-desforges-12576276.jpg" alt="" srcset=""> -->
+                    <img class="comment-image" src="../assets/pexels-phil-desforges-12576276.jpg" alt="" srcset="">
                 </div>
             </div>
 
@@ -46,7 +46,7 @@
             </div>
 
         </div>
-    </div>
+    </div> -->
 
 </template>
 
@@ -82,8 +82,13 @@ export default {
     box-shadow: var(--container-shadow);
     padding: 30px;
     background-color: var(--color-white);
-    max-width: 600px;
+    width: 500px;
     border-radius: 10px;
+}
+
+.post-wrapper button {
+    margin-top: 5px;
+    margin-left: auto;
 }
 
 .post,
@@ -104,17 +109,14 @@ export default {
     flex-direction: column;
     align-items: flex-start;
     gap: 5px;
+    width: 100%;
 }
 
-.post-content button {
-    align-self: end;
-}
 
 
 .post-image,
 .comment-image {
-    max-width: 100%;
-    max-height: 250px;
+    width: 100%;
     margin: 10px 0 10px 0;
     border-radius: 5px;
 }
@@ -126,7 +128,7 @@ export default {
     flex-direction: column;
     gap: 30px;
     margin-top: 30px;
-    /* display: none; */
+    display: none;
 }
 
 .comment {

@@ -1,10 +1,16 @@
 
 
 <template>
-    <div id="postBtn" @click="toggle">
+    <button class="start-post" @click="toggle">
+        <span>Start post</span>
+        <i class="uil uil-edit"></i>
+    </button>
+
+
+    <!-- <div id="postBtn" @click="toggle">
         <span>Start a post</span>
         <img src="../assets/writepost.png" alt="">
-    </div>
+    </div> -->
     <div v-show="isOpen">
         <form @submit.prevent="submitPost" id="newpost">
             <span><b>Create a post</b></span>
@@ -112,7 +118,7 @@ export default {
             this.$store.dispatch('fetchPosts')
             console.log('Post submitted');
         },
-    },    
+    },
 }
 </script>
 
@@ -138,5 +144,24 @@ const checkedFollowers = ref([])
     border: 1px solid #706A6A;
     border-radius: 3px;
     border: 1px solid #706A6A;
+}
+
+.start-post {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 15px;
+    margin-left: 25px;
+    background-color: var(--input-bg);
+    border: none;
+    box-shadow: var(--container-shadow);
+    width: 500px;
+    font-family: inherit;
+    font-size: 16px;
+    border-radius: var(--container-border-radius);
+}
+
+.start-post i {
+    font-size: 1.25em;
 }
 </style>

@@ -1,10 +1,11 @@
 <template>
     <NavBarOn />
-    <!-- <NewPost /> -->
+    <NewPost />
+    <!-- <Groups /> -->
+
     <AllPosts />
 
 
-    <Groups />
 </template>
 
 <script>

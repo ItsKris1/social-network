@@ -35,7 +35,7 @@ export default {
         filtered() {
             this.dropdownList = this.$store.getters.filterUsers(this.searchQuery)
         }, goToUserProfile(userid) {
-            this.$router.push({ name: 'Profile', params: { id: userid }})
+            this.$router.push({ name: 'Profile', params: { id: userid } })
         }
     },
 }
@@ -54,8 +54,7 @@ export default {
 
     background: #FFFFFF;
     border: 1px solid #706A6A;
-    border-radius: 3px;
-    border: 1px solid #706A6A;
+    border-radius: var(--container-border-radius);
 }
 
 #dropdownlist {

@@ -47,9 +47,10 @@
                 <p class="post-author">{{ postData.author.nickname }}</p>
                 <p class="post-body">{{ postData.content }}</p>
                 <img v-if="postData.image" class="post-image" :src="'http://localhost:8081/' + postData.image" alt="">
-                <button v-if="!isCommentsOpen" @click="toggleComments" class="btn">Comments</button>
+
             </div>
         </div>
+        <button v-if="!isCommentsOpen" @click="toggleComments" class="btn">Comments</button>
 
         <div class="comments">
             <div class="comment" v-for="comment in postData.comments">
