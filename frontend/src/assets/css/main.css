@@ -8,6 +8,7 @@
     --color-blue: #4B5283;
     --button-content: #D7D7D7;
     --container-shadow: 0px 0px 2px rgba(0, 0, 0, 0.27);
+    --input-bg: #f5f5f5;
 
 }
 
@@ -33,7 +34,7 @@ ul {
 
 h1 {
     font-size: 24px;
-    font-weight: 300;
+    font-weight: 500;
     margin: 0;
 }
 
@@ -50,6 +51,38 @@ p {
 
 i {
     font-size: 1.25em;
+}
+
+a {
+    text-decoration: none;
+    color: var(--color-lg-black);
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--color-lg-black);
+}
+
+input,
+select,
+textarea {
+    padding: 7.5px;
+    border-radius: 5px;
+    background-color: var(--input-bg);
+    border: none;
+    box-shadow: var(--container-shadow);
+    font-family: 'Poppins', sans-serif;
+    width: 100%;
+}
+
+
+
+
+input:focus,
+select:focus {
+    border: none;
+    outline: none;
 }
 
 .user-picture {
