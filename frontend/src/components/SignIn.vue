@@ -16,7 +16,7 @@
         </div>
       </form>
       <div>
-        <button class="btn" form="sign-in__form">Sign in</button>
+        <button class="btn" form="sign-in__form" type="submit">Sign in</button>
         <p>Need an account?
           <router-link to="/reg" id="sign-up">Register here</router-link>
         </p>
