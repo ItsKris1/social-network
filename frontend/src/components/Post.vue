@@ -52,19 +52,34 @@
         </div>
         <button v-if="!isCommentsOpen" @click="toggleComments" class="btn">Comments</button>
 
-        <div class="comments">
-            <div class="comment" v-for="comment in postData.comments">
-                <div class="user-picture medium"
-                    :style="{ backgroundImage: `url(http://localhost:8081/${comment.author.avatar})` }"></div>
-                <div class="comment-content">
-                    <p class="comment-author">{{ comment.authorNickname }}</p>
-                    <p class="comment-body">{{ comment.content }}</p>
-                    <img class="comment-image" v-if="comment.image" :src="'http://localhost:8081/' + comment.image"
-                        alt="">
+
+        <div v-if="isCommentsOpen">
+            <textarea v-model="this.comment.body" name="" id="" cols="30" rows="5"
+                placeholder="Add your comment here"></textarea>
+            <div>
+                <button @click="toggleComments">Hide comments</button>
+                <div class="comment-img">
+                    <label for="comment-image">
+                        <img src="../assets/addimg.png" />
+                    </label>
+                    <input id="comment-image" @change="checkPicture" type="file"
+                        accept="image/png, image/gif, image/jpeg" />
+                </div>
+                <button @click="submitComment(postData.id)">Add comment</button>
+            </div>
+            <div class="comments">
+                <div class="comment" v-for="comment in postData.comments">
+                    <!-- <div class="user-picture medium"
+                        :style="{ backgroundImage: `url(http://localhost:8081/${comment.author.avatar})` }"></div> -->
+                    <div class="comment-content">
+                        <p class="comment-author">{{ comment.authorNickname }}</p>
+                        <p class="comment-body">{{ comment.content }}</p>
+                        <img class="comment-image" v-if="comment.image" :src="'http://localhost:8081/' + comment.image"
+                            alt="">
+                    </div>
                 </div>
             </div>
         </div>
-
     </div>
 
 
@@ -147,7 +162,7 @@ export default {
 
 
 <style>
-#post_image {
+/* #post_image {
     height: 47px;
     width: 47px;
     border-radius: 50%;
@@ -166,9 +181,68 @@ export default {
 
 #commentsDiv {
     border-top: double;
-}
+} */
 
 .comment-img>input {
     display: none;
+}
+
+.post-wrapper {
+    display: inline-block;
+    box-shadow: var(--container-shadow);
+    padding: 30px;
+    background-color: var(--color-white);
+    width: 500px;
+    border-radius: 10px;
+}
+
+.post-wrapper button {
+    margin-top: 5px;
+    margin-left: auto;
+}
+
+.post,
+.comment {
+    display: flex;
+    gap: 10px;
+}
+
+
+.post-author,
+.comment-author {
+    font-weight: 500;
+}
+
+.post-content,
+.comment-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    width: 100%;
+}
+
+
+
+.post-image,
+.comment-image {
+    width: 100%;
+    margin: 10px 0 10px 0;
+    border-radius: 5px;
+}
+
+
+
+.comments {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-top: 30px;
+    display: none;
+}
+
+.comment {
+    border-top: 1px solid #DDDDDD;
+    padding-top: 30px;
 }
 </style>

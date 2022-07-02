@@ -1,14 +1,24 @@
 <template>
-    <div class="item-list">
+
+
+    <div class="item-list__wrapper">
         <h3>My groups</h3>
-        <ul class="item-list__items">
-            <li class="item-list__item">
+        <ul class="item-list">
+            <li>
                 <i class="uil uil-users-alt"></i>
-                <div class="item-list__text">Group 1</div>
+                <div class="item-text">Group 1</div>
             </li>
-            <li class="item-list__item">
+            <li>
                 <i class="uil uil-users-alt"></i>
-                <div class="item-list__text">Group 2</div>
+                <div class="item-text">Group 2</div>
+            </li>
+            <li>
+                <i class="uil uil-users-alt"></i>
+                <div class="item-text">Group 3</div>
+            </li>
+            <li>
+                <i class="uil uil-users-alt"></i>
+                <div class="item-text">Group 4</div>
             </li>
         </ul>
         <button class="btn">New group<i class="uil uil-plus"></i></button>

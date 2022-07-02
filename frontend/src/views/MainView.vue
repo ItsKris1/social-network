@@ -1,7 +1,7 @@
 <template>
     <NavBarOn />
     <NewPost />
-    <!-- <Groups /> -->
+    <Groups />
 
     <AllPosts />
 
