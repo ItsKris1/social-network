@@ -1,7 +1,7 @@
 <template>
 
 
-    <div class="item-list__wrapper">
+    <div class="item-list__wrapper" id="groups">
         <h3>My groups</h3>
         <ul class="item-list">
             <li>

@@ -17,6 +17,10 @@
 
 }
 
+* {
+    box-sizing: border-box;
+}
+
 body {
     background-color: var(--page-bg);
     font-family: 'Poppins', sans-serif;
@@ -26,9 +30,9 @@ body {
 
 }
 
-#app>*:not(:first-child) {
+/* #app>*:not(:first-child) {
     margin-top: 20px;
-}
+} */
 
 ul {
     padding: 0;
@@ -85,7 +89,8 @@ textarea {
     box-shadow: var(--container-shadow);
     font-family: 'Poppins', sans-serif;
     width: 100%;
-    max-width: 250px;
+    min-width: 250px;
+
 }
 
 

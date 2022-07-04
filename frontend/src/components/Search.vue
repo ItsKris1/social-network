@@ -1,18 +1,27 @@
 <template>
     <div id="searchDiv">
         <input @input="filtered" v-model="this.searchQuery" id="inputBox" type="text"
-            placeholder="Search for user or group">
+            placeholder="Search user or group">
 
-        <div style="color:black">{{ this.searchQuery }}</div>
+        <!-- <div style="color:black">{{ this.searchQuery }}</div> -->
+        <!-- <img id="glass" src="../assets/glass.png" alt="glass.png"> -->
 
-        <img id="glass" src="../assets/glass.png" alt="glass.png">
+        <ul id="dropdownlist" v-if="this.dropdownList.length !== 0">
+            <li @click="goToUserProfile(user.id)" id="dropdownitem" v-for="user in dropdownList">
+                <img id="dropdownimage" :src="'http://localhost:8081/' + user.avatar" alt="dropdownimage">
+                {{ user.nickname }}
+            </li>
+
+        </ul>
     </div>
-    <div id="dropdownlist" v-if="this.dropdownList.length !== 0">
+
+
+    <!-- <div id="dropdownlist" v-if="this.dropdownList.length !== 0">
         <div @click="goToUserProfile(user.id)" id="dropdownitem" v-for="user in dropdownList">
             <img id="dropdownimage" :src="'http://localhost:8081/' + user.avatar" alt="dropdownimage">
             {{ user.nickname }}
         </div>
-    </div>
+    </div> -->
 </template>
 
 <script>
@@ -43,7 +52,7 @@ export default {
 
 
 <style>
-#searchDiv {
+/* #searchDiv {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -55,7 +64,7 @@ export default {
     background: #FFFFFF;
     border: 1px solid #706A6A;
     border-radius: var(--container-border-radius);
-}
+} */
 
 #dropdownlist {
     cursor: default;
@@ -88,8 +97,10 @@ export default {
 }
 
 #inputBox {
-    border: none;
-    width: 230px;
+    background-image: url(../assets/glass.svg);
+    background-repeat: no-repeat;
+    background-position: right 7.5px center;
+    padding-right: calc(17px + 7.5px + 7.5px);
 }
 
 *:focus {

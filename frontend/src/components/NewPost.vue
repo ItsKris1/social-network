@@ -151,7 +151,6 @@ const checkedFollowers = ref([])
     align-items: center;
     justify-content: space-between;
     padding: 10px 15px;
-    margin-left: 25px;
     background-color: var(--input-bg);
     border: none;
     box-shadow: var(--container-shadow);

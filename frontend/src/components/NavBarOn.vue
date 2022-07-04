@@ -69,14 +69,21 @@ export default {
 
 <style scoped>
 #navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    min-width: min-content;
+
     display: flex;
-    padding: 10px 40px;
-    background-color: var(--color-blue);
     align-items: center;
     justify-content: space-between;
+
+    padding: 10px 40px;
     font-weight: 300;
+    background-color: var(--color-blue);
     color: var(--color-white);
-    margin-bottom: 50px;
 
 }
 
@@ -98,7 +105,8 @@ export default {
 
 .nav-titleSearch {
     display: flex;
-    gap: 25px
+    gap: 25px;
+    width: max-content;
 }
 
 

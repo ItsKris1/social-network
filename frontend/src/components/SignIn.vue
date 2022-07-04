@@ -104,7 +104,7 @@ export default {
   align-self: center;
   display: flex;
   margin: auto 0;
-  background-color: var(--container-border-radius);
+  background-color: var(--color-white);
   border-radius: 20px;
   box-shadow: var(--container-shadow);
   overflow: hidden;

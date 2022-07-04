@@ -1,9 +1,12 @@
 <template>
     <NavBarOn />
-    <NewPost />
-    <Groups />
 
-    <AllPosts />
+    <div id="layout">
+        <NewPost />
+        <Groups />
+        <AllPosts />
+    </div>
+
 
 
 </template>
@@ -21,4 +24,30 @@ export default {
 </script>
 
 <style>
+#layout {
+    display: grid;
+    grid-template-columns: 1fr minmax(min-content, 500px) 1fr;
+    grid-template-areas:
+        "groups startpost ."
+        "groups posts .";
+
+    align-items: flex-start;
+    row-gap: 50px;
+    column-gap: 50px;
+    margin-top: 100px;
+}
+
+
+#groups {
+    grid-area: groups;
+    justify-self: end;
+}
+
+#all_posts {
+    grid-area: posts;
+}
+
+.start-post {
+    grid-area: startpost;
+}
 </style>
