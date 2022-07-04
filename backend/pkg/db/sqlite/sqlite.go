@@ -30,6 +30,7 @@ func InitRepositories(db *sql.DB) *models.Repositories {
 		PostRepo:    &PostRepository{DB: db},
 		CommentRepo: &CommentRepository{DB: db},
 		NotifRepo:   &NotifRepository{DB: db},
+		EventRepo:   &EventRepository{DB: db},
 	}
 }
 
@@ -97,6 +98,39 @@ func createTables(db *sql.DB) {
 		CREATE TABLE IF NOT EXISTS almost_private (
 			"user_id" VARCHAR(255) not null,
 			"post_id" VARCHAR(255) not null
+		)`,
+		`
+		CREATE TABLE IF NOT EXISTS event (
+			"event_id" VARCHAR(255) not null,
+			"group_id" VARCHAR(255) not null,
+			"created_by" VARCHAR(255) not null,
+			"created_at" DATETIME not null default CURRENT_TIMESTAMP,
+			"title" VARCHAR(255) not null,
+			"content" VARCHAR(255) not null,
+			"date" DATETIME not null,
+			primary key ("event_id")
+		)`,
+		`
+		CREATE TABLE IF NOT EXISTS messages (
+			"message_id" VARCHAR(255) not null,
+			"sender_id" VARCHAR(255) not null,
+			"receiver_id" DATETIME not null default CURRENT_TIMESTAMP,
+			"type" VARCHAR(255) not null,
+			"created_at" VARCHAR(255) not null,
+			"content" VARCHAR(255) not null,
+			primary key ("message_id")
+		)`,
+		`
+		CREATE TABLE IF NOT EXISTS event_users (
+			"event_id" VARCHAR(255) not null,
+			"user_id" VARCHAR(255) not null
+		)`,
+		`
+		CREATE TABLE IF NOT EXISTS notifications (
+			"notif_id" VARCHAR(255) not null,
+			"user_id" VARCHAR(255) not null,
+			"type" VARCHAR(255) not null,
+			"content" VARCHAR(255) not null
 		)`,
 	}
 	for _, table := range tables {

@@ -45,12 +45,37 @@ func (repo *PostRepository) GetUserPosts(userID, currentUserID string) ([]models
 	return posts, nil
 }
 
+func (repo *PostRepository) GetGroupPosts(groupID string) ([]models.Post, error) {
+	var posts []models.Post
+	rows, err := repo.DB.Query("SELECT post_id , created_by, content, image  FROM posts WHERE group_id = ? ORDER BY created_at DESC;", groupID)
+	if err != nil {
+		return posts, err
+	}
+	for rows.Next() {
+		var post models.Post
+		rows.Scan(&post.ID, &post.AuthorID, &post.Content, &post.ImagePath)
+		posts = append(posts, post)
+	}
+	return posts, nil
+}
+
 func (repo *PostRepository) New(post models.Post) error {
 	stmt, err := repo.DB.Prepare("INSERT INTO posts (post_id, group_id, created_by, content,image,visibility) values (?,(NULLIF(?,'')),?,?,?,?)")
 	if err != nil {
 		return err
 	}
 	if _, err := stmt.Exec(post.ID, post.GroupID, post.AuthorID, post.Content, post.ImagePath, post.Visibility); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (repo *PostRepository) SaveAccess(postId, userId string) error {
+	stmt, err := repo.DB.Prepare("INSERT INTO almost_private (post_id, user_id) values (?,?)")
+	if err != nil {
+		return err
+	}
+	if _, err := stmt.Exec(postId, userId); err != nil {
 		return err
 	}
 	return nil

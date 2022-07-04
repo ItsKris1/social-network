@@ -33,6 +33,11 @@ type GroupMessage struct {
 	Groups []models.Group `json:"groups"`
 }
 
+type EventMessage struct {
+	Type   string         `json:"type"`
+	Events []models.Event `json:"events"`
+}
+
 // Error takes writer, message, status code and additional error property
 // Sets status code in header and encode resp in json
 func RespondWithError(w http.ResponseWriter, message string, code int) {
@@ -70,6 +75,14 @@ func RespondWithUsers(w http.ResponseWriter, users []models.User, code int) {
 func RespondWithPosts(w http.ResponseWriter, posts []models.Post, code int) {
 	w.WriteHeader(code)
 	err := PostMessage{Posts: posts, Type: "Success"}
+	jsonResp, _ := json.Marshal(err)
+	w.Write(jsonResp)
+}
+
+// responds with success events
+func RespondWithEvents(w http.ResponseWriter, events []models.Event, code int) {
+	w.WriteHeader(code)
+	err := EventMessage{Events: events, Type: "Success"}
 	jsonResp, _ := json.Marshal(err)
 	w.Write(jsonResp)
 }
