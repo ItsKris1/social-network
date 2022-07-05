@@ -1,27 +1,64 @@
 <template>
+
+    <!-- 
     <div id="searchDiv">
+
         <input @input="filtered" v-model="this.searchQuery" id="inputBox" type="text"
             placeholder="Search user or group">
 
-        <!-- <div style="color:black">{{ this.searchQuery }}</div> -->
-        <!-- <img id="glass" src="../assets/glass.png" alt="glass.png"> -->
 
-        <ul id="dropdownlist" v-if="this.dropdownList.length !== 0">
+
+        <div style="color:black">{{ this.searchQuery }}</div>
+        <img id="glass" src="../assets/glass.png" alt="glass.png">
+
+        <ul id="dropdownlist" v-if="this.dropdownList.length !== 0" class="item-list">
             <li @click="goToUserProfile(user.id)" id="dropdownitem" v-for="user in dropdownList">
-                <img id="dropdownimage" :src="'http://localhost:8081/' + user.avatar" alt="dropdownimage">
+                <div class="user-picture small"
+                    :style="{ backgroundImage: `url(http://localhost:8081/${user.avatar})` }">
+                </div>
                 {{ user.nickname }}
+
+
             </li>
 
         </ul>
+    </div> -->
+
+
+    <div id="searchDiv">
+
+        <input @input="filtered" v-model="this.searchQuery" type="text" placeholder="Search user or group">
+        <!-- <div id="dropdownlist" v-if="this.dropdownList.length !== 0">
+            <div @click="goToUserProfile(user.id)" id="dropdownitem" v-for="user in dropdownList">
+                <img class="small " id="dropdownimage" :src="'http://localhost:8081/' + user.avatar"
+                    alt="dropdownimage">
+                {{ user.nickname }}
+            </div>
+        </div> -->
+        <div id="dropdown">
+            <ul class="item-list">
+                <li>
+                    <div class="user-picture small"></div>
+                    <div class="item-text">John Mayer</div>
+                </li>
+
+                <li>
+                    <img class="small" src="../assets/icons/users-alt.svg" alt="">
+                    <div class="item-text">Garrisons</div>
+                </li>
+
+                <li>
+                    <div class="user-picture small"></div>
+                    <div class="item-text">John Mayer</div>
+                </li>
+
+            </ul>
+        </div>
+
     </div>
 
 
-    <!-- <div id="dropdownlist" v-if="this.dropdownList.length !== 0">
-        <div @click="goToUserProfile(user.id)" id="dropdownitem" v-for="user in dropdownList">
-            <img id="dropdownimage" :src="'http://localhost:8081/' + user.avatar" alt="dropdownimage">
-            {{ user.nickname }}
-        </div>
-    </div> -->
+
 </template>
 
 <script>
@@ -52,62 +89,57 @@ export default {
 
 
 <style>
-/* #searchDiv {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 10px;
-
-    width: 257px;
-    height: 15px;
-
-    background: #FFFFFF;
-    border: 1px solid #706A6A;
-    border-radius: var(--container-border-radius);
-} */
-
-#dropdownlist {
-    cursor: default;
-    margin-left: 20px;
-    display: block;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    padding: 12px 16px;
-    z-index: 1;
+#searchDiv {
+    flex-grow: 1;
+    position: relative;
+    align-self: flex-start;
+    min-width: 250px;
+    max-width: 250px;
 }
 
-#dropdownitem {
-    font-family: 'Poppins';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 146.02%;
-
-    display: flex;
-    align-items: center;
-    text-align: center;
-    color: #141111;
-}
-
-#dropdownimage {
-    width: 20px;
-    height: 20px;
-}
-
-#inputBox {
-    background-image: url(../assets/glass.svg);
+#searchDiv input[type="text"] {
+    background-image: url(../assets/icons/glass.svg);
     background-repeat: no-repeat;
-    background-position: right 7.5px center;
-    padding-right: calc(17px + 7.5px + 7.5px);
+    background-position: left 10px center;
+    padding: 10px;
+    padding-left: calc(17px + 20px);
+    border-radius: 10px;
+    box-shadow: var(--container-shadow);
 }
+
+
+#dropdown {
+
+    background-color: var(--input-bg);
+    color: var(--color-lg-black);
+    width: 100%;
+    padding: 0 10px;
+    position: absolute;
+    box-shadow: 0 2px 5px -1px rgba(0, 0, 0, 0.27);
+
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+
+    display: none;
+
+}
+
+#dropdown .item-list {
+    padding: 15px 0;
+    border-top: 1px solid rgb(211, 211, 211);
+}
+
+.open #inputBox {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.open #dropdownlist {
+    display: block;
+}
+
 
 *:focus {
     outline: none;
-}
-
-#glass {
-    margin-left: auto;
 }
 </style>

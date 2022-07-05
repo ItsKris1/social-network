@@ -26,6 +26,7 @@ body {
     font-family: 'Poppins', sans-serif;
     font-size: 16px;
     min-height: 100vh;
+    font-weight: 400;
     margin: 0;
 
 }
@@ -88,11 +89,11 @@ textarea {
     border: none;
     box-shadow: var(--container-shadow);
     font-family: 'Poppins', sans-serif;
+
     width: 100%;
-    min-width: 250px;
+    /* max-width: 250px; */
 
 }
-
 
 
 
@@ -111,13 +112,11 @@ select:focus {
 
 .user-picture {
 
-    border: 0;
-    background-image: url(../default-profile.svg);
-    /* background-image: url(../pexels-jack-winbow-1559486.jpg); */
+    background-image: url(../icons/default-profile.svg);
     background-size: cover;
     background-position: center;
     flex-shrink: 0;
-
+    border: 0;
     border-radius: 50%;
 
 }
@@ -157,9 +156,13 @@ select:focus {
     background-color: var(--color-white);
     box-shadow: var(--container-shadow);
     border-radius: var(--container-border-radius);
-    /* max-width: 250px; */
-    /* align-items: flex-start; */
+    color: var(--color-lg-black)
+}
 
+.item-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px
 }
 
 .item-list li {
@@ -169,9 +172,6 @@ select:focus {
 
 }
 
-.item-list i {
-    font-size: 1.5em;
-}
 
 .item-text {
     white-space: nowrap;
@@ -180,15 +180,8 @@ select:focus {
 }
 
 
-.item-list.users {
-    display: flex;
-    flex-direction: column;
-    gap: 10px
-}
 
-.item-list__items.users .item-list__item {
-    gap: 7.5px
-}
+
 
 
 

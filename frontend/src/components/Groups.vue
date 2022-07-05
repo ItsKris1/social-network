@@ -5,19 +5,19 @@
         <h3>My groups</h3>
         <ul class="item-list">
             <li>
-                <i class="uil uil-users-alt"></i>
+                <img class="small" src="../assets/icons/users-alt.svg" alt="">
                 <div class="item-text">Group 1</div>
             </li>
             <li>
-                <i class="uil uil-users-alt"></i>
+                <img class="small" src="../assets/icons/users-alt.svg" alt="">
                 <div class="item-text">Group 2</div>
             </li>
             <li>
-                <i class="uil uil-users-alt"></i>
+                <img class="small" src="../assets/icons/users-alt.svg" alt="">
                 <div class="item-text">Group 3</div>
             </li>
             <li>
-                <i class="uil uil-users-alt"></i>
+                <img class="small" src="../assets/icons/users-alt.svg" alt="">
                 <div class="item-text">Group 4</div>
             </li>
         </ul>

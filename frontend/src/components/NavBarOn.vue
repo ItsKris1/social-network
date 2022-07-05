@@ -1,10 +1,13 @@
 <template>
 
     <div id="navbar">
-        <div class="nav-titleSearch">
+
+        <div id="nav-titleSearch">
             <a id="nav-title" href="/">Social Network</a>
             <Search />
         </div>
+
+
 
         <ul class="nav-links">
             <li>
@@ -81,11 +84,12 @@ export default {
     justify-content: space-between;
 
     padding: 10px 40px;
-    font-weight: 300;
     background-color: var(--color-blue);
     color: var(--color-white);
 
+
 }
+
 
 #navbar a {
     color: var(--color-white);
@@ -98,15 +102,19 @@ export default {
 
 
 .nav-links>li {
+    font-weight: 300;
     display: inline-block;
     margin-left: 20px;
 }
 
 
-.nav-titleSearch {
+#nav-titleSearch {
     display: flex;
     gap: 25px;
-    width: max-content;
+    flex-grow: 1;
+    align-items: center;
+
+
 }
 
 
