@@ -1,6 +1,6 @@
 <template>
     <div id="profile">
-        {{ user }}
+        <!-- {{ user }} -->
         <div>
             <img id="profileImg" :src="'http://localhost:8081/' + user.avatar" alt="profilePic">
         </div>
@@ -29,10 +29,7 @@ export default {
     components: { AllMyPosts },
     data() {
         return {
-            user: {
-
-            }
-
+            user: {}
         }
     },
     created() {
@@ -56,6 +53,7 @@ export default {
             })
                 .then((r) => r.json())
                 .then((json) => {
+                    console.log("profile.vue/getuserid",json);
                     this.user = json.users[0];
                     // console.log(userInfo);
                     // this.commit("updateProfileInfo", userInfo);

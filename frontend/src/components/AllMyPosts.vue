@@ -3,8 +3,8 @@
     <!-- <button @click="getAllMyPosts">get</button>
     <button @click="showAllMyPosts">show</button> -->
     <!-- <div v-if="this.myposts !== undefined"> -->
-        {{this.userid}}
-    <Post v-for="post in myPosts" :key="post.id" v-bind:postData="post" />
+        <!-- {{this.posts}} -->
+    <Post v-for="post in this.posts" :key="post.id" v-bind:postData="post" />
     <!-- </div> -->
 
 </template>
@@ -21,38 +21,31 @@ export default {
     },
     data() {
         return {
+            posts:{}
         }
     },
     created() {
         // this.getAllMyPosts()
         this.getPosts()
     },
-    computed: mapGetters(['myPosts']),
-    // computed:{
-    //     // getId(){
-    //     //     this.userId = this.$route.params.id
-    //     //     console.log("id",this.userId);
-    //     // }
-    // },
+    // computed: mapGetters(['myPosts']),
+    watch: { //watching changes in route
+        userid() {
+            this.getPosts()
+        }
+    },
     methods: {
-        // getAllMyPosts() {
-        //     this.$store.dispatch('fetchMyPosts')
-        // },
         async getPosts() {
-            console.log("USERID", this.userid);
+            // console.log("USERID", this.userid);
             await fetch("http://localhost:8081/userPosts?id=" + this.userid, {
                 credentials: "include",
             })
                 .then((r) => r.json())
                 .then((r) => {
-                    console.log("response",r);
-                    // const myposts = r.posts;
-                    // this.commit("updateMyPosts", myposts);
+                    // console.log("response",r);
+                    this.posts = r.posts
                 });
         },
-        // showAllMyPosts() {
-        //     console.log('All posts: ', myPosts);
-        // },
     },
 }
 </script>
