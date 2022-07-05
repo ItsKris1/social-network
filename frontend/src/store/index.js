@@ -66,7 +66,7 @@ export default createStore({
         // .then((r=>console.log(r)))
         .then((res) => res.json())
         .then((json) => {
-          // console.log(json);
+          console.log(json);
           const posts = json.posts;
           this.commit("updatePosts", posts);
         });
@@ -91,7 +91,9 @@ export default createStore({
         .then((r) => {
           const myposts = r.posts;
           this.commit("updateMyPosts", myposts);
-        });
+          // console.log(myposts);
+        })
+
       // .then((json) => console.log("get posts -", json));
     },
     async getMyProfileInfo() {

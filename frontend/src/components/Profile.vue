@@ -1,6 +1,6 @@
 <template>
     <div id="profile">
-        <!-- {{ user }} -->
+        {{ user }}
         <div>
             <img id="profileImg" :src="'http://localhost:8081/' + user.avatar" alt="profilePic">
         </div>
@@ -18,7 +18,7 @@
         <span>ABOUT ME<br></span>
         <span>{{ user.about }}</span>
     </div>
-    <AllMyPosts />
+    <AllMyPosts v-bind:userid="this.user.id" />
 </template>
 
 <script>
@@ -29,7 +29,10 @@ export default {
     components: { AllMyPosts },
     data() {
         return {
-            user: {}
+            user: {
+
+            }
+
         }
     },
     created() {
@@ -58,10 +61,20 @@ export default {
                     // this.commit("updateProfileInfo", userInfo);
                     console.log("user profile info -", json);
                 });
-        }
+            // this.isOwnerProfile()
+        },
+        // isOwnerProfile() {
+        //     console.log("cookie",document.cookie);
+        //     console.log("user id",this.user.id);
+        //     let activeCookie = document.cookie.slice(11)
+        //     if (activeCookie === this.user.id) {
+        //         console.log("It's a owner");
+        //     } else { console.log("It's NOT a owner") }
+
+        // }
     },
     watch: { //watching changes in route
-        $route(){
+        $route() {
             this.getUserId()
         }
     }
