@@ -28,15 +28,14 @@
     <div id="searchDiv">
 
         <input @input="filtered" v-model="this.searchQuery" type="text" placeholder="Search user or group">
-        <!-- <div id="dropdownlist" v-if="this.dropdownList.length !== 0">
-            <div @click="goToUserProfile(user.id)" id="dropdownitem" v-for="user in dropdownList">
-                <img class="small " id="dropdownimage" :src="'http://localhost:8081/' + user.avatar"
-                    alt="dropdownimage">
-                {{ user.nickname }}
-            </div>
-        </div> -->
-        <div id="dropdown">
+
+        <div id="dropdown" v-if="this.dropdownList.length !== 0">
             <ul class="item-list">
+                <li @click="goToUserProfile(user.id)" id="dropdownitem" v-for="user in dropdownList">
+                    <div class="user-picture small"
+                        :style="{ backgroundImage: `url(http://localhost:8081/${user.avatar})` }"></div>
+                    <div class="item-text">{{ user.nickname }}</div>
+                </li>
                 <li>
                     <div class="user-picture small"></div>
                     <div class="item-text">John Mayer</div>
@@ -46,18 +45,9 @@
                     <img class="small" src="../assets/icons/users-alt.svg" alt="">
                     <div class="item-text">Garrisons</div>
                 </li>
-
-                <li>
-                    <div class="user-picture small"></div>
-                    <div class="item-text">John Mayer</div>
-                </li>
-
             </ul>
         </div>
-
     </div>
-
-
 
 </template>
 
@@ -120,7 +110,7 @@ export default {
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
 
-    display: none;
+    /* display: none; */
 
 }
 

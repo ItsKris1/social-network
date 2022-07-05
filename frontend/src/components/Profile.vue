@@ -137,7 +137,7 @@ export default {
 <style>
 #layout-profile {
     display: grid;
-    grid-template-columns: 1fr minmax(min-content, 500px) 1fr;
+    grid-template-columns: 1fr minmax(min-content, 550px) 1fr;
     column-gap: 50px;
     margin-top: 100px;
 
@@ -207,7 +207,6 @@ export default {
     padding: var(--container-padding);
     gap: 15px;
 
-    width: 500px;
     background: var(--color-white);
     box-shadow: var(--container-shadow);
     border-radius: var(--container-border-radius);

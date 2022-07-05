@@ -95,10 +95,7 @@ textarea {
 
 }
 
-.flex-column {
-    display: flex;
-    flex-direction: column;
-}
+
 
 input:focus,
 select:focus {
@@ -148,7 +145,13 @@ select:focus {
     background-color: var(--color-blue);
 }
 
+.btn.outline {
+    background-color: var(--color-white);
+    box-shadow: inset 0 0 0 2px var(--color-blue);
+    color: var(--color-lg-black);
+    font-weight: 400;
 
+}
 
 .item-list__wrapper {
     display: flex;
