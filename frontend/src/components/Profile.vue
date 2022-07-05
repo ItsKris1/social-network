@@ -1,78 +1,89 @@
 <template>
+    <div id="layout-profile">
 
-    <div class="user-profile__public">
-        <div class="user-picture" :style="{ backgroundImage: `url(http://localhost:8081/${user.avatar})` }"></div>
-        <div class="user-profile__info">
-            <h3 class="username">{{ user.nickname }}</h3>
-            <p class="user-email">{{ user.login }}</p>
-            <p class="user-dateOfBirth">{{ user.dateOfBirth }}</p>
-        </div>
+        <div class="left-section ">
+            <div class="user-profile__public">
+                <div class="user-picture" :style="{ backgroundImage: `url(http://localhost:8081/${user.avatar})` }">
+                </div>
+                <div class="user-profile__info">
+                    <h3 class="username">{{ user.nickname }}</h3>
+                    <p class="user-email">{{ user.login }}</p>
+                    <p class="user-dateOfBirth">{{ user.dateOfBirth }}</p>
+                </div>
 
-        <div class="user-profile__privacy">
-            <!-- <label for="user-profile__setting">Private profile</label>
+                <div class="user-profile__privacy">
+                    <!-- <label for="user-profile__setting">Private profile</label>
             <input type="radio" name="user-profile__setting" id="user-profile__setting"> -->
 
-            <span>Private profile</span>
-            <img src="../assets/Toggle.png">
+                    <span>Private profile</span>
+                    <img src="../assets/Toggle.png">
+                </div>
+
+                <!-- <button class="btn">Follow<i class="uil uil-user-plus"></i></button> -->
+            </div>
+            <div class="multiple-item-list" id="following">
+                <div class="item-list__wrapper">
+                    <h3>Followers</h3>
+                    <ul class="item-list users">
+                        <li>
+                            <div class="user-picture small"></div>
+                            <div class="item-text">User 1</div>
+                        </li>
+                        <li>
+                            <div class="user-picture small"></div>
+                            <div class="item-text">User 2</div>
+                        </li>
+                        <li>
+                            <div class="user-picture small"></div>
+                            <div class="item-text">User 3</div>
+                        </li>
+                        <li>
+                            <div class="user-picture small"></div>
+                            <div class="item-text">User 4</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="item-list__wrapper">
+                    <h3>Following</h3>
+                    <ul class="item-list users">
+                        <li>
+                            <div class="user-picture small"></div>
+                            <div class="item-text">User 1</div>
+                        </li>
+                        <li>
+                            <div class="user-picture small"></div>
+                            <div class="item-text">User 2</div>
+                        </li>
+                        <li>
+                            <div class="user-picture small"></div>
+                            <div class="item-text">User 3</div>
+                        </li>
+                        <li>
+                            <div class="user-picture small"></div>
+                            <div class="item-text">User 4</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
 
-        <!-- <button class="btn">Follow<i class="uil uil-user-plus"></i></button> -->
-    </div>
 
-
-    <div class="multiple-item-list">
-        <div class="item-list__wrapper">
-            <h3>Followers</h3>
-            <ul class="item-list users">
-                <li>
-                    <div class="user-picture small"></div>
-                    <div class="item-text">User 1</div>
-                </li>
-                <li>
-                    <div class="user-picture small"></div>
-                    <div class="item-text">User 2</div>
-                </li>
-                <li>
-                    <div class="user-picture small"></div>
-                    <div class="item-text">User 3</div>
-                </li>
-                <li>
-                    <div class="user-picture small"></div>
-                    <div class="item-text">User 4</div>
-                </li>
-            </ul>
+        <div class="middle-section ">
+            <div class="about" v-if="user.about !== ''">
+                <h2 class="about-title">About me</h2>
+                <p class="about-text">{{ user.about }}</p>
+            </div>
+            <AllMyPosts />
         </div>
 
-        <div class="item-list__wrapper">
-            <h3>Following</h3>
-            <ul class="item-list users">
-                <li>
-                    <div class="user-picture small"></div>
-                    <div class="item-text">User 1</div>
-                </li>
-                <li>
-                    <div class="user-picture small"></div>
-                    <div class="item-text">User 2</div>
-                </li>
-                <li>
-                    <div class="user-picture small"></div>
-                    <div class="item-text">User 3</div>
-                </li>
-                <li>
-                    <div class="user-picture small"></div>
-                    <div class="item-text">User 4</div>
-                </li>
-            </ul>
-        </div>
+
+
+
+
+
+
     </div>
-
-
-
-    <div class="about" v-if="user.about !== ''">
-        <h2 class="about-title">About me</h2>
-        <p class="about-text">{{ user.about }}</p>
-    </div>
-    <AllMyPosts />
 
 </template>
 
@@ -124,9 +135,31 @@ export default {
 </script>
 
 <style>
+#layout-profile {
+    display: grid;
+    grid-template-columns: 1fr minmax(min-content, 500px) 1fr;
+    column-gap: 50px;
+    margin-top: 100px;
+
+}
+
+.middle-section {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.left-section {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    align-items: flex-end;
+}
+
+
 .user-profile__public,
 .user-profile__private {
-    display: inline-flex;
+    display: flex;
     flex-direction: column;
     padding: var(--container-padding);
     background-color: var(--color-white);
@@ -136,6 +169,7 @@ export default {
     text-align: center;
     margin-left: 15px;
     gap: 25px;
+
 
 }
 
@@ -177,5 +211,6 @@ export default {
     background: var(--color-white);
     box-shadow: var(--container-shadow);
     border-radius: var(--container-border-radius);
+
 }
 </style>

@@ -154,7 +154,7 @@ const checkedFollowers = ref([])
     background-color: var(--input-bg);
     border: none;
     box-shadow: var(--container-shadow);
-    width: 500px;
+    width: 80%;
     font-family: inherit;
     font-size: 16px;
     border-radius: var(--container-border-radius);

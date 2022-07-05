@@ -1,6 +1,10 @@
 <template>
     <NavBarOn />
+
+
     <Profile />
+
+
 </template>
 
 <script>

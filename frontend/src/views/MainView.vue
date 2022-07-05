@@ -32,6 +32,7 @@ export default {
         "groups posts .";
 
     align-items: flex-start;
+    justify-items: center;
     row-gap: 50px;
     column-gap: 50px;
     margin-top: 100px;
