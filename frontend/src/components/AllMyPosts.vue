@@ -11,7 +11,7 @@
 
 
 <script>
-import { mapGetters } from 'vuex'
+// import { mapGetters } from 'vuex'
 import Post from './Post.vue'
 export default {
     name: 'AllMyPosts',

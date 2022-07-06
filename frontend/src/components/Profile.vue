@@ -18,15 +18,19 @@
         <span>ABOUT ME<br></span>
         <span>{{ user.about }}</span>
     </div>
+    <Following />
+    <Followers />
     <AllMyPosts v-bind:userid="this.user.id" />
 </template>
 
 <script>
 import AllMyPosts from './AllMyPosts.vue'
+import Following from './Following.vue'
+import Followers from './Followers.vue'
 // import { mapGetters } from 'vuex'
 export default {
     name: 'Profile',
-    components: { AllMyPosts },
+    components: { AllMyPosts, Followers, Following },
     data() {
         return {
             user: {}
