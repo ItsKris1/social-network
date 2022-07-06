@@ -74,7 +74,7 @@
                 <h2 class="about-title">About me</h2>
                 <p class="about-text">{{ user.about }}</p>
             </div>
-            <AllMyPosts />
+            <AllMyPosts v-bind:userid="this.user.id" />
         </div>
 
 
@@ -119,12 +119,23 @@ export default {
             })
                 .then((r) => r.json())
                 .then((json) => {
+                    console.log("profile.vue/getuserid", json);
                     this.user = json.users[0];
                     // console.log(userInfo);
                     // this.commit("updateProfileInfo", userInfo);
                     console.log("user profile info -", json);
                 });
-        }
+            // this.isOwnerProfile()
+        },
+        // isOwnerProfile() {
+        //     console.log("cookie",document.cookie);
+        //     console.log("user id",this.user.id);
+        //     let activeCookie = document.cookie.slice(11)
+        //     if (activeCookie === this.user.id) {
+        //         console.log("It's a owner");
+        //     } else { console.log("It's NOT a owner") }
+
+        // }
     },
     watch: { //watching changes in route
         $route() {
