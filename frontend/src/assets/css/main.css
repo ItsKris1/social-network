@@ -99,6 +99,36 @@ select:focus {
     outline: none;
 }
 
+select:invalid {
+    color: rgb(136, 136, 136);
+}
+
+option {
+    color: var(--color-lg-black)
+}
+
+::placeholder {
+    color: rgb(136, 136, 136);
+}
+
+select {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.select-wrapper {
+    position: relative;
+}
+
+.select-wrapper img {
+    position: absolute;
+    right: 7.5px;
+    top: 7.5px;
+    height: 18.5px;
+    width: 18.5px;
+
+}
+
 .form-group {
     display: flex;
     flex-direction: column;
@@ -239,6 +269,11 @@ select:focus {
 .modal-header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header i {
+    font-size: 1.25em;
 }
 
 .modal-content form {
@@ -249,35 +284,4 @@ select:focus {
 
 .modal-content button {
     align-self: flex-end;
-}
-
-select:invalid {
-    color: rgb(158, 158, 158);
-}
-
-option {
-    color: var(--color-lg-black)
-}
-
-::placeholder {
-    color: rgb(158, 158, 158);
-}
-
-select {
-    -webkit-appearance: none;
-    appearance: none;
-}
-
-.select-wrapper {
-    position: relative;
-}
-
-.select-wrapper img {
-    position: absolute;
-    right: 7.5px;
-    top: 7.5px;
-    height: 18.5px;
-    width: 18.5px;
-    vertical-align: middle;
-
 }

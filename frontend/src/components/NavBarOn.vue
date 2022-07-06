@@ -10,6 +10,7 @@
 
 
         <ul class="nav-links">
+
             <li>
                 <Notifications />
             </li>
@@ -23,6 +24,8 @@
 
 
     </div>
+
+
 
 </template>
 
