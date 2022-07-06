@@ -97,6 +97,8 @@ export default {
 #app {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  height: 100vh;
 }
 
 

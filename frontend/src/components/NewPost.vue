@@ -11,36 +11,121 @@
         <span>Start a post</span>
         <img src="../assets/writepost.png" alt="">
     </div> -->
-    <div v-show="isOpen">
-        <form @submit.prevent="submitPost" id="newpost">
-            <span><b>Create a post</b></span>
-            <div>Post privacy</div>
-            <select v-model="newpost.privacy" name="post_privacy" @change="getFollowers">
-                <option value="public">Everyone</option>
-                <option value="private">Followers</option>
-                <option value="almost-private">Choosen followers</option>
-            </select>
-            <div v-if="newpost.privacy === 'almost-private'">
+    <div class="modal" v-show="isOpen">
 
-                <div v-for="follower in fetchedFollowers.followers">
-                    <input type="checkbox" :id="follower" name="privacy" :value="follower" v-model="checkedFollowers" />
-                    <label :for="follower">{{ follower }}</label>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create a post</h2>
+                <i class="uil uil-times close" @click="toggle"></i>
+            </div>
+            <form @submit.prevent="submitPost" id="newpost">
+                <div class="form-input">
+                    <label for="post_privacy">Post privacy</label>
+                    <div class="select-wrapper">
+                        <img src="../assets/icons/angle-down.svg" alt="" srcset="">
+
+                        <select v-model="newpost.privacy" name="post_privacy" @change="getFollowers" id="post_privacy"
+                            required>
+                            <option value="" selected disabled hidden>Choose here</option>
+                            <option value="public" selected>Everyone</option>
+                            <option value="private">Followers</option>
+                            <option value="almost-private">Choosen followers</option>
+                        </select>
+
+                    </div>
+
+                    <div v-if="newpost.privacy === 'almost-private'">
+
+                        <div v-for="follower in fetchedFollowers.followers">
+                            <input type="checkbox" :id="follower" name="privacy" :value="follower"
+                                v-model="checkedFollowers" />
+                            <label :for="follower">{{ follower }}</label>
+                        </div>
+                        <div>Checked names: {{ checkedFollowers }}</div>
+
+                    </div>
                 </div>
-                <div>Checked names: {{ checkedFollowers }}</div>
 
-            </div>
+                <div class="form-input">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="4" cols="50" v-model="newpost.body"
+                        placeholder="What are you thinking?"></textarea>
+                </div>
 
-            <div>Body</div>
-            <input v-model="newpost.body" type="text">
-            <div class="image-upload">
-                <label for="file-input">
-                    <img src="../assets/addimg.png" />
-                </label>
-                <input id="file-input" @change="checkPicture" type="file" accept="image/png, image/gif, image/jpeg" />
-            </div>
-            <button type="submit">Post</button>
-        </form>
+                <div class="btns-wrapper">
+
+                    <label for="upload-image">
+                        <img src="../assets/addimg.png" />
+                    </label>
+                    <input id="upload-image" @change="checkPicture" type="file"
+                        accept="image/png, image/gif, image/jpeg" />
+
+                    <button class="btn" type="submit">Post</button>
+
+                </div>
+            </form>
+        </div>
     </div>
+
+
+
+
+
+    <!-- 
+    <div class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Modal title</h2>
+                <i class="uil uil-times close"></i>
+            </div>
+
+            <form>
+                <div class="form-input">
+                    <label for="username">First name</label>
+                    <input type="text" name="username" id="username">
+                </div>
+
+                <div class="form-input">
+                    <label for="username">Last name</label>
+                    <input type="text" name="username" id="username">
+                </div>
+
+                <div class="form-input">
+                    <label for="username">Email</label>
+                    <input type="text" name="username" id="username">
+                </div>
+
+                <div class="form-input">
+                    <label for="date">Select a date</label>
+                    <input type="date" name="date" id="date">
+                </div>
+
+                <div class="form-input">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="4" cols="50"></textarea>
+                </div>
+
+                <div class="form-input">
+                    <label for="cars">Select an option</label>
+
+                    <select name="cars" id="cars">
+                        <option value="" selected disabled hidden>Choose here</option>
+                        <option value="volvo">Volvo</option>
+                        <option value="saab">Saab</option>
+                        <option value="mercedes">Mercedes</option>
+                        <option value="audi">Audi</option>
+                    </select>
+                </div>
+            </form>
+
+            <button class="btn">Button</button>
+
+        </div>
+    </div> -->
+
+
+
+
 </template>
 
 

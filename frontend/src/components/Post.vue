@@ -64,12 +64,12 @@
                 <div class="create-comment__btns">
                     <button class="btn outline" @click="toggleComments">Hide comments</button>
 
-                    <div class="add-comment">
+                    <div class="btns-wrapper">
 
-                        <label for="add-comment-image">
+                        <label for="upload-image">
                             <img src="../assets/addimg.png" />
                         </label>
-                        <input id="add-comment-image" @change="checkPicture" type="file"
+                        <input id="upload-image" @change="checkPicture" type="file"
                             accept="image/png, image/gif, image/jpeg" style="display: none" />
 
 
@@ -183,31 +183,6 @@ export default {
 
 
 <style>
-/* #post_image {
-    height: 47px;
-    width: 47px;
-    border-radius: 50%;
-    margin-right: 8px;
-}
-
-#post {
-    display: flex;
-}
-
-#postImage,
-#commentImage {
-    height: 20%;
-    width: 20%;
-}
-
-#commentsDiv {
-    border-top: double;
-} */
-
-
-
-
-
 .post-wrapper {
     display: inline-block;
     box-shadow: var(--container-shadow);
@@ -273,18 +248,23 @@ export default {
     justify-content: space-between;
 }
 
-.add-comment {
+.btns-wrapper {
     display: flex;
     gap: 10px;
     align-items: center;
+    justify-content: end;
 
 }
 
-.add-comment input {
+.btns-wrapper label {
+    margin: 0;
+}
+
+.btns-wrapper input {
     display: none;
 }
 
-.add-comment label img {
+.btns-wrapper label img {
     vertical-align: middle;
 }
 
