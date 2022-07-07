@@ -9,9 +9,10 @@
         </div>
     </div> -->
 
-    Notifications
+
 
     <div class="relative-wrapper">
+        Notifications
         <div class="item-list__wrapper" id="notifications">
             <ul class="item-list">
                 <li>
@@ -65,6 +66,8 @@
 
 
 
+
+
 </template>
 
 <script>
@@ -83,9 +86,6 @@ export default {
 <style>
 .relative-wrapper {
     position: relative;
-    top: 10px;
-
-    display: none;
 }
 
 
@@ -96,8 +96,13 @@ export default {
     transform: translateX(-50%);
     left: 50%;
     font-weight: 400;
+    margin-top: 5px;
+    display: none;
+
 
 }
+
+
 
 #notifications .item-list {
     gap: 15px;

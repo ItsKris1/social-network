@@ -43,7 +43,7 @@
 
                 <li>
                     <img class="small" src="../assets/icons/users-alt.svg" alt="">
-                    <div class="item-text">Garrisons</div>
+                    <div class="item-text">Garrisonsttttttttttttttttttttttttttttttttttttttttttt</div>
                 </li>
             </ul>
         </div>

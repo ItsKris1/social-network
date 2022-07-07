@@ -15,8 +15,7 @@
                     <!-- <label for="user-profile__setting">Private profile</label>
             <input type="radio" name="user-profile__setting" id="user-profile__setting"> -->
 
-                    <span>Private profile</span>
-                    <img src="../assets/Toggle.png">
+                    <PrivacyBtn />
                 </div>
 
                 <!-- <button class="btn">Follow<i class="uil uil-user-plus"></i></button> -->
@@ -43,10 +42,11 @@
 import AllMyPosts from './AllMyPosts.vue'
 import Following from './Following.vue'
 import Followers from './Followers.vue'
+import PrivacyBtn from './PrivacyBtn.vue'
 // import { mapGetters } from 'vuex'
 export default {
     name: 'Profile',
-    components: { AllMyPosts, Followers, Following },
+    components: { AllMyPosts, Followers, Following, PrivacyBtn },
     data() {
         return {
             user: {}
@@ -157,6 +157,7 @@ export default {
 .user-profile__privacy {
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 7.5px;
 
     padding-top: 25px;
