@@ -21,50 +21,9 @@
 
                 <!-- <button class="btn">Follow<i class="uil uil-user-plus"></i></button> -->
             </div>
-            <div class="multiple-item-list" id="following">
-                <div class="item-list__wrapper">
-                    <h3>Followers</h3>
-                    <ul class="item-list users">
-                        <li>
-                            <div class="user-picture small"></div>
-                            <div class="item-text">User 1</div>
-                        </li>
-                        <li>
-                            <div class="user-picture small"></div>
-                            <div class="item-text">User 2</div>
-                        </li>
-                        <li>
-                            <div class="user-picture small"></div>
-                            <div class="item-text">User 3</div>
-                        </li>
-                        <li>
-                            <div class="user-picture small"></div>
-                            <div class="item-text">User 4</div>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="item-list__wrapper">
-                    <h3>Following</h3>
-                    <ul class="item-list users">
-                        <li>
-                            <div class="user-picture small"></div>
-                            <div class="item-text">User 1</div>
-                        </li>
-                        <li>
-                            <div class="user-picture small"></div>
-                            <div class="item-text">User 2</div>
-                        </li>
-                        <li>
-                            <div class="user-picture small"></div>
-                            <div class="item-text">User 3</div>
-                        </li>
-                        <li>
-                            <div class="user-picture small"></div>
-                            <div class="item-text">User 4</div>
-                        </li>
-                    </ul>
-                </div>
+            <div class="multiple-item-list">
+                <Following />
+                <Followers />
             </div>
         </div>
 
@@ -77,22 +36,17 @@
             <AllMyPosts v-bind:userid="this.user.id" />
         </div>
 
-
-
-
-
-
-
     </div>
-
 </template>
 
 <script>
 import AllMyPosts from './AllMyPosts.vue'
+import Following from './Following.vue'
+import Followers from './Followers.vue'
 // import { mapGetters } from 'vuex'
 export default {
     name: 'Profile',
-    components: { AllMyPosts },
+    components: { AllMyPosts, Followers, Following },
     data() {
         return {
             user: {}
@@ -151,6 +105,7 @@ export default {
     grid-template-columns: 1fr minmax(min-content, 550px) 1fr;
     column-gap: 50px;
     margin-top: 100px;
+    justify-items: flex-end;
 
 }
 
@@ -164,7 +119,9 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 50px;
-    align-items: flex-end;
+    max-width: max-content;
+    min-width: min-content;
+
 }
 
 
@@ -178,7 +135,6 @@ export default {
     border-radius: var(--container-border-radius);
     align-items: center;
     text-align: center;
-    margin-left: 15px;
     gap: 25px;
 
 

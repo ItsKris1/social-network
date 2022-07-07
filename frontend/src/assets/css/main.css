@@ -219,12 +219,15 @@ select {
     display: flex;
     flex-direction: column;
     gap: 40px;
-    width: max-content;
+    /* width: max-content; */
     overflow: hidden;
     padding: var(--container-padding);
     box-shadow: var(--container-shadow);
     border-radius: var(--container-border-radius);
     background-color: var(--color-white);
+
+    align-items: center;
+
 }
 
 .multiple-item-list>.item-list__wrapper {
