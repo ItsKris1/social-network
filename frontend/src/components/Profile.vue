@@ -8,7 +8,7 @@
             <span>{{ user.nickname }}</span>
             <span>{{ user.login }}</span>
             <span>{{ user.dateOfBirth }}</span>
-            <button id="followBtn" click="follow">Follow</button>
+            <FollowBtn v-bind:profileId="this.user.id" />
         </div>
         <div id="profileSettings">
             <span>Privacy change-button</span>
@@ -27,10 +27,11 @@
 import AllMyPosts from './AllMyPosts.vue'
 import Following from './Following.vue'
 import Followers from './Followers.vue'
+import FollowBtn from './FollowBtn.vue'
 // import { mapGetters } from 'vuex'
 export default {
     name: 'Profile',
-    components: { AllMyPosts, Followers, Following },
+    components: { AllMyPosts, Followers, Following, FollowBtn },
     data() {
         return {
             user: {}
@@ -44,10 +45,7 @@ export default {
         // ...mapGetters(['userInfo']),
         // ...getUserId()
     },
-    methods: {
-        follow() {
-            console.log('subscribe function')
-        },
+    methods: {        
         getUserInfo() {
             this.$store.dispatch('getMyProfileInfo')
         },
@@ -104,12 +102,5 @@ export default {
     margin-left: auto;
 }
 
-#followBtn {
-    height: 37px;
-    width: 92px;
-    left: 0px;
-    top: 0px;
-    border-radius: 8px;
-    padding: 10px, 15px, 10px, 15px;
-}
+
 </style>
