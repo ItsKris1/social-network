@@ -27,7 +27,8 @@
                     <button @click="submitComment(postData.id)">Add comment</button>
                 </div>
                 <div id="commentsDiv" v-for=" comment in postData.comments">
-                    <div><b>{{ comment.authorNickname }}</b></div>
+                <img class="commentAuthorAvatar" :src="'http://localhost:8081/' + comment.author.avatar" alt="commentAuthorAvatar">
+                    <div><b>{{ comment.author.nickname }}</b></div>
                     <div>{{ comment.content }}</div>
 
                     <div v-if="comment.image">
@@ -133,6 +134,10 @@ export default {
 }
 #commentsDiv{
     border-top: double;
+}
+.commentAuthorAvatar{
+    height: 47px;
+    width: 47px;
 }
 .comment-img>input{
     display: none;

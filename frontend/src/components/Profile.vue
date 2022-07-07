@@ -57,11 +57,11 @@ export default {
             })
                 .then((r) => r.json())
                 .then((json) => {
-                    console.log("profile.vue/getuserid",json);
+                    // console.log("profile.vue/getuserid",json);
                     this.user = json.users[0];
                     // console.log(userInfo);
                     // this.commit("updateProfileInfo", userInfo);
-                    console.log("user profile info -", json);
+                    // console.log("user profile info -", json);
                 });
             // this.isOwnerProfile()
         },
