@@ -134,6 +134,14 @@ func AttachComments(handler *Handler, posts *[]models.Post) error {
 		if err != nil {
 			return err
 		}
+		// add author
+		for i := 0; i < len(comments); i++ {
+			author, err := handler.repos.UserRepo.GetDataMin(comments[i].AuthorID)
+			if err != nil {
+				return err
+			}
+			comments[i].Author = author
+		}
 		(*posts)[i].Comments = comments
 	}
 	return nil
