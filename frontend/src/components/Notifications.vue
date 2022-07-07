@@ -10,44 +10,57 @@
     </div> -->
 
     Notifications
-    <div class="some-wrapper">
-        <div class="item-list" id="requests">
-            <ul class="item-list__items">
-                <li class="item-list__item">
 
+    <div class="relative-wrapper">
+        <div class="item-list__wrapper" id="notifications">
+            <ul class="item-list">
+                <li>
                     <div class="row1">
                         <img class="small" src="../assets/icons/default-profile.svg">
 
-                        <div class="item-list__text">
-                            James Brown sent you a following request
+                        <div class="item-text">
+                            <span class="who">John Smith</span> has sent you a following request
                         </div>
-
                     </div>
-
                     <div class="row2">
                         <i class="uil uil-times accept"></i>
                         <i class="uil uil-check decline"></i>
                     </div>
                 </li>
-                <!-- <li class="item-list__item">
-
+                <li>
                     <div class="row1">
-                        <img class="small" src="../assets/icons/arrow-circle-right.svg">
-                        <div class="item-list__text">twoasfasfasfasf</div>
+                        <img class="small" src="../assets/icons/default-profile.svg">
+                        <div class="item-text">
+                            <span class="who">Chris Brown</span> wants to join your group
+                        </div>
 
                     </div>
-
                     <div class="row2">
                         <i class="uil uil-times accept"></i>
                         <i class="uil uil-check decline"></i>
                     </div>
-                </li> -->
+                </li>
+                <li>
+                    <div class="row1">
+                        <img class="small" src="../assets/icons/default-profile.svg">
+
+                        <div class="item-text">
+                            <span class="who">Goblins</span> has invited you to join their group
+                        </div>
+                    </div>
+                    <div class="row2">
+                        <i class="uil uil-times accept"></i>
+                        <i class="uil uil-check decline"></i>
+                    </div>
+                </li>
 
             </ul>
         </div>
-
-
     </div>
+
+
+
+
 
 
 
@@ -68,59 +81,47 @@ export default {
 </script>
 
 <style>
-.some-wrapper {
+.relative-wrapper {
     position: relative;
+    top: 10px;
+
+    display: none;
 }
 
-#requests {
+
+
+#notifications {
+
     position: absolute;
-    min-width: 300px;
     transform: translateX(-50%);
     left: 50%;
+    font-weight: 400;
+
 }
 
-.item-list__text {
-    overflow-wrap: anywhere;
+#notifications .item-list {
+    gap: 15px;
 }
 
-#requests ul {
-    /* position: absolute; */
-    background-color: orange;
-}
-
-#requests .item-list__item {
+#notifications .item-list li {
     justify-content: space-between;
+    gap: 20px;
 }
 
-#requests .item-list__item .row1 {
+.item-list .row1 {
     display: flex;
     gap: 5px;
     align-items: center;
+
 }
 
-#requests .item-list__item .row2 {
+.item-list .row2 {
+    font-size: 1.25em;
+    min-width: max-content;
     flex-shrink: 0;
 }
 
-#notificationsBtn {
-    display: inline-block;
-    position: relative;
-    cursor: pointer;
-    user-select: none;
-}
 
-
-
-#notificationsContent {
-    cursor: default;
-    display: block;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    padding: 12px 16px;
-    z-index: 1;
-}
 
 .accept {
     color: green;
@@ -128,5 +129,9 @@ export default {
 
 .decline {
     color: red;
+}
+
+.who {
+    font-weight: 500;
 }
 </style>

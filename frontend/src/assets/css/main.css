@@ -183,7 +183,7 @@ select {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    width: max-content;
+    /* width: max-content; */
     padding: var(--container-padding);
     background-color: var(--color-white);
     box-shadow: var(--container-shadow);
