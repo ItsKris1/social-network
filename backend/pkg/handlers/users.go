@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"net/http"
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
@@ -206,4 +207,48 @@ func (handler *Handler) Unfollow(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	utils.RespondWithSuccess(w, "Unfollowing successful", 200)
+}
+
+//not tested
+// wait for POST request with notification Id and response -"ACCEPT" or "DECLINE"
+func (handler *Handler) ResponseFollowRequest(w http.ResponseWriter, r *http.Request) {
+	w = utils.ConfigHeader(w)
+	if r.Method != "POST" {
+		utils.RespondWithError(w, "Error on form submittion", 200)
+		return
+	}
+	/* ---------------------------- read incoming data --------------------------- */
+	// Try to decode the JSON request to a new response
+	type Response struct {
+		RequestID string `json:"requestId"`
+		Response  string `json:"response"` // ACCEPT or DECLINE
+	}
+	var resp Response
+	err := json.NewDecoder(r.Body).Decode(&resp)
+	if err != nil {
+		utils.RespondWithError(w, "Error on form submittion", 200)
+		return
+	}
+	// get other user id from notification
+	followerId, err := handler.repos.NotifRepo.GetUserFromRequest(resp.RequestID)
+	userId := r.Context().Value(utils.UserKey).(string)
+	if err != nil {
+		utils.RespondWithError(w, "Internal server error", 200)
+		return
+	}
+	if strings.ToUpper(resp.Response) == "ACCEPT" {
+		err = handler.repos.UserRepo.SaveFollower(userId, followerId)
+		if err != nil {
+			utils.RespondWithError(w, "Internal server error", 200)
+			return
+		}
+	}
+	/* ----------------------- delete pending notification ---------------------- */
+	err = handler.repos.NotifRepo.Delete(resp.RequestID)
+	if err != nil {
+		utils.RespondWithError(w, "Internal server error", 200)
+		return
+	}
+	// notify websocket about notification changes
+	utils.RespondWithSuccess(w, "Response successful", 200)
 }

@@ -4,14 +4,15 @@ export default createStore({
   //------------------------------------- state is like a variables, which hold a values.
   state: {
     profileInfo: {},
-    notifications: {
-      isNotificationsOpen: false,
-    },
+    // notifications: {
+    //   isNotificationsOpen: false,
+    // },
     posts: {
       allposts: [],
       myposts: [],
     },
     users: {
+      
       allusers: [],
     },
   },
@@ -66,7 +67,7 @@ export default createStore({
         // .then((r=>console.log(r)))
         .then((res) => res.json())
         .then((json) => {
-          console.log(json);
+          // console.log(json);
           const posts = json.posts;
           this.commit("updatePosts", posts);
         });

@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
@@ -19,21 +18,15 @@ func (handler *Handler) AllPosts(w http.ResponseWriter, r *http.Request) {
 		utils.RespondWithError(w, "Error on getting data", 200)
 		return
 	}
-	for i := 0; i < len(posts); i++ {
-		author, err := handler.repos.UserRepo.GetDataMin(posts[i].AuthorID)
-		if err != nil {
-			utils.RespondWithError(w, "Error on getting data", 200)
-			return
-		}
-		posts[i].Author = author
+	// Get post author info attached
+	if err := AttachAuthors(handler, &posts); err != nil {
+		utils.RespondWithError(w, "Error on getting data", 200)
+		return
 	}
-	for i := 0; i < len(posts); i++ {
-		comments, err := handler.repos.CommentRepo.Get(posts[i].ID)
-		if err != nil {
-			utils.RespondWithError(w, "Error on getting data", 200)
-			return
-		}
-		posts[i].Comments = comments
+	// Get comment info for each post
+	if err := AttachComments(handler, &posts); err != nil {
+		utils.RespondWithError(w, "Error on getting data", 200)
+		return
 	}
 	utils.RespondWithPosts(w, posts, 200)
 }
@@ -53,27 +46,18 @@ func (handler *Handler) UserPosts(w http.ResponseWriter, r *http.Request) {
 	//request user posts
 	posts, errPosts := handler.repos.PostRepo.GetUserPosts(userId, currentUserId)
 	if errPosts != nil {
-		fmt.Println("Err: ", errPosts)
 		utils.RespondWithError(w, "Error on getting data", 200)
 		return
 	}
 	// Get post author info attached
-	for i := 0; i < len(posts); i++ {
-		author, err := handler.repos.UserRepo.GetDataMin(posts[i].AuthorID)
-		if err != nil {
-			utils.RespondWithError(w, "Error on getting data", 200)
-			return
-		}
-		posts[i].Author = author
+	if err := AttachAuthors(handler, &posts); err != nil {
+		utils.RespondWithError(w, "Error on getting data", 200)
+		return
 	}
 	// Get comment info for each post
-	for i := 0; i < len(posts); i++ {
-		comments, err := handler.repos.CommentRepo.Get(posts[i].ID)
-		if err != nil {
-			utils.RespondWithError(w, "Error on getting data", 200)
-			return
-		}
-		posts[i].Comments = comments
+	if err := AttachComments(handler, &posts); err != nil {
+		utils.RespondWithError(w, "Error on getting data", 200)
+		return
 	}
 	utils.RespondWithPosts(w, posts, 200)
 }
@@ -98,7 +82,7 @@ func (handler *Handler) NewPost(w http.ResponseWriter, r *http.Request) {
 	newPost := models.Post{
 		ID:         utils.UniqueId(),
 		Content:    r.PostFormValue("body"),
-		GroupID:    r.PostFormValue("group-id"),
+		GroupID:    r.PostFormValue("groupId"),
 		Visibility: visibility,
 		AuthorID:   userId,
 	}
@@ -112,13 +96,53 @@ func (handler *Handler) NewPost(w http.ResponseWriter, r *http.Request) {
 	}
 	// in case of "almost private post", save users with access
 	if newPost.Visibility == "ALMOST_PRIVATE" {
-		accessList := r.PostFormValue("checkedfollowers")
-		fmt.Println("Save: ", accessList)
+		accessListRaw := r.PostFormValue("checkedfollowers")
+		accessList := strings.Split(accessListRaw, ",")
 		for i := 0; i < len(accessList); i++ {
 			// save each follower in db
-			// fmt.Println("Save: ", accessList[i])
+			err = handler.repos.PostRepo.SaveAccess(newPost.ID, accessList[i])
+			if errDB != nil {
+				utils.RespondWithError(w, "Internal server error", 200)
+				return
+			}
 		}
 
 	}
 	utils.RespondWithSuccess(w, "New post created", 200)
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                   helpers                                  */
+/* -------------------------------------------------------------------------- */
+
+func AttachAuthors(handler *Handler, posts *[]models.Post) error {
+	for i := 0; i < len(*posts); i++ {
+		var userId = (*posts)[i].AuthorID
+		author, err := handler.repos.UserRepo.GetDataMin(userId)
+		if err != nil {
+			return err
+		}
+		(*posts)[i].Author = author
+	}
+	return nil
+}
+
+func AttachComments(handler *Handler, posts *[]models.Post) error {
+	for i := 0; i < len(*posts); i++ {
+		var postId = (*posts)[i].ID
+		comments, err := handler.repos.CommentRepo.Get(postId)
+		if err != nil {
+			return err
+		}
+		// add author
+		for i := 0; i < len(comments); i++ {
+			author, err := handler.repos.UserRepo.GetDataMin(comments[i].AuthorID)
+			if err != nil {
+				return err
+			}
+			comments[i].Author = author
+		}
+		(*posts)[i].Comments = comments
+	}
+	return nil
 }

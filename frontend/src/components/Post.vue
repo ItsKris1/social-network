@@ -28,7 +28,8 @@
                     <button @click="submitComment(postData.id)">Add comment</button>
                 </div>
                 <div id="commentsDiv" v-for=" comment in postData.comments">
-                    <div><b>{{ comment.authorNickname }}</b></div>
+                <img class="commentAuthorAvatar" :src="'http://localhost:8081/' + comment.author.avatar" alt="commentAuthorAvatar">
+                    <div><b>{{ comment.author.nickname }}</b></div>
                     <div>{{ comment.content }}</div>
 
                     <div v-if="comment.image">
@@ -89,11 +90,10 @@
 
             <div class="comments" v-if="postData.comments">
                 <div class="comment" lang="en" v-for="comment in postData.comments">
-                    <!-- <div class="user-picture medium"
-                        :style="{ backgroundImage: `url(http://localhost:8081/${comment.author.avatar})` }"></div> -->
-                    <div class="user-picture medium"></div>
+                    <div class="user-picture medium"
+                        :style="{ backgroundImage: `url(http://localhost:8081/${comment.author.avatar})` }"></div>
                     <div class="comment-content">
-                        <p class="comment-author">{{ comment.authorNickname }}</p>
+                        <p class="comment-author">{{ comment.author.nickname }}</p>
                         <p class="comment-body">{{ comment.content }}</p>
                         <img class="comment-image" v-if="comment.image" :src="'http://localhost:8081/' + comment.image"
                             alt="">

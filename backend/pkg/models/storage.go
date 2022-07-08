@@ -8,4 +8,5 @@ type Repositories struct {
 	PostRepo    PostRepository
 	CommentRepo CommentRepository
 	NotifRepo   NotifRepository
+	EventRepo   EventRepository
 }

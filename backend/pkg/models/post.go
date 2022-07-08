@@ -17,5 +17,10 @@ type PostRepository interface {
 	GetAll(userID string) ([]Post, error)
 	// get user posts that current user have access to
 	GetUserPosts(userID, currentUserID string) ([]Post, error)
+	// get group psts from specific group
+	GetGroupPosts(groupId string)([]Post, error)
+	
 	New(Post) error
+
+	SaveAccess(postId, userId string) error //save access for almost_private post
 }

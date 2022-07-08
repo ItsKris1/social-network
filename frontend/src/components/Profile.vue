@@ -11,14 +11,13 @@
                     <p class="user-dateOfBirth">{{ user.dateOfBirth }}</p>
                 </div>
 
-                <div class="user-profile__privacy">
-                    <!-- <label for="user-profile__setting">Private profile</label>
-            <input type="radio" name="user-profile__setting" id="user-profile__setting"> -->
+                <FollowBtn v-bind:profileId="this.user.id" />
 
+                <div class="user-profile__privacy">
                     <PrivacyBtn />
                 </div>
 
-                <!-- <button class="btn">Follow<i class="uil uil-user-plus"></i></button> -->
+
             </div>
             <div class="multiple-item-list">
                 <Following />
@@ -42,11 +41,12 @@
 import AllMyPosts from './AllMyPosts.vue'
 import Following from './Following.vue'
 import Followers from './Followers.vue'
+import FollowBtn from './FollowBtn.vue'
 import PrivacyBtn from './PrivacyBtn.vue'
 // import { mapGetters } from 'vuex'
 export default {
     name: 'Profile',
-    components: { AllMyPosts, Followers, Following, PrivacyBtn },
+    components: { AllMyPosts, Followers, Following, FollowBtn, PrivacyBtn },
     data() {
         return {
             user: {}
@@ -61,9 +61,6 @@ export default {
         // ...getUserId()
     },
     methods: {
-        follow() {
-            console.log('subscribe function')
-        },
         getUserInfo() {
             this.$store.dispatch('getMyProfileInfo')
         },
@@ -73,11 +70,11 @@ export default {
             })
                 .then((r) => r.json())
                 .then((json) => {
-                    console.log("profile.vue/getuserid", json);
+                    // console.log("profile.vue/getuserid",json);
                     this.user = json.users[0];
                     // console.log(userInfo);
                     // this.commit("updateProfileInfo", userInfo);
-                    console.log("user profile info -", json);
+                    // console.log("user profile info -", json);
                 });
             // this.isOwnerProfile()
         },

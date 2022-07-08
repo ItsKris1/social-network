@@ -69,7 +69,7 @@ export default {
         })
           .then((response => response.json()))
           .then((json => {
-            console.log(json);
+            // console.log(json)
             if (json.message === "Login successful") {
               this.$toast.open({
                 message: "Login success!",
