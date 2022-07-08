@@ -19,8 +19,8 @@
                     <div class="row1">
                         <img class="small" src="../assets/icons/default-profile.svg">
 
-                        <div class="item-text">
-                            <span class="who">John Smith</span> has sent you a following request
+                        <div>
+                            <span class="who">John Smith</span> sent you a follow request
                         </div>
                     </div>
                     <div class="row2">
@@ -31,7 +31,7 @@
                 <li>
                     <div class="row1">
                         <img class="small" src="../assets/icons/default-profile.svg">
-                        <div class="item-text">
+                        <div>
                             <span class="who">Chris Brown</span> wants to join your group
                         </div>
 
@@ -45,8 +45,21 @@
                     <div class="row1">
                         <img class="small" src="../assets/icons/default-profile.svg">
 
-                        <div class="item-text">
-                            <span class="who">Goblins</span> has invited you to join their group
+                        <div>
+                            <span class="who">Goblins</span> invited you to join their group
+                        </div>
+                    </div>
+                    <div class="row2">
+                        <i class="uil uil-times accept"></i>
+                        <i class="uil uil-check decline"></i>
+                    </div>
+                </li>
+                <li>
+                    <div class="row1">
+                        <img class="small" src="../assets/icons/users-alt.svg">
+
+                        <div>
+                            <span class="who">ItsKris</span> did something
                         </div>
                     </div>
                     <div class="row2">
@@ -58,14 +71,6 @@
             </ul>
         </div>
     </div>
-
-
-
-
-
-
-
-
 
 
 </template>
@@ -86,9 +91,8 @@ export default {
 <style>
 .relative-wrapper {
     position: relative;
+
 }
-
-
 
 #notifications {
 
@@ -97,9 +101,9 @@ export default {
     left: 50%;
     font-weight: 400;
     margin-top: 5px;
+    min-width: 500px;
+
     display: none;
-
-
 }
 
 

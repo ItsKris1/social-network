@@ -1,30 +1,4 @@
 <template>
-
-    <!-- 
-    <div id="searchDiv">
-
-        <input @input="filtered" v-model="this.searchQuery" id="inputBox" type="text"
-            placeholder="Search user or group">
-
-
-
-        <div style="color:black">{{ this.searchQuery }}</div>
-        <img id="glass" src="../assets/glass.png" alt="glass.png">
-
-        <ul id="dropdownlist" v-if="this.dropdownList.length !== 0" class="item-list">
-            <li @click="goToUserProfile(user.id)" id="dropdownitem" v-for="user in dropdownList">
-                <div class="user-picture small"
-                    :style="{ backgroundImage: `url(http://localhost:8081/${user.avatar})` }">
-                </div>
-                {{ user.nickname }}
-
-
-            </li>
-
-        </ul>
-    </div> -->
-
-
     <div id="searchDiv">
 
         <input @input="filtered" v-model="this.searchQuery" type="text" placeholder="Search user or group">
@@ -43,7 +17,7 @@
 
                 <li>
                     <img class="small" src="../assets/icons/users-alt.svg" alt="">
-                    <div class="item-text">Garrisonsttttttttttttttttttttttttttttttttttttttttttt</div>
+                    <div class="item-text">Garrisons</div>
                 </li>
             </ul>
         </div>
