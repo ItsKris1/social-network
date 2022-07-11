@@ -1,24 +1,25 @@
 <template>
-    <button class="btn" v-if="isMyProfile" @click="follow">Follow<i class="uil uil-user-plus"></i></button>
+    <button class="btn" @click="follow">Follow<i class="uil uil-user-plus"></i></button>
 </template>
 
 
 <script>
 export default {
     name: 'FollowBtn',
+    props: ['profileId'],
     data() {
         return {
             userid: "",
             isMyProfile: false,
         }
     },
-    props: {
-        profileId: ""
-    },
+
     created() {
-        this.getLoggedUserId()
-        this.checkProfile()
+        this.checkProfile();
+        console.log(this.profileId)
     },
+
+
     watch: { //watching changes in route
         $route() {
             this.checkProfile()
@@ -46,14 +47,12 @@ export default {
                     this.userid = json.users[0].id
                 }))
         },
-        checkProfile() {
 
-            if (this.userid === this.profileId) {
-                this.isMyProfile = true
-            } else {
-                this.isMyProfile = false
-            }
-            // console.log("checkProfile", this.isMyProfile);
+        async checkProfile() {
+            await this.getLoggedUserId();
+            this.isMyProfile = this.userid === this.profileId
+            console.log("1", this.userid)
+            console.log("2", this.profileId)
         },
     }
 }

@@ -1,4 +1,5 @@
 <template>
+
     <div id="layout-profile">
 
         <div class="left-section ">
@@ -11,11 +12,8 @@
                     <p class="user-dateOfBirth">{{ user.dateOfBirth }}</p>
                 </div>
 
-                <!-- <FollowBtn v-bind:profileId="this.user.id" /> -->
-
-                <div class="user-profile__privacy">
-                    <PrivacyBtn v-bind:profileID="user.id" />
-                </div>
+                <PrivacyBtn v-if="isMyProfile" />
+                <FollowBtn v-else />
 
 
             </div>
@@ -49,17 +47,20 @@ export default {
     components: { AllMyPosts, Followers, Following, FollowBtn, PrivacyBtn },
     data() {
         return {
-            user: {}
+            user: {},
+            isMyProfile: false,
         }
     },
     created() {
         // this.getUserInfo()
         this.getUserId()
+        this.checkProfile()
     },
     computed: {
         // ...mapGetters(['userInfo']),
         // ...getUserId()
     },
+
     methods: {
         getUserInfo() {
             this.$store.dispatch('getMyProfileInfo')
@@ -72,6 +73,11 @@ export default {
                 .then((json) => {
                     // console.log("profile.vue/getuserid",json);
                     this.user = json.users[0];
+                    // console.log("user", this.user)
+
+                    // if (this.$route.params.id === this.user.id) {
+                    //     console.log("my user")
+                    // }
                     // console.log(userInfo);
                     // this.commit("updateProfileInfo", userInfo);
                     // console.log("user profile info -", json);
@@ -87,10 +93,37 @@ export default {
         //     } else { console.log("It's NOT a owner") }
 
         // }
+
+        async getLoggedUserId() {
+            const response = await fetch("http://localhost:8081/currentUser", {
+                credentials: "include",
+            })
+
+            const data = await response.json();
+            this.loggedUserID = data.users[0].id;
+
+            return data.users[0].id
+
+            // .then((r) => r.json())
+            // .then((json => {
+            //     this.loggedUserID = json.users[0].id
+            // }))
+        },
+
+        async checkProfile() {
+            const profileID = this.$route.params.id;
+            const loggedUserID = await this.getLoggedUserId();
+
+            console.log(profileID)
+            console.log(loggedUserID)
+
+            this.isMyProfile = (profileID === loggedUserID)
+        }
     },
     watch: { //watching changes in route
         $route() {
             this.getUserId()
+            this.checkProfile();
         }
     }
 }

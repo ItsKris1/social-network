@@ -252,7 +252,7 @@ export default {
     display: flex;
     gap: 10px;
     align-items: center;
-    justify-content: end;
+    justify-content: flex-end;
 
 }
 
