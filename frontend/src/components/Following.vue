@@ -1,8 +1,8 @@
 <template>
     <div>
         <span>Following</span>
-        <div>
-
+        <div v-for="user in this.following" :key="user.id">           
+                {{user.nickname}}
         </div>
     </div>
 </template>
@@ -11,6 +11,19 @@
 <script>
 export default {
     name: 'Following',
+    data(){
+        return {
+            following:[]
+        }
+    },
+    created(){
+        this.getFollowing()
+    },
+    watch: { //watching changes in route
+        $route() {
+            this.getFollowing()
+        }
+    },
     methods: {
         async getFollowing() {
             // console.log("getFollowing");
@@ -18,7 +31,16 @@ export default {
                 credentials: 'include'
             })
                 .then((response => response.json()))
-                // .then((json=>console.log(json)))
+                .then((json=>{
+                    console.log("following:",json) 
+                    return json
+                    }))
+                
+                .then((json=>{
+                    this.following = json.users
+                }))
+
+
         }
     }
 }

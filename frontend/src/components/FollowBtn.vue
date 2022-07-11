@@ -33,7 +33,7 @@ export default {
                 credentials: "include",
             })
                 .then((r) => r.json())
-                // .then((json=>console.log("server response:",json)))
+                .then((json=>console.log("server response:",json)))
         },
         unfollow() {
             console.log('unsubscribe function')
