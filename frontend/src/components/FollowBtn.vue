@@ -25,8 +25,14 @@ export default {
         }
     },
     methods: {
-        follow() {
-            console.log('subscribe function')
+        async follow() {
+            // console.log('subscribe function:')
+            // console.log(this.profileId);
+             await fetch("http://localhost:8081/follow?userId=" + this.profileId, {
+                credentials: "include",
+            })
+                .then((r) => r.json())
+                // .then((json=>console.log("server response:",json)))
         },
         unfollow() {
             console.log('unsubscribe function')
