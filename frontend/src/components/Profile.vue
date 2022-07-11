@@ -11,10 +11,10 @@
                     <p class="user-dateOfBirth">{{ user.dateOfBirth }}</p>
                 </div>
 
-                <FollowBtn v-bind:profileId="this.user.id" />
+                <!-- <FollowBtn v-bind:profileId="this.user.id" /> -->
 
                 <div class="user-profile__privacy">
-                    <PrivacyBtn />
+                    <PrivacyBtn v-bind:profileID="user.id" />
                 </div>
 
 

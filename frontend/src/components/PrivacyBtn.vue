@@ -1,11 +1,17 @@
 <template>
+    {{ isMyProfile }}
 
-    <span>Private profile</span>
-    <div class="hello-world">
-        <div class="toggle-wrapper">
-            <span class="toggle-indicator"></span>
+    <div v-if="isMyProfile">
+        <span>Private profile</span>
+        <div class="hello-world">
+            <div class="toggle-wrapper">
+                <span class="toggle-indicator"></span>
+            </div>
         </div>
+
+
     </div>
+
 
 </template>
 
@@ -13,6 +19,30 @@
 <script>
 export default {
     name: 'PrivacyBtn',
+    props: ['profileID'],
+
+    data() {
+        return {
+            isMyProfile: false
+        }
+    },
+
+    created() {
+        this.getLoggedUserId()
+    },
+    methods: {
+        async getLoggedUserId() {
+            await fetch("http://localhost:8081/currentUser", {
+                credentials: "include",
+            })
+                .then((r) => r.json())
+                .then((json => {
+                    const userid = json.users[0].id
+                    this.isMyProfile = userid === this.profileID;
+                }))
+        },
+    }
+
 }
 
 

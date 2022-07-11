@@ -1,5 +1,5 @@
 <template>
-    <button class="btn" v-show="this.isMyProfile" @click="follow">Follow<i class="uil uil-user-plus"></i></button>
+    <button class="btn" v-if="isMyProfile" @click="follow">Follow<i class="uil uil-user-plus"></i></button>
 </template>
 
 
@@ -28,11 +28,11 @@ export default {
         async follow() {
             // console.log('subscribe function:')
             // console.log(this.profileId);
-             await fetch("http://localhost:8081/follow?userId=" + this.profileId, {
+            await fetch("http://localhost:8081/follow?userId=" + this.profileId, {
                 credentials: "include",
             })
                 .then((r) => r.json())
-                // .then((json=>console.log("server response:",json)))
+            // .then((json=>console.log("server response:",json)))
         },
         unfollow() {
             console.log('unsubscribe function')
