@@ -1,72 +1,73 @@
 <template>
     <div class="user-profile__privacy">
-        <span>Private profile</span>
-
-        <div class="toggle-wrapper" @click="private = !private" :class="{ active: private }">
-            <span class="toggle-indicator"></span>
-        </div>
+        Private profile
+        <label for="privateProfileInput">
+            <div class="toggle-wrapper" :class="{ active: isActive }">
+                <span class="toggle-button"></span>
+                <input type="checkbox" id="privateProfileInput"
+                       v-model="checked"
+                       @change="updateProfileStatus">
+            </div>
+        </label>
 
     </div>
-
 
 </template>
 
 
 <script>
 export default {
+    props: ['status'],
     data() {
         return {
-            private: false
+            currentUserStatus: this.status,
+            checked: false
+        }
+    },
+
+    computed: {
+        isActive() {
+            if (this.currentUserStatus === "PRIVATE") {
+                this.checked = true;
+                return true;
+            } else {
+                return false;
+            }
+        }
+    },
+
+    methods: {
+        async updateProfileStatus() {
+            this.currentUserStatus = (this.checked ? 'PRIVATE' : 'PUBLIC');
+            const response = await fetch(`http://localhost:8081/changeStatus?status=${this.currentUserStatus}`, {
+                credentials: "include"
+            });
+            console.log("Response", await response.json())
+
         }
     }
 }
-
-// export default {
-//     name: 'PrivacyBtn',
-//     props: ['profileId'],
-
-//     data() {
-//         return {
-//             isMyProfile: false,
-//             loggedUserID: ""
-//         }
-//     },
-
-//     // created() {
-//     //     this.checkProfile();
-
-//     // },
-//     methods: {
-//         async getLoggedUserId() {
-//             const response = await fetch("http://localhost:8081/currentUser", {
-//                 credentials: "include",
-//             })
-
-//             const data = await response.json();
-//             this.loggedUserID = data.users[0].id;
-
-//             // .then((r) => r.json())
-//             // .then((json => {
-//             //     this.loggedUserID = json.users[0].id
-//             // }))
-//         },
-
-//         async checkProfile() {
-//             await this.getLoggedUserId();
-//             this.isMyProfile = (this.loggedUserID === this.profileId)
-//             console.log("1", this.loggedUserID)
-//             console.log("2", this.profileId)
-//         },
-
-//     }
-
-// }
-
 
 </script>
 
 
 <style>
+.user-profile__privacy {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7.5px;
+
+    padding-top: 25px;
+    border-top: 1px solid rgb(212, 212, 212);
+    width: 100%;
+    font-size: 14px;
+}
+
+.user-profile__privacy label {
+    margin: 0;
+}
+
 .toggle-wrapper {
     width: 60px;
     height: 30px;
@@ -77,7 +78,7 @@ export default {
     background-color: rgb(228, 228, 228);
 }
 
-.toggle-indicator {
+.toggle-button {
     display: inline-block;
     height: 30px;
     width: 30px;
@@ -90,9 +91,13 @@ export default {
     transition: all 0.3s ease;
 }
 
-.active .toggle-indicator {
+.active .toggle-button {
     transform: translateX(100%);
     background-color: rgb(0, 158, 0);
+}
+
+#privateProfileInput {
+    opacity: 0;
 }
 
 

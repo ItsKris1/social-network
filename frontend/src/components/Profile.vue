@@ -1,38 +1,42 @@
-<template>
+<template v-if="5 === 2">
 
-    <div id="layout-profile">
+    <div v-if="user">
+        <div id="layout-profile">
 
-        <div class="left-section ">
-            <div class="user-profile__public">
-                <div class="user-picture" :style="{ backgroundImage: `url(http://localhost:8081/${user.avatar})` }">
+            <div class="left-section ">
+                <div class="user-profile__public">
+                    <div class="user-picture" :style="{ backgroundImage: `url(http://localhost:8081/${user.avatar})` }">
+                    </div>
+                    <div class="user-profile__info">
+                        <h3 class="username">{{ user.nickname }}</h3>
+                        <p class="user-email">{{ user.login }}</p>
+                        <p class="user-dateOfBirth">{{ user.dateOfBirth }}</p>
+                    </div>
+
+                    <div v-if="user">
+                        <PrivacyBtn v-if="user" :status="user.status" />
+                        <FollowBtn v-else />
+
+                    </div>
+
                 </div>
-                <div class="user-profile__info">
-                    <h3 class="username">{{ user.nickname }}</h3>
-                    <p class="user-email">{{ user.login }}</p>
-                    <p class="user-dateOfBirth">{{ user.dateOfBirth }}</p>
+                <div class="multiple-item-list">
+                    <Following />
+                    <Followers />
                 </div>
-
-                <PrivacyBtn v-if="isMyProfile" />
-                <FollowBtn v-else />
-
-
             </div>
-            <div class="multiple-item-list">
-                <Following />
-                <Followers />
+
+            <div class="middle-section ">
+                <div class="about" v-if="user.about !== ''">
+                    <h2 class="about-title">About me</h2>
+                    <p class="about-text">{{ user.about }}</p>
+                </div>
+                <AllMyPosts v-bind:userid="this.user.id" />
             </div>
+
         </div>
-
-
-        <div class="middle-section ">
-            <div class="about" v-if="user.about !== ''">
-                <h2 class="about-title">About me</h2>
-                <p class="about-text">{{ user.about }}</p>
-            </div>
-            <AllMyPosts v-bind:userid="this.user.id" />
-        </div>
-
     </div>
+
 </template>
 
 <script>
@@ -47,7 +51,7 @@ export default {
     components: { AllMyPosts, Followers, Following, FollowBtn, PrivacyBtn },
     data() {
         return {
-            user: {},
+            user: null,
             isMyProfile: false,
         }
     },
@@ -184,17 +188,7 @@ export default {
 
 
 
-.user-profile__privacy {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 7.5px;
 
-    padding-top: 25px;
-    border-top: 1px solid rgb(212, 212, 212);
-    width: 100%;
-    font-size: 14px;
-}
 
 .about {
     display: flex;
