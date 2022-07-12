@@ -191,6 +191,8 @@ select {
     color: var(--color-lg-black)
 }
 
+
+
 .item-list {
     display: flex;
     flex-direction: column;
@@ -211,6 +213,10 @@ select {
     text-overflow: ellipsis;
 }
 
+#following,
+#followers:is(h3) {
+    text-align: center;
+}
 
 
 
