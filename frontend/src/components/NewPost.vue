@@ -6,13 +6,9 @@
         <i class="uil uil-edit"></i>
     </button>
 
-    <div class="modal" v-show="isOpen">
-
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Create a post</h2>
-                <i class="uil uil-times close" @click="toggle"></i>
-            </div>
+    <Modal v-show="isOpen" @closeModal="toggle">
+        <template #title>Create a post</template>
+        <template #body>
             <form @submit.prevent="submitPost" id="newpost">
                 <div class="form-input">
                     <label for="post_privacy">Post privacy</label>
@@ -59,15 +55,20 @@
 
                 </div>
             </form>
-        </div>
-    </div>
+
+        </template>
+    </Modal>
 
 </template>
 
 
 
 <script>
+import Modal from './Modal.vue'
 export default {
+    components: {
+        Modal
+    },
     name: 'Newpost',
     data() {
         return {
