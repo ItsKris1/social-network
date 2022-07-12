@@ -79,8 +79,8 @@ func setRoutes(handler *handlers.Handler) http.Handler {
 	mux.HandleFunc("/responseInviteRequest", handler.Auth(handler.ResponseInviteRequest)) // response to invite request
 
 	/* --------------------------------- events --------------------------------- */
-	// mux.HandleFunc("/newEvent", handler.Auth(handler.NewEvent)) // create new
-	// mux.HandleFunc("/participate", handler.Auth(handler.Participate)) // react to participation in event
+	mux.HandleFunc("/newEvent", handler.Auth(handler.NewEvent)) // create new
+	mux.HandleFunc("/participate", handler.Auth(handler.Participate)) // react to participation in event
 
 	return mux
 }

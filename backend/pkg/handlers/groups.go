@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
@@ -99,20 +100,20 @@ func (handler *Handler) GroupEvents(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	groupId := query.Get("groupId")
 	if groupId == "" { //check if group id exists in request
-		utils.RespondWithError(w, "Error on getting data", 200)
+		utils.RespondWithError(w, "Error on reading group ID", 200)
 		return
 	}
 	// check if current user is a member or admin  of the group
 	var isMember = false
 	isAdmin, err := handler.repos.GroupRepo.IsAdmin(groupId, userId)
 	if err != nil {
-		utils.RespondWithError(w, "Error on getting data", 200)
+		utils.RespondWithError(w, "Error on reading role", 200)
 		return
 	}
 	if !isAdmin {
 		isMember, err = handler.repos.GroupRepo.IsMember(groupId, userId)
 		if err != nil {
-			utils.RespondWithError(w, "Error on getting data", 200)
+			utils.RespondWithError(w, "Error on checking if is group member", 200)
 			return
 		}
 	}
@@ -123,7 +124,8 @@ func (handler *Handler) GroupEvents(w http.ResponseWriter, r *http.Request) {
 	// current user is a member or admin -> get events
 	events, err := handler.repos.EventRepo.GetAll(groupId)
 	if err != nil {
-		utils.RespondWithError(w, "Error on getting data", 200)
+		fmt.Println(err)
+		utils.RespondWithError(w, "Error on getting event data", 200)
 		return
 	}
 	utils.RespondWithEvents(w, events, 200)
