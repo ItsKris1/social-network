@@ -136,8 +136,9 @@ func (handler *Handler) UserStatus(w http.ResponseWriter, r *http.Request) {
 // Find all followers
 func (handler *Handler) GetFollowers(w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)
-	// access user id
-	userId := r.Context().Value(utils.UserKey).(string)
+	// get userId from request
+	query := r.URL.Query()
+	userId := query.Get("userId")
 	// request all  following users
 	followers, errUsers := handler.repos.UserRepo.GetFollowers(userId)
 	if errUsers != nil {
@@ -150,8 +151,9 @@ func (handler *Handler) GetFollowers(w http.ResponseWriter, r *http.Request) {
 // Find all who clinet is following
 func (handler *Handler) GetFollowing(w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)
-	// access user id
-	userId := r.Context().Value(utils.UserKey).(string)
+	// get userId from request
+	query := r.URL.Query()
+	userId := query.Get("userId")
 	// request all  following users
 	followers, errUsers := handler.repos.UserRepo.GetFollowing(userId)
 	if errUsers != nil {

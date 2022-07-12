@@ -16,7 +16,6 @@ export default {
 
     created() {
         this.checkProfile();
-        console.log(this.profileId)
     },
 
 
@@ -29,11 +28,11 @@ export default {
         async follow() {
             // console.log('subscribe function:')
             // console.log(this.profileId);
-            await fetch("http://localhost:8081/follow?userId=" + this.profileId, {
+            await fetch("http://localhost:8081/follow?userId=" + this.$route.params.id, {
                 credentials: "include",
             })
                 .then((r) => r.json())
-            // .then((json=>console.log("server response:",json)))
+                .then((json => console.log("server response:", json)))
         },
         unfollow() {
             console.log('unsubscribe function')
