@@ -12,7 +12,7 @@ export default createStore({
       myposts: [],
     },
     users: {
-      
+
       allusers: [],
     },
   },
@@ -31,14 +31,15 @@ export default createStore({
       return state.users.allusers;
     },
     filterUsers: (state) => (searchquery) => {
+      if (searchquery === "") { return [] }
       let arr = [];
       state.users.allusers.filter((user) => {
         if (user.nickname.includes(searchquery)) {
           arr.push(user);
         }
       });
-
-      // console.log("arr", arr);
+      console.log("searchQuery", searchquery)
+      console.log("arr", arr);
       return arr;
     },
   },

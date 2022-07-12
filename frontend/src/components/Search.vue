@@ -1,24 +1,36 @@
 <template>
+
     <div id="searchDiv">
+        <input @input="filtered(); toggleDropdown()"
+               @blur="showDropdown = false"
+               @focus="toggleDropdown"
 
-        <input @input="filtered" v-model="this.searchQuery" type="text" placeholder="Search user or group">
+               v-model="searchQuery"
+               :class="{ 'no-bottom-border': showDropdown }"
+               type="text"
+               placeholder="Search user or group">
 
-        <div id="dropdown" v-if="this.dropdownList.length !== 0">
+        <div id="dropdown"
+             v-if="showDropdown">
             <ul class="item-list">
-                <li @click="goToUserProfile(user.id)" id="dropdownitem" v-for="user in dropdownList">
+                <li @click="goToUserProfile(user.id)"
+                    id="dropdownitem"
+                    v-for="user in dropdownList">
                     <div class="user-picture small"
-                        :style="{ backgroundImage: `url(http://localhost:8081/${user.avatar})` }"></div>
+                         :style="{ backgroundImage: `url(http://localhost:8081/${user.avatar})` }"></div>
                     <div class="item-text">{{ user.nickname }}</div>
                 </li>
-                <li>
+                <!-- <li>
                     <div class="user-picture small"></div>
                     <div class="item-text">John Mayer</div>
                 </li>
 
                 <li>
-                    <img class="small" src="../assets/icons/users-alt.svg" alt="">
+                    <img class="small"
+                         src="../assets/icons/users-alt.svg"
+                         alt="">
                     <div class="item-text">Garrisons</div>
-                </li>
+                </li> -->
             </ul>
         </div>
     </div>
@@ -35,6 +47,7 @@ export default {
             allusers: [],
             searchQuery: "",
             dropdownList: [],
+            showDropdown: false,
         }
     },
     created() {
@@ -44,9 +57,16 @@ export default {
     methods: {
         filtered() {
             this.dropdownList = this.$store.getters.filterUsers(this.searchQuery)
-        }, goToUserProfile(userid) {
+        },
+        goToUserProfile(userid) {
             this.$router.push({ name: 'Profile', params: { id: userid } })
-        }
+        },
+
+        toggleDropdown() {
+            this.showDropdown = this.dropdownList.length > 0;
+        },
+
+
     },
 }
 </script>
@@ -71,6 +91,10 @@ export default {
     box-shadow: var(--container-shadow);
 }
 
+#searchDiv input[type="text"].no-bottom-border {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
 
 #dropdown {
 
@@ -87,6 +111,7 @@ export default {
     /* display: none; */
 
 }
+
 
 #dropdown .item-list {
     padding: 15px 0;
