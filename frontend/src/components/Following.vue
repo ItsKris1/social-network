@@ -31,11 +31,10 @@ export default {
                 credentials: 'include'
             })
                 .then((response => response.json()))
-                .then((json=>{
-                    console.log("following:",json) 
-                    return json
-                    }))
-                
+                // .then((json=>{
+                //     console.log("following:",json) 
+                //     return json
+                //     }))                
                 .then((json=>{
                     this.following = json.users
                 }))
