@@ -170,7 +170,12 @@ func (handler *Handler) Follow(w http.ResponseWriter, r *http.Request) {
 	// get status from request
 	query := r.URL.Query()
 	reqUserId := query.Get("userId")
-
+	/* ----------------- safety check -> if request already made ---------------- */
+	alreadyFollowing, _ := handler.repos.UserRepo.IsFollowing(reqUserId, currentUserId)
+	if alreadyFollowing {
+		utils.RespondWithError(w, "User already is following", 200)
+		return
+	}
 	// get target user profile status -> public or private
 	reqUserStatus, err := handler.repos.UserRepo.GetStatus(reqUserId)
 	if err != nil {
