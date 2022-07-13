@@ -4,10 +4,10 @@
     <div id="layout">
         <NewPost />
         <Groups />
+
         <AllPosts />
     </div>
-
-
+    <NewGroup />
 
 </template>
 
@@ -16,10 +16,11 @@ import NavBarOn from '@/components/NavBarOn.vue'
 import NewPost from '@/components/NewPost.vue'
 import AllPosts from '@/components/AllPosts.vue'
 import Groups from '@/components/Groups.vue'
+import NewGroup from '@/components/NewGroup.vue'
 
 export default {
     name: 'MainView',
-    components: { NavBarOn, NewPost, AllPosts, Groups },
+    components: { NavBarOn, NewPost, AllPosts, Groups, NewGroup },
 }
 </script>
 

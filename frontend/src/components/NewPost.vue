@@ -27,13 +27,6 @@
 
                     <div v-if="newpost.privacy === 'almost-private'">
 
-                        <div v-for="follower in fetchedFollowers.followers">
-                            <input type="checkbox" :id="follower" name="privacy" :value="follower"
-                                   v-model="checkedFollowers" />
-                            <label :for="follower">{{ follower }}</label>
-                        </div>
-                        <div>Checked names: {{ checkedFollowers }}</div>
-
                     </div>
                 </div>
 
