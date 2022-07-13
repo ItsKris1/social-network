@@ -1,4 +1,5 @@
 <template>
+
   <div class="sign-in__wrapper">
     <img src="../assets/toa-heftiba-l_ExpFwwOEg-unsplash.jpg" alt="people hanging out">
 
@@ -23,6 +24,7 @@
       </div>
     </div>
   </div>
+
 </template>
 
 
@@ -93,19 +95,10 @@ export default {
 }
 </script>
 
-<style>
-#app {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 100vh;
-}
-
-
+<style >
 .sign-in__wrapper {
-  align-self: center;
   display: flex;
-  margin: auto 0;
+  /* margin: auto 0; */
   background-color: var(--color-white);
   border-radius: 20px;
   box-shadow: var(--container-shadow);
