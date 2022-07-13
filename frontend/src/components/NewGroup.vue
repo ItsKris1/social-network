@@ -15,29 +15,77 @@
                       required></textarea>
         </div>
 
-        <div class="form-input">
-            <div v-for="follower in fetchedFollowers">
-                <input type="checkbox"
-                       :id="follower"
-                       :value="follower"
-                       v-model="checkedFollowers" />
+        <div class="form-input" id="followersDropdown">
+            <p>Invite users</p>
+            <ul class="checkedFollowersList">
+                <li v-for="checkedFollower in checkedFollowers"> {{ checkedFollower }}</li>
+            </ul>
 
-                <label :for="follower">{{ follower }}</label>
-            </div>
-            <div>Checked names: {{ this.checkedFollowers }}</div>
+            <button type="button" @click.self="showDropdown = !showDropdown">Select users</button>
+
+            <ul class="item-list" v-show="showDropdown">
+                <li v-for="follower in fetchedFollowers">
+                    <input type="checkbox"
+                           :id="follower"
+                           :value="follower"
+                           v-model="checkedFollowers" />
+                    <label :for="follower">{{ follower }}</label>
+
+                </li>
+            </ul>
+
         </div>
         <button class="btn" type="submit">Post</button>
     </form>
 
 </template>
 
+<style>
+#followersDropdown {
+    width: 250px;
+    background: var(--input-bg);
+}
+
+#followersDropdown button {
+    padding: 7.5px;
+    border-radius: 5px;
+    background-color: var(--input-bg);
+    border: none;
+    box-shadow: var(--container-shadow);
+    font-family: 'Poppins', sans-serif;
+    text-align: left;
+    color: rgb(136, 136, 136);
+    width: 250px;
+
+
+}
+
+#followersDropdown .item-list {
+    width: 100%;
+}
+
+
+.checkedFollowersList {
+    display: flex;
+    gap: 5px;
+}
+
+.checkedFollowersList li {
+    background-color: rgb(179, 179, 179);
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 14px;
+}
+</style>
 <script>
 export default {
 
     data() {
         return {
             checkedFollowers: [],
-            fetchedFollowers: null
+            fetchedFollowers: null,
+
+            showDropdown: false,
         }
     },
 
