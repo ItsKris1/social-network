@@ -1,6 +1,6 @@
 <template>
     <div>
-        <span>Following</span>
+        <span><b>Following</b></span>
         <div v-for="user in this.following" :key="user.id">           
                 {{user.nickname}}
         </div>
