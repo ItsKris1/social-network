@@ -1,19 +1,17 @@
 <template>
 
-    <div id="searchDiv">
+    <div id="searchDiv" @click.stop>
         <input @input="filtered(); toggleDropdown()"
-               @blur="showDropdown = false"
                @focus="toggleDropdown"
-
                v-model="searchQuery"
                :class="{ 'no-bottom-border': showDropdown }"
                type="text"
                placeholder="Search user or group">
 
         <div id="dropdown"
-             v-if="showDropdown">
+             v-show="showDropdown">
             <ul class="item-list">
-                <li @click="goToUserProfile(user.id)"
+                <li @click="goToUserProfile(user.id); hideDropDown"
                     id="dropdownitem"
                     v-for="user in dropdownList">
                     <div class="user-picture small"
@@ -52,7 +50,9 @@ export default {
     },
     created() {
         this.$store.dispatch('getAllUsers')
+        window.addEventListener("click", this.hideDropDown)
     },
+
     computed: mapGetters(['allUsers']),
     methods: {
         filtered() {
@@ -65,6 +65,10 @@ export default {
         toggleDropdown() {
             this.showDropdown = this.dropdownList.length > 0;
         },
+
+        hideDropDown() {
+            this.showDropdown = false;
+        }
 
 
     },
