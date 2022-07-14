@@ -1,0 +1,77 @@
+<template>
+    <div class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>
+                    <slot name="title"></slot>
+                </h2>
+                <i class="uil uil-times close" @click="$emit('closeModal')"></i>
+            </div>
+            <!-- MODAL BODY -->
+            <slot name="body"></slot>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+
+}
+
+</script>
+
+
+<style>
+.modal {
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+
+    /* display: none; */
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+
+    padding: 30px 50px;
+    width: 30vw;
+
+
+
+    position: relative;
+    background-color: var(--page-bg);
+    border-radius: var(--container-border-radius);
+
+
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header i {
+    font-size: 1.25em;
+    cursor: pointer;
+}
+
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.modal-content form .btn.form-submit {
+    align-self: flex-end;
+}
+</style>

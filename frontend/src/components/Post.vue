@@ -1,7 +1,7 @@
 <template>
 
-    <div id="post">
-        <!-- <button @click="showPostId(postData.id)">Show post id!</button> -->
+    <!-- <div id="post">
+        <button @click="showPostId(postData.id)">Show post id!</button>
         <div>
             <img id="post_image" :src="'http://localhost:8081/' + postData.author.avatar" alt="user-avatar">
         </div>
@@ -14,7 +14,8 @@
             <div>{{ postData.content }}</div>
             <button v-if="!isCommentsOpen" @click="toggleComments">View comments</button>
             <div v-if="isCommentsOpen">
-                <textarea v-model="this.comment.body" name="" id="" cols="30" rows="5" placeholder="Add your comment here"></textarea>
+                <textarea v-model="this.comment.body" name="" id="" cols="30" rows="5"
+                    placeholder="Add your comment here"></textarea>
                 <div>
                     <button @click="toggleComments">Hide comments</button>
                     <div class="comment-img">
@@ -27,16 +28,82 @@
                     <button @click="submitComment(postData.id)">Add comment</button>
                 </div>
                 <div id="commentsDiv" v-for=" comment in postData.comments">
-                    <div><b>{{ comment.authorNickname }}</b></div>
+                <img class="commentAuthorAvatar" :src="'http://localhost:8081/' + comment.author.avatar" alt="commentAuthorAvatar">
+                    <div><b>{{ comment.author.nickname }}</b></div>
                     <div>{{ comment.content }}</div>
 
                     <div v-if="comment.image">
-                        <img id="commentImage" :src="'http://localhost:8081/'+comment.image" alt="">
+                        <img id="commentImage" :src="'http://localhost:8081/' + comment.image" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+    <div class="post-wrapper">
+        <div class="post">
+            <div class="user-picture medium"
+                :style="{ backgroundImage: `url(http://localhost:8081/${postData.author.avatar})` }"></div>
+            <div class="post-content">
+                <p class="post-author">{{ postData.author.nickname }}</p>
+                <p class="post-body">{{ postData.content }}</p>
+                <img v-if="postData.image" class="post-image" :src="'http://localhost:8081/' + postData.image" alt="">
+                <button v-if="!isCommentsOpen" @click="toggleComments" class="btn ">Comments</button>
+
+            </div>
+
+        </div>
+
+
+
+        <div v-if="isCommentsOpen">
+
+            <div class="create-comment">
+                <textarea v-model="this.comment.body" name="" id="" cols="30" rows="4"
+                    placeholder="Add your comment here"></textarea>
+
+                <div class="create-comment__btns">
+                    <button class="btn outline" @click="toggleComments">Hide comments</button>
+
+                    <div class="btns-wrapper">
+
+                        <label for="upload-image">
+                            <img src="../assets/addimg.png" />
+                        </label>
+                        <input id="upload-image" @change="checkPicture" type="file"
+                            accept="image/png, image/gif, image/jpeg" style="display: none" />
+
+
+
+                        <button class="btn" @click="submitComment(postData.id)">Comment</button>
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+
+
+
+
+            <div class="comments" v-if="postData.comments">
+                <div class="comment" lang="en" v-for="comment in postData.comments">
+                    <div class="user-picture medium"
+                        :style="{ backgroundImage: `url(http://localhost:8081/${comment.author.avatar})` }"></div>
+                    <div class="comment-content">
+                        <p class="comment-author">{{ comment.author.nickname }}</p>
+                        <p class="comment-body">{{ comment.content }}</p>
+                        <img class="comment-image" v-if="comment.image" :src="'http://localhost:8081/' + comment.image"
+                            alt="">
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+
 </template>
 
 
@@ -116,26 +183,105 @@ export default {
 
 
 <style>
-#post_image {
-    height: 47px;
-    width: 47px;
-    border-radius: 50%;
-    margin-right: 8px;
+.post-wrapper {
+    display: inline-block;
+    box-shadow: var(--container-shadow);
+    padding: 30px;
+    background-color: var(--color-white);
+    width: 550px;
+    border-radius: 10px;
 }
 
-#post {
+
+
+.post {
     display: flex;
+    gap: 10px;
 }
 
-#postImage, #commentImage {
-    height: 20%;
-    width: 20%;
+
+
+.post-author,
+.comment-author {
+    font-weight: 500;
 }
-#commentsDiv{
-    border-top: double;
+
+.post-content,
+.comment-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    flex-grow: 1;
 }
-.comment-img>input{
+
+.post-image,
+.comment-image {
+    width: 100%;
+    margin: 10px 0 10px 0;
+    border-radius: 5px;
+}
+
+.post-body,
+.comment-body {
+    overflow-wrap: anywhere;
+}
+
+.post-content button {
+    align-self: flex-end;
+    margin-top: 10px;
+}
+
+
+
+
+.create-comment {
+    padding-left: 58px;
+}
+
+.create-comment textarea {
+    margin: 10px 0;
+}
+
+.create-comment__btns {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btns-wrapper {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-end;
+
+}
+
+.btns-wrapper label {
+    margin: 0;
+}
+
+.btns-wrapper input {
     display: none;
 }
 
+.btns-wrapper label img {
+    vertical-align: middle;
+}
+
+
+
+
+.comments>* {
+    display: flex;
+    gap: 10px;
+    border-top: 1px solid #DDDDDD;
+    padding-top: 30px;
+}
+
+.comments {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-top: 30px;
+}
 </style>

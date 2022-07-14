@@ -3,6 +3,7 @@
     <div id="all_posts" v-if="allPosts !== undefined">
         <Post v-for="post in allPosts" :key="post.id" v-bind:postData="post" />
     </div>
+
 </template>
 
 <script>
@@ -15,12 +16,7 @@ export default {
     },
     computed: mapGetters(['allPosts']),
     components: { Post },
-    methods: {
-        // showAllPosts() {
-        //     this.$store.dispatch('fetchPosts')
-        //     console.log('All posts: ', this.allPosts);
-        // },
-    },
+    methods: {},
 }
 </script>
 
@@ -30,5 +26,6 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 50px;
 }
 </style>

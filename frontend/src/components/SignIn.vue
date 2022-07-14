@@ -1,90 +1,147 @@
 <template>
-  <form @submit.prevent="signSubmit">
-    <span>Welcome back!</span>
-    <div style="input">
-      <label>E-mail</label>
-      <input v-model="signInForm.login" id="rectangle1" type="email" required>
-    </div>
 
-    <label>Password</label>
-    <input v-model="signInForm.password" type="password" required>
-    <button>Login</button>
-  </form>
-  <div id="reglink">
-    <span>Need an account?</span>
-    <router-link to="/reg">SIGN UP HERE</router-link>
-    <b-icon-door-closed> </b-icon-door-closed>
+  <div class="sign-in__wrapper">
+    <img src="../assets/toa-heftiba-l_ExpFwwOEg-unsplash.jpg" alt="people hanging out">
+
+    <div class="sign-in">
+      <h1>Sign in</h1>
+      <form class="form-group" @submit.prevent="signSubmit" id="sign-in__form">
+        <div class="form-input">
+          <label for="username">Email</label>
+          <input type="email" id="email" v-model="signInForm.login" required>
+        </div>
+
+        <div class="form-input">
+          <label for="password">Password</label>
+          <input type="password" id="password" v-model="signInForm.password" required>
+        </div>
+      </form>
+      <div>
+        <button class="btn" form="sign-in__form" type="submit">Sign in</button>
+        <p>Need an account?
+          <router-link to="/reg" id="sign-up">Register here</router-link>
+        </p>
+      </div>
+    </div>
   </div>
-  <!-- <p>{{signInForm.login}}+{{signInForm.password}}</p> -->
+
 </template>
 
 
 <script>
+import NavBarOff from './NavBarOff.vue';
 export default {
-  name: 'SignIn',
+  name: "SignIn",
   data() {
     return {
       signInForm: {
         login: "",
         password: "",
       },
-    }
+    };
   },
   methods: {
     toast() {
       /*---------------           Here is toast example             --------------------*/
       // 
       this.$toast.open({
-        message: 'Data sent!',
-        type: 'default', //One of success, info, warning, error, default
-
+        message: "Data sent!",
+        type: "default",
         //optional options
-        position: 'bottom-right', //One of top, bottom, top-right, bottom-right,top-left, bottom-left
-        duration: 3000, //Visibility duration in milliseconds, set to 0 to keep toast visible
-        dismissible: true, //Allow user dismiss by clicking
-        onClick: null, //Do something when user clicks(function)
-        onDismiss: null, //Do something after toast gets dismissed(function)
-        queue: false, // Wait for existing to dismiss before showing new
+        position: "bottom-right",
+        duration: 3000,
+        dismissible: true,
+        onClick: null,
+        onDismiss: null,
+        queue: false,
         pauseOnHover: true, //Pause the timer when mouse on over a toast
       });
     },
     async signSubmit() {
       try {
         // await fetch('https://bfdf8b79-b1e1-40ce-8d02-896de58da3ca.mock.pstmn.io/signin', {
-        await fetch('http://localhost:8081/signin', {
-          credentials: 'include',  // Uncomment when testing on real-server
-          method: 'POST',
+        await fetch("http://localhost:8081/signin", {
+          credentials: "include",
+          method: "POST",
           headers: {
-            'Accept': 'application/json',
-            "Content-Type": "application/json" 
+            "Accept": "application/json",
+            "Content-Type": "application/json"
           },
           body: JSON.stringify(this.signInForm)
         })
           .then((response => response.json()))
           .then((json => {
-            console.log(json)
+            // console.log(json)
             if (json.message === "Login successful") {
               this.$toast.open({
-                            message: 'Login success!',
-                            type: 'success', //One of success, info, warning, error, default
-                        })
+                message: "Login success!",
+                type: "success", //One of success, info, warning, error, default
+              });
               this.$router.push("/main");
-            } else {
+            }
+            else {
               this.$router.push("/");
               this.$toast.open({
-                            message: json.message,
-                            type: 'error', //One of success, info, warning, error, default
-                        })
+                message: json.message,
+                type: "error", //One of success, info, warning, error, default
+              });
             }
-          }
-          ))
+          }));
       }
       catch { }
-
     },
   },
+  components: { NavBarOff }
 }
 </script>
 
-<style>
+<style >
+.sign-in__wrapper {
+  display: flex;
+  /* margin: auto 0; */
+  background-color: var(--color-white);
+  border-radius: 20px;
+  box-shadow: var(--container-shadow);
+  overflow: hidden;
+  align-items: center;
+
+}
+
+
+.sign-in__wrapper img {
+  height: 550px;
+  min-height: 550px;
+  width: auto;
+
+}
+
+
+.sign-in {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 40px;
+  margin: 0 auto;
+  padding: 0 70px;
+
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+}
+
+
+
+.sign-in button {
+  margin-bottom: 10px;
+}
+
+
+
+#sign-up {
+  font-weight: 500;
+}
 </style>

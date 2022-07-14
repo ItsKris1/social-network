@@ -1,83 +1,200 @@
 <template>
-    <div id="profile">
-        <div>
-            <img id="profileImg" :src="'http://localhost:8081/'+this.user.avatar" alt="profilePic">
-        </div>
-        <div id="basicInformation">
-            <span>{{this.user.nickname}}</span>
-            <span>e-mail</span>
-            <span>birthday date</span>
-            <button id="followBtn" click="follow">Follow</button>
-        </div>
-        <div id="profileSettings">
-            <span>Privacy change-button</span>
+
+    <div v-if="user">
+        <div id="layout-profile">
+
+            <div class="left-section ">
+                <div class="user-profile__public">
+                    <div class="user-picture" :style="{ backgroundImage: `url(http://localhost:8081/${user.avatar})` }">
+                    </div>
+                    <div class="user-profile__info">
+                        <h3 class="username">{{ user.nickname }}</h3>
+                        <p class="user-email" v-if="user.login">{{ user.login }}</p>
+                        <p class="user-dateOfBirth" v-if="user.dateOfBirth">{{ user.dateOfBirth }}</p>
+                    </div>
+
+                    <PrivacyBtn v-if="isMyProfile" :status="user.status" />
+                    <FollowBtn v-else />
+
+                </div>
+                <div class="multiple-item-list">
+                    <Following />
+                    <Followers />
+                </div>
+            </div>
+
+            <div class="middle-section ">
+                <div class="about" v-if="user.about !== ''">
+                    <h2 class="about-title">About me</h2>
+                    <p class="about-text">{{ user.about }}</p>
+                </div>
+                <AllMyPosts v-bind:userid="this.user.id" />
+            </div>
+
         </div>
     </div>
-    <AllMyPosts />
+
 </template>
 
 <script>
 import AllMyPosts from './AllMyPosts.vue'
+import Following from './Following.vue'
+import Followers from './Followers.vue'
+import FollowBtn from './FollowBtn.vue'
+import PrivacyBtn from './PrivacyBtn.vue'
+// import { mapGetters } from 'vuex'
 export default {
     name: 'Profile',
-    components:{AllMyPosts},
-    data(){
-        return{
-            user:{
-                avatar:"",
-                id:"",
-                nickname:""
-            }
+    components: { AllMyPosts, Followers, Following, FollowBtn, PrivacyBtn },
+    data() {
+        return {
+            user: null,
+            isMyProfile: false,
         }
     },
-    created(){
-        this.fetchBaseInfo()
+    created() {
+        // this.getUserInfo()
+        this.getUserId()
+        this.checkProfile()
     },
+    computed: {
+        // ...mapGetters(['userInfo']),
+        // ...getUserId()
+    },
+
     methods: {
-        follow() {
-            console.log('subscribe function')
+        getUserInfo() {
+            this.$store.dispatch('getMyProfileInfo')
         },
-        async fetchBaseInfo(){
-            await fetch("http://localhost:8081/currentUser", {
-                credentials: 'include',
+        async getUserId() {
+            await fetch("http://localhost:8081/userData?userId=" + this.$route.params.id, {
+                credentials: "include",
             })
-                .then((r => r.json()))
-                .then((json => {
-                    // console.log(json)
-                    this.user = json.users[0]
-                }))
+                .then((r) => r.json())
+                .then((json) => {
+                    // console.log("profile.vue/getuserid",json);
+                    this.user = json.users[0];
+                    // console.log("user", this.user)
+
+                    // if (this.$route.params.id === this.user.id) {
+                    //     console.log("my user")
+                    // }
+                    // console.log(userInfo);
+                    // this.commit("updateProfileInfo", userInfo);
+                    // console.log("user profile info -", json);
+                });
+            // this.isOwnerProfile()
         },
+        // isOwnerProfile() {
+        //     console.log("cookie",document.cookie);
+        //     console.log("user id",this.user.id);
+        //     let activeCookie = document.cookie.slice(11)
+        //     if (activeCookie === this.user.id) {
+        //         console.log("It's a owner");
+        //     } else { console.log("It's NOT a owner") }
+
+        // }
+
+        async getLoggedUserId() {
+            const response = await fetch("http://localhost:8081/currentUser", {
+                credentials: "include",
+            })
+
+            const data = await response.json();
+            this.loggedUserID = data.users[0].id;
+
+            return data.users[0].id
+
+            // .then((r) => r.json())
+            // .then((json => {
+            //     this.loggedUserID = json.users[0].id
+            // }))
+        },
+
+        async checkProfile() {
+            const profileID = this.$route.params.id;
+            const loggedUserID = await this.getLoggedUserId();
+            this.isMyProfile = (profileID === loggedUserID)
+        }
+    },
+    watch: { //watching changes in route
+        $route() {
+            this.getUserId()
+            this.checkProfile();
+        }
     }
 }
 </script>
 
 <style>
-#profile {
-    display: flex;
-    margin-top: 10px;
-}
-
-#profileImg {
-    border-radius: 50%;
-    margin-right: 20px;
-    width: 200px;
-    height: 200px;
-}
-
-#basicInformation {
+#layout-profile {
     display: grid;
+    grid-template-columns: 1fr minmax(min-content, 550px) 1fr;
+    column-gap: 50px;
+    margin-top: 100px;
+    justify-items: flex-end;
+
 }
 
-#profileSettings{
-    margin-left: auto;
+.middle-section {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
 }
 
-#followBtn {
-    height: 37px;
-    width: 92px;
-    left: 0px;
-    top: 0px;
-    border-radius: 8px;
-    padding: 10px, 15px, 10px, 15px;
+.left-section {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    max-width: max-content;
+    min-width: min-content;
+
+}
+
+
+.user-profile__public,
+.user-profile__private {
+    display: flex;
+    flex-direction: column;
+    padding: var(--container-padding);
+    background-color: var(--color-white);
+    box-shadow: var(--container-shadow);
+    border-radius: var(--container-border-radius);
+    align-items: center;
+    text-align: center;
+    gap: 25px;
+
+
+}
+
+:is(.user-profile__public, .user-profile__private) .user-picture {
+    background-image: url(../assets/pexels-jack-winbow-1559486.jpg);
+    height: 185px;
+    width: 185px;
+}
+
+.user-profile__info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+
+
+
+.about {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: var(--container-padding);
+    gap: 15px;
+
+    background: var(--color-white);
+    box-shadow: var(--container-shadow);
+    border-radius: var(--container-border-radius);
+
 }
 </style>

@@ -1,9 +1,7 @@
 <template>
-
     <div id="navbar">
-        <a href="/" id="logo">Social Network</a>
+        <a id="nav-title" href="/">Social Network</a>
     </div>
-
 </template>
 
 
@@ -19,21 +17,20 @@ export default {
 <style scoped>
 #navbar {
     display: flex;
-    /* justify-content: space-around; */
-    margin-top: 10px;
-    margin-bottom: 10px;
+    padding: 10px 40px;
+    background-color: var(--color-blue);
     align-items: center;
+    justify-content: space-between;
+    font-weight: 300;
+    color: var(--color-white);
+    margin-bottom: 0;
+
 }
 
-#logo {
-    font-family: Inter;
+#nav-title {
     font-size: 24px;
-    font-weight: 649;
-    line-height: 29px;
-    letter-spacing: 0em;
-    text-align: center;
-    font-variation-settings: 'slnt' 0;
+    color: var(--color-white);
     text-decoration: none;
-
+    font-weight: 400;
 }
 </style>
