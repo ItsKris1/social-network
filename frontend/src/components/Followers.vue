@@ -3,30 +3,13 @@
     <div class="item-list__wrapper" id="followers">
         <h3>Followers</h3>
         <ul class="item-list users">
-            <li>
+            <li v-for="user in this.followers" :key="user.id">
                 <div class="user-picture small"></div>
-                <div class="item-text">User 1</div>
-            </li>
-            <li>
-                <div class="user-picture small"></div>
-                <div class="item-text">User 2</div>
-            </li>
-            <li>
-                <div class="user-picture small"></div>
-                <div class="item-text">User 3</div>
-            </li>
-            <li>
-                <div class="user-picture small"></div>
-                <div class="item-text">User 4</div>
+                <div class="item-text">{{ user.nickname }}</div>
             </li>
         </ul>
     </div>
-    <div>
-        <span><b>Followers</b></span>
-        <div v-for="user in this.followers" :key="user.id">
-            {{ user.nickname }}
-        </div>
-    </div>
+
 </template>
 
 

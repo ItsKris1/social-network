@@ -32,6 +32,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 2;
 
     /* display: none; */
 }
@@ -61,6 +62,7 @@ export default {
 
 .modal-header i {
     font-size: 1.25em;
+    cursor: pointer;
 }
 
 .modal-content form {
@@ -69,7 +71,7 @@ export default {
     gap: 15px;
 }
 
-.modal-content button {
+.btn.modal-form__submit {
     align-self: flex-end;
 }
 </style>

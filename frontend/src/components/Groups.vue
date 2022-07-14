@@ -1,6 +1,5 @@
 <template>
 
-
     <div class="item-list__wrapper" id="groups">
         <h3>My groups</h3>
         <ul class="item-list">
@@ -20,16 +19,23 @@
                 <img class="small" src="../assets/icons/users-alt.svg" alt="">
                 <div class="item-text">Group 4</div>
             </li>
+
         </ul>
-        <button class="btn">New group<i class="uil uil-plus"></i></button>
+        <NewGroup />
     </div>
 
 </template>
 
 
 <script>
+import NewGroup from '@/components/NewGroup.vue'
+
 export default {
     name: 'Groups',
+    components: {
+        NewGroup
+    },
+
     methods: {
         createNewGroup() {
 

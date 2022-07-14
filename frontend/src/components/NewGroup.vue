@@ -1,91 +1,73 @@
 <template>
+    <button class="btn" @click="toggle">New group<i class="uil uil-plus"></i></button>
 
-    <form @submit.prevent="submitNewGroup" v-if="fetchedFollowers">
-        <div class="form-input">
-            <label for="name">Name</label>
-            <input type="text" name="name" id="name">
-        </div>
+    <Modal @closeModal="toggle">
+        <template #title>
+            Create new group
+        </template>
 
-        <div class="form-input">
-            <label for="description">Description</label>
-            <textarea id="description"
-                      name="description"
-                      rows="4"
-                      cols="50"
-                      required></textarea>
-        </div>
+        <template #body>
+            <form @submit.prevent="submitNewGroup" v-if="fetchedFollowers">
+                <div class="form-input">
+                    <label for="name">Name</label>
+                    <input type="text" name="name" id="name">
+                </div>
 
-        <div class="form-input" id="followersDropdown">
-            <p>Invite users</p>
-            <ul class="checkedFollowersList">
-                <li v-for="checkedFollower in checkedFollowers"> {{ checkedFollower }}</li>
-            </ul>
+                <div class="form-input">
+                    <label for="description">Description</label>
+                    <textarea id="description"
+                              name="description"
+                              rows="4"
+                              cols="50"
+                              required
+                              placeholder="Describe here"></textarea>
+                </div>
 
-            <button type="button" @click.self="showDropdown = !showDropdown">Select users</button>
+                <div class="form-input" id="followersDropdown">
+                    <p>Invite users</p>
+                    <ul class="checkedFollowersList" v-if="checkedFollowers.length !== 0">
+                        <li v-for="checkedFollower in checkedFollowers"> {{ checkedFollower }}</li>
+                    </ul>
 
-            <ul class="item-list" v-show="showDropdown">
-                <li v-for="follower in fetchedFollowers">
-                    <input type="checkbox"
-                           :id="follower"
-                           :value="follower"
-                           v-model="checkedFollowers" />
-                    <label :for="follower">{{ follower }}</label>
+                    <p v-if="5 === 2">hello ther</p>
+                    <button type="button" @click.self="showDropdown = !showDropdown">Select users</button>
 
-                </li>
-            </ul>
+                    <ul class="item-list" v-show="showDropdown">
+                        <li v-for="follower in fetchedFollowers">
+                            <input type="checkbox"
+                                   :id="follower"
+                                   :value="follower"
+                                   v-model="checkedFollowers" />
+                            <label :for="follower">{{ follower }}</label>
 
-        </div>
-        <button class="btn" type="submit">Post</button>
-    </form>
+                        </li>
+                    </ul>
+
+                </div>
+                <button class="btn modal-form__submit" type="submit">Create</button>
+            </form>
+
+        </template>
+    </Modal>
 
 </template>
 
-<style>
-#followersDropdown {
-    width: 250px;
-    background: var(--input-bg);
-}
 
-#followersDropdown button {
-    padding: 7.5px;
-    border-radius: 5px;
-    background-color: var(--input-bg);
-    border: none;
-    box-shadow: var(--container-shadow);
-    font-family: 'Poppins', sans-serif;
-    text-align: left;
-    color: rgb(136, 136, 136);
-    width: 250px;
-
-
-}
-
-#followersDropdown .item-list {
-    width: 100%;
-}
-
-
-.checkedFollowersList {
-    display: flex;
-    gap: 5px;
-}
-
-.checkedFollowersList li {
-    background-color: rgb(179, 179, 179);
-    border-radius: 5px;
-    padding: 5px;
-    font-size: 14px;
-}
-</style>
 <script>
-export default {
+import Modal from "@/components/Modal.vue"
 
+export default {
+    components: {
+        Modal
+    },
     data() {
         return {
             checkedFollowers: [],
             fetchedFollowers: null,
 
+            // Element show/hide
             showDropdown: false,
+            isOpen: false,
         }
     },
 
@@ -123,9 +105,51 @@ export default {
 
         },
 
-
+        toggle() {
+            this.isOpen = !this.isOpen
+        },
 
     }
 }
 
 </script>
+
+<style>
+#followersDropdown {
+    /* background-color: brown; */
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+#followersDropdown button {
+    padding: 7.5px;
+    border-radius: 5px;
+    background-color: var(--input-bg);
+    border: none;
+    box-shadow: var(--container-shadow);
+    font-family: 'Poppins', sans-serif;
+    text-align: left;
+    color: rgb(136, 136, 136);
+    /* width: 250px; */
+
+
+}
+
+#followersDropdown .item-list {
+    width: 100%;
+}
+
+/* 
+.checkedFollowersList {
+    display: flex;
+    gap: 5px;
+} */
+
+.checkedFollowersList li {
+    background-color: rgb(179, 179, 179);
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 14px;
+}
+</style>

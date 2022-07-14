@@ -7,8 +7,6 @@
             <Search />
         </div>
 
-
-
         <ul class="nav-links">
 
             <li>
@@ -22,10 +20,7 @@
             <li @click="logout">Log out</li>
         </ul>
 
-
     </div>
-
-
 
 </template>
 
@@ -78,7 +73,7 @@ export default {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 555;
+    z-index: 1;
     width: 100%;
     min-width: min-content;
 

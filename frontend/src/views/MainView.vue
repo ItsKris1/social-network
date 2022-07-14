@@ -4,10 +4,8 @@
     <div id="layout">
         <NewPost />
         <Groups />
-
         <AllPosts />
     </div>
-    <NewGroup />
 
 </template>
 
