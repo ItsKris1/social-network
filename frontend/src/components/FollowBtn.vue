@@ -27,7 +27,6 @@ export default {
     methods: {
         async follow() {
             // console.log('subscribe function:')
-            // console.log(this.profileId);
             await fetch("http://localhost:8081/follow?userId=" + this.$route.params.id, {
                 credentials: "include",
             })
@@ -50,8 +49,6 @@ export default {
         async checkProfile() {
             await this.getLoggedUserId();
             this.isMyProfile = this.userid === this.profileId
-            console.log("1", this.userid)
-            console.log("2", this.profileId)
         },
     }
 }

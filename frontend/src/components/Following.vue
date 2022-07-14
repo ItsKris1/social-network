@@ -11,9 +11,9 @@
     </div>
     <!-- 
     <div>
-        <span>Following</span>
-        <div v-for="user in this.following" :key="user.id">
-            {{ user.nickname }}
+        <span><b>Following</b></span>
+        <div v-for="user in this.following" :key="user.id">           
+                {{user.nickname}}
         </div>
     </div>
 
@@ -56,14 +56,13 @@ export default {
                 credentials: 'include'
             })
                 .then((response => response.json()))
-                .then((json => {
-                    console.log("following:", json)
-                    return json
-                }))
-
+                // .then((json=>{
+                //     console.log("following:",json) 
+                //     return json
+                //     }))                
                 .then((json => {
                     this.following = json.users
-                    console.log(json.users)
+                    // console.log(json.users)
                 }))
 
 

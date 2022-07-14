@@ -24,6 +24,8 @@
 - [ ] groups.go - ResponseInviteRequest - route needs testing / notify websocket abot deleted notif
 - [ ] users.go - ResponseFollowRequest - route needs testing / notify websocket abot deleted notif
 
+- [ ] events.go - NewEvent - notify websocket abot newEvent created
+
 #### Websockets
 
 - [ ] Plan out notification table (db)

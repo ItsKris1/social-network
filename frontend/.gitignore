@@ -3,7 +3,10 @@ node_modules
 /dist
 run.go
 # .dockerignore
+ndc.sh
+todo
 backend/tempDB.db
+
 
 
 # local env files

@@ -1,4 +1,4 @@
-<template v-if="5 === 2">
+<template>
 
     <div v-if="user">
         <div id="layout-profile">
@@ -9,15 +9,12 @@
                     </div>
                     <div class="user-profile__info">
                         <h3 class="username">{{ user.nickname }}</h3>
-                        <p class="user-email">{{ user.login }}</p>
-                        <p class="user-dateOfBirth">{{ user.dateOfBirth }}</p>
+                        <p class="user-email" v-if="user.login">{{ user.login }}</p>
+                        <p class="user-dateOfBirth" v-if="user.dateOfBirth">{{ user.dateOfBirth }}</p>
                     </div>
 
-                    <div v-if="user">
-                        <PrivacyBtn v-if="user" :status="user.status" />
-                        <FollowBtn v-else />
-
-                    </div>
+                    <PrivacyBtn v-if="isMyProfile" :status="user.status" />
+                    <FollowBtn v-else />
 
                 </div>
                 <div class="multiple-item-list">
@@ -117,10 +114,6 @@ export default {
         async checkProfile() {
             const profileID = this.$route.params.id;
             const loggedUserID = await this.getLoggedUserId();
-
-            console.log(profileID)
-            console.log(loggedUserID)
-
             this.isMyProfile = (profileID === loggedUserID)
         }
     },

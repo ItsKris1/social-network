@@ -119,7 +119,7 @@ export default {
             const data = await response.json();
             this.fetchedFollowers = data.followers;
 
-            console.log("Fetched followers", data)
+            // console.log("Fetched followers", data)
 
         },
 

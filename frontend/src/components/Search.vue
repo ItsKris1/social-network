@@ -11,7 +11,7 @@
         <div id="dropdown"
              v-show="showDropdown">
             <ul class="item-list">
-                <li @click="goToUserProfile(user.id); hideDropDown"
+                <li @click="goToUserProfile(user.id); clearSearch()"
                     id="dropdownitem"
                     v-for="user in dropdownList">
                     <div class="user-picture small"
@@ -66,7 +66,8 @@ export default {
             this.showDropdown = this.dropdownList.length > 0;
         },
 
-        hideDropDown() {
+        clearSearch() {
+            this.searchQuery = "";
             this.showDropdown = false;
         }
 

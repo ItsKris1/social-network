@@ -38,8 +38,6 @@ export default createStore({
           arr.push(user);
         }
       });
-      console.log("searchQuery", searchquery)
-      console.log("arr", arr);
       return arr;
     },
   },
