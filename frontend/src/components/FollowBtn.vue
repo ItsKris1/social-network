@@ -1,25 +1,24 @@
 <template>
-    <button v-show="this.isMyProfile" id="followBtn" @click="follow">Follow</button>
-
+    <button class="btn" @click="follow">Follow<i class="uil uil-user-plus"></i></button>
 </template>
 
 
 <script>
 export default {
     name: 'FollowBtn',
+    props: ['profileId'],
     data() {
         return {
             userid: "",
             isMyProfile: false,
         }
     },
-    props: {
-        profileId: ""
-    },
+
     created() {
-        this.getLoggedUserId()
-        this.checkProfile()
+        this.checkProfile();
     },
+
+
     watch: { //watching changes in route
         $route() {
             this.checkProfile()
@@ -28,12 +27,11 @@ export default {
     methods: {
         async follow() {
             // console.log('subscribe function:')
-            // console.log(this.profileId);
-             await fetch("http://localhost:8081/follow?userId=" + this.profileId, {
+            await fetch("http://localhost:8081/follow?userId=" + this.$route.params.id, {
                 credentials: "include",
             })
                 .then((r) => r.json())
-                .then((json=>console.log("server response:",json)))
+                .then((json => console.log("server response:", json)))
         },
         unfollow() {
             console.log('unsubscribe function')
@@ -47,14 +45,10 @@ export default {
                     this.userid = json.users[0].id
                 }))
         },
-        checkProfile() {
 
-            if (this.userid === this.profileId) {
-                this.isMyProfile = true
-            } else {
-                this.isMyProfile = false
-            }
-            // console.log("checkProfile", this.isMyProfile);
+        async checkProfile() {
+            await this.getLoggedUserId();
+            this.isMyProfile = this.userid === this.profileId
         },
     }
 }

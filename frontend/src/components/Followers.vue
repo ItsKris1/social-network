@@ -1,10 +1,15 @@
 <template>
-    <div>
-        <span><b>Followers</b></span>
-        <div v-for="user in this.followers" :key="user.id">
-            {{ user.nickname }}
-        </div>
+
+    <div class="item-list__wrapper" id="followers">
+        <h3>Followers</h3>
+        <ul class="item-list users">
+            <li v-for="user in this.followers" :key="user.id">
+                <div class="user-picture small"></div>
+                <div class="item-text">{{ user.nickname }}</div>
+            </li>
+        </ul>
     </div>
+
 </template>
 
 
@@ -34,7 +39,7 @@ export default {
                 .then((json => {
                     // console.log("Followers:", json)
                     this.followers = json.users
-                    }))
+                }))
         }
     }
 }

@@ -1,18 +1,38 @@
 <template>
-    <div id="searchDiv">
-        <input @input="filtered" v-model="this.searchQuery" id="inputBox" type="text"
-            placeholder="Search for user or group">
 
-        <div style="color:black">{{ this.searchQuery }}</div>
+    <div id="searchDiv" @click.stop>
+        <input @input="filtered(); toggleDropdown()"
+               @focus="toggleDropdown"
+               v-model="searchQuery"
+               :class="{ 'no-bottom-border': showDropdown }"
+               type="text"
+               placeholder="Search user or group">
 
-        <img id="glass" src="../assets/glass.png" alt="glass.png">
-    </div>
-    <div id="dropdownlist" v-if="this.dropdownList.length !== 0">
-        <div @click="goToUserProfile(user.id)" id="dropdownitem" v-for="user in dropdownList">
-            <img id="dropdownimage" :src="'http://localhost:8081/' + user.avatar" alt="dropdownimage">
-            {{ user.nickname }}
+        <div id="dropdown"
+             v-show="showDropdown">
+            <ul class="item-list">
+                <li @click="goToUserProfile(user.id); clearSearch()"
+                    id="dropdownitem"
+                    v-for="user in dropdownList">
+                    <div class="user-picture small"
+                         :style="{ backgroundImage: `url(http://localhost:8081/${user.avatar})` }"></div>
+                    <div class="item-text">{{ user.nickname }}</div>
+                </li>
+                <!-- <li>
+                    <div class="user-picture small"></div>
+                    <div class="item-text">John Mayer</div>
+                </li>
+
+                <li>
+                    <img class="small"
+                         src="../assets/icons/users-alt.svg"
+                         alt="">
+                    <div class="item-text">Garrisons</div>
+                </li> -->
+            </ul>
         </div>
     </div>
+
 </template>
 
 <script>
@@ -25,18 +45,33 @@ export default {
             allusers: [],
             searchQuery: "",
             dropdownList: [],
+            showDropdown: false,
         }
     },
     created() {
         this.$store.dispatch('getAllUsers')
+        window.addEventListener("click", this.hideDropDown)
     },
+
     computed: mapGetters(['allUsers']),
     methods: {
         filtered() {
             this.dropdownList = this.$store.getters.filterUsers(this.searchQuery)
-        }, goToUserProfile(userid) {
-            this.$router.push({ name: 'Profile', params: { id: userid }})
+        },
+        goToUserProfile(userid) {
+            this.$router.push({ name: 'Profile', params: { id: userid } })
+        },
+
+        toggleDropdown() {
+            this.showDropdown = this.dropdownList.length > 0;
+        },
+
+        clearSearch() {
+            this.searchQuery = "";
+            this.showDropdown = false;
         }
+
+
     },
 }
 </script>
@@ -44,60 +79,61 @@ export default {
 
 <style>
 #searchDiv {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+    flex-grow: 1;
+    position: relative;
+    align-self: flex-start;
+    min-width: 250px;
+    max-width: 250px;
+}
+
+#searchDiv input[type="text"] {
+    background-image: url(../assets/icons/glass.svg);
+    background-repeat: no-repeat;
+    background-position: left 10px center;
     padding: 10px;
-
-    width: 257px;
-    height: 15px;
-
-    background: #FFFFFF;
-    border: 1px solid #706A6A;
-    border-radius: 3px;
-    border: 1px solid #706A6A;
+    padding-left: calc(17px + 20px);
+    border-radius: 10px;
+    box-shadow: var(--container-shadow);
 }
 
-#dropdownlist {
-    cursor: default;
-    margin-left: 20px;
-    display: block;
+#searchDiv input[type="text"].no-bottom-border {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+#dropdown {
+
+    background-color: var(--input-bg);
+    color: var(--color-lg-black);
+    width: 100%;
+    padding: 0 10px;
     position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    padding: 12px 16px;
-    z-index: 1;
+    box-shadow: 0 2px 5px -1px rgba(0, 0, 0, 0.27);
+
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+
+    /* display: none; */
+
 }
 
-#dropdownitem {
-    font-family: 'Poppins';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 146.02%;
 
-    display: flex;
-    align-items: center;
-    text-align: center;
-    color: #141111;
+#dropdown .item-list {
+    padding: 15px 0;
+    border-top: 1px solid rgb(211, 211, 211);
 }
 
-#dropdownimage {
-    width: 20px;
-    height: 20px;
+.open #inputBox {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
-#inputBox {
-    border: none;
-    width: 230px;
+.open #dropdownlist {
+    display: block;
 }
+
 
 *:focus {
     outline: none;
-}
-
-#glass {
-    margin-left: auto;
 }
 </style>

@@ -3,6 +3,7 @@
     <div id="all_posts" v-if="allPosts !== undefined">
         <Post v-for="post in allPosts" :key="post.id" v-bind:postData="post" />
     </div>
+
 </template>
 
 <script>
@@ -25,5 +26,6 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 50px;
 }
 </style>

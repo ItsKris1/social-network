@@ -1,44 +1,106 @@
 <template>
-    <form @submit.prevent="submitRegData">
+    <!-- <form @submit.prevent="submitRegData">
         <div id="frame1">
             <div id="frame3">
-                <div id="email-input">
-                    <label class="label">Email</label>
-                    <input v-model="form.email" id="" class="rectangle1" type="email">
+                <div id="form-input">
+                    <label for="email">Email</label>
+                    <input v-model="form.email" id="email" type="email">
                 </div>
-                <div id="password-input">
-                    <label class="label">Password</label>
-                    <input v-model="form.password" class="rectangle1" type="password">
+                <div id="form-input">
+                    <label for="">Password</label>
+                    <input v-model="form.password" type="password">
                 </div>
-                <div id="firstname-input">
-                    <label class="label">First Name</label>
-                    <input v-model="form.firstname" class="rectangle1" type="text">
+                <div id="form-input">
+                    <label for="">First Name</label>
+                    <input v-model="form.firstname" type="text">
                 </div>
                 <div id="lastname-input">
-                    <label class="label">Last Name</label>
-                    <input v-model="form.lastname" class="rectangle1" type="text">
+                    <label for="">Last Name</label>
+                    <input v-model="form.lastname" type="text">
                 </div>
                 <div id="birtday-input">
-                    <label class="label">Date Of Birth</label>
-                    <input v-model="form.dateofbirth" class="rectangle1" type="date">
+                    <label for="">Date Of Birth</label>
+                    <input v-model="form.dateofbirth" type="date">
                 </div>
                 <div id="nickname-input">
-                    <label for="nickname" class="label">Nickname</label>
-                    <input v-model="form.nickname" id="nickname" class="rectangle1" type="text">
+                    <label for="nickname">Nickname</label>
+                    <input v-model="form.nickname" id="nickname" type="text">
                 </div>
                 <div id="avatar-input">
-                    <label class="label" placeholder="avatar">Avatar</label>
-                    <input @change="checkPicture" class="rectangle1" type="file"
-                        accept="image/png, image/gif, image/jpeg">
+                    <label placeholder="avatar">Avatar</label>
+                    <input @change="checkPicture" type="file" accept="image/png, image/gif, image/jpeg">
                 </div>
                 <div id="about-me-input">
-                    <label class="label">About me</label>
-                    <input v-model="form.aboutme" class="rectangle1" type="text">
+                    <label for="">About me</label>
+                    <input v-model="form.aboutme" type="text">
                 </div>
                 <button id="regBtn" type="submit">Register</button>
             </div>
         </div>
-    </form>
+    </form> -->
+
+    <div class="register__wrapper">
+
+
+
+        <img src="../assets/pexels-cottonbro-5053739.jpg" alt="man holding phone">
+
+
+
+
+        <div class="register">
+            <h1>Create your account</h1>
+            <form @submit.prevent="submitRegData" id="register__form">
+
+                <div class="form-group">
+                    <div class="form-input">
+                        <label for="firstname">First name</label>
+                        <input v-model="form.firstname" type="text" name="firstname" id="firstname">
+                    </div>
+                    <div class="form-input">
+                        <label for="email">Email</label>
+                        <input v-model="form.email" type="email" name="email" id="email">
+                    </div>
+
+                    <div class="form-input">
+                        <label for="date">Date of Birth</label>
+                        <input v-model="form.dateofbirth" type="date" name="date" id="date">
+                    </div>
+
+                    <div class="form-input">
+                        <label for="aboutme">About me</label>
+                        <textarea v-model="form.aboutme" id="aboutme" name="aboutme" rows="4" cols="50"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-input">
+                        <label for="lastname">Last name</label>
+                        <input v-model="form.lastname" type="text" name="lastname" id="lastname">
+                    </div>
+
+                    <div class="form-input">
+                        <label for="password">Password</label>
+                        <input v-model="form.password" type="password" name="password" id="password">
+                    </div>
+
+
+                    <div class="form-input">
+                        <label for="nickname">Nickname</label>
+                        <input v-model="form.nickname" type="text" name="nickname" id="nickname">
+                    </div>
+                    <div class="form-input">
+                        <label for="avatar">Avatar</label>
+                        <input id="avatar" @change="checkPicture" type="file" accept="image/png, image/gif, image/jpeg">
+                    </div>
+                </div>
+            </form>
+
+            <button class="btn" form="register__form" type="submit">Create account</button>
+
+        </div>
+    </div>
+
 </template>
 
 <script>
@@ -111,17 +173,17 @@ export default {
             if ((!(extension == "image"))) {
                 console.log('File is not an image.');
                 this.$toast.open({
-                            message: 'File is not an image.',
-                            type: 'error', //One of success, info, warning, error, default
-                        })
+                    message: 'File is not an image.',
+                    type: 'error', //One of success, info, warning, error, default
+                })
                 return
             }
             if (file.size > 2048000) {
                 console.log('File size is more than 2 MB.');
                 this.$toast.open({
-                            message: 'File size is more than 2 MB.',
-                            type: 'error', //One of success, info, warning, error, default
-                        })
+                    message: 'File size is more than 2 MB.',
+                    type: 'error', //One of success, info, warning, error, default
+                })
                 return
             }
             this.form.avatar = file;
@@ -131,4 +193,47 @@ export default {
 </script>
 
 <style>
+.register__wrapper {
+    display: flex;
+    align-items: center;
+    height: 80vh;
+    min-height: 650px;
+    max-height: 700px;
+    width: 80vw;
+    min-width: min-content;
+    max-width: max-content;
+    margin: auto;
+    background-color: var(--color-white);
+    box-shadow: var(--container-shadow);
+    border-radius: 20px;
+    overflow: hidden;
+
+}
+
+.register {
+    flex: 0 1 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 45px;
+    padding: 0 50px;
+
+}
+
+.register__wrapper img {
+    height: 100%;
+}
+
+.register form {
+    display: flex;
+    gap: 40px;
+}
+
+.register form>* {
+    flex: 1;
+}
+
+.register .form-group {
+    gap: 25px;
+}
 </style>

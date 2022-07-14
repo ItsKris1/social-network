@@ -1,7 +1,8 @@
 <template>
-    <NavBarOff />
-    <SignIn />
-
+    <div class="sign-in__container">
+        <NavBarOff />
+        <SignIn />
+    </div>
 </template>
 
 <script>
@@ -19,3 +20,15 @@ export default {
 }
 
 </script>
+
+<style>
+.sign-in__container {
+    display: grid;
+    grid-template-rows: minmax(min-content, max-content);
+    height: 100vh;
+}
+
+.sign-in__container .sign-in__wrapper {
+    place-self: center;
+}
+</style>

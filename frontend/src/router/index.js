@@ -8,6 +8,7 @@ const routes = [
     path: "/",
     name: "auth",
     component: Auth,
+
   },
   {
     path: "/sign-in",

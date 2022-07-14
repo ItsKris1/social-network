@@ -3,7 +3,7 @@
     <!-- <button @click="getAllMyPosts">get</button>
     <button @click="showAllMyPosts">show</button> -->
     <!-- <div v-if="this.myposts !== undefined"> -->
-        <!-- {{this.posts}} -->
+    <!-- {{this.posts}} -->
     <Post v-for="post in this.posts" :key="post.id" v-bind:postData="post" />
     <!-- </div> -->
 
@@ -11,17 +11,16 @@
 
 
 <script>
-// import { mapGetters } from 'vuex'
 import Post from './Post.vue'
 export default {
     name: 'AllMyPosts',
     components: { Post },
-    props:{
-        userid:""
+    props: {
+        userid: ""
     },
     data() {
         return {
-            posts:{}
+            posts: {}
         }
     },
     created() {
