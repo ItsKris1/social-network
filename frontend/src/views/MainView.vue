@@ -5,8 +5,13 @@
         <NewPost />
         <Groups />
         <AllPosts />
+
+        <MultiselectDropdown labelName="Select animals"
+                             :content="['cat', 'dog', 'mouse']"
+                             placeholder="Please choose" />
     </div>
 
+    <!-- ['hello', 'there', 'how are you'] -->
 </template>
 
 <script>
@@ -15,10 +20,11 @@ import NewPost from '@/components/NewPost.vue'
 import AllPosts from '@/components/AllPosts.vue'
 import Groups from '@/components/Groups.vue'
 import NewGroup from '@/components/NewGroup.vue'
+import MultiselectDropdown from '@/components/MultiselectDropdown.vue'
 
 export default {
     name: 'MainView',
-    components: { NavBarOn, NewPost, AllPosts, Groups, NewGroup },
+    components: { NavBarOn, NewPost, AllPosts, Groups, NewGroup, MultiselectDropdown },
 }
 </script>
 

@@ -120,7 +120,7 @@ export default {
 </script>
 
 <style>
-.followers-dropdown {
+/* .followers-dropdown {
     background-color: var(--input-bg);
     box-shadow: var(--container-shadow);
     border-radius: 5px;
@@ -133,10 +133,10 @@ export default {
     font-family: 'Poppins', sans-serif;
     text-align: left;
     color: rgb(136, 136, 136);
-    /* width: 250px; */
     position: relative;
     background-color: transparent;
     width: 100%;
+    min-height: 35px;
 }
 
 .followers-dropdown .item-list {
@@ -157,5 +157,5 @@ export default {
     border-radius: 5px;
     padding: 5px;
     font-size: 14px;
-}
+} */
 </style>
