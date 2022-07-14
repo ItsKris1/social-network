@@ -74,6 +74,7 @@ export default {
             fetchedFollowers: [],
         }
     },
+
     methods: {
         toggle() {
             this.newpost.privacy = "";
