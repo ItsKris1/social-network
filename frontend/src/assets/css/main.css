@@ -62,19 +62,17 @@ p {
 }
 
 
-
-
-
 a {
     text-decoration: none;
     color: var(--color-lg-black);
 }
 
-label {
-    display: block;
+
+/* label {
+    display: block; 
     margin-bottom: 5px;
-    color: var(--color-lg-black);
-}
+
+} */
 
 input,
 select,
@@ -85,7 +83,6 @@ textarea {
     border: none;
     box-shadow: var(--container-shadow);
     font-family: 'Poppins', sans-serif;
-
     width: 100%;
     /* max-width: 250px; */
 
@@ -125,23 +122,37 @@ select {
     appearance: none;
 }
 
-.select-wrapper {
-    position: relative;
-}
 
-.select-wrapper img {
+
+/* .select-wrapper img {
     position: absolute;
     right: 7.5px;
     top: 7.5px;
     height: 18.5px;
     width: 18.5px;
 
+} */
+.form-input {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    color: var(--color-lg-black);
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
     gap: 15px;
+
+}
+
+.dropdown-arrow {
+    position: absolute;
+    right: 7.5px;
+    top: 7.5px;
+    height: 18.5px;
+    width: 18.5px;
+
 
 }
 
@@ -193,12 +204,12 @@ select {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    /* width: max-content; */
     padding: var(--container-padding);
     background-color: var(--color-white);
     box-shadow: var(--container-shadow);
     border-radius: var(--container-border-radius);
-    color: var(--color-lg-black)
+    color: var(--color-lg-black);
+    /* width: max-content; */
 }
 
 

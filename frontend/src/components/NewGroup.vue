@@ -1,7 +1,7 @@
 <template>
     <button class="btn" @click="toggle">New group<i class="uil uil-plus"></i></button>
 
-    <Modal @closeModal="toggle">
+    <Modal v-show="isOpen" @closeModal="toggle">
         <template #title>
             Create new group
         </template>
@@ -23,28 +23,33 @@
                               placeholder="Describe here"></textarea>
                 </div>
 
-                <div class="form-input" id="followersDropdown">
-                    <p>Invite users</p>
+                <div class="form-input">
+                    <p class="custom-label">Invite users</p>
+
                     <ul class="checkedFollowersList" v-if="checkedFollowers.length !== 0">
                         <li v-for="checkedFollower in checkedFollowers"> {{ checkedFollower }}</li>
                     </ul>
 
-                    <p v-if="5 === 2">hello ther</p>
-                    <button type="button" @click.self="showDropdown = !showDropdown">Select users</button>
+                    <div class="followers-dropdown">
+                        <button type="button" @click="showDropdown = !showDropdown">
+                            Select users
+                            <img class="dropdown-arrow" src="../assets/icons/angle-down.svg" alt="" srcset="">
+                        </button>
 
-                    <ul class="item-list" v-show="showDropdown">
-                        <li v-for="follower in fetchedFollowers">
-                            <input type="checkbox"
-                                   :id="follower"
-                                   :value="follower"
-                                   v-model="checkedFollowers" />
-                            <label :for="follower">{{ follower }}</label>
+                        <ul class="item-list" v-show="showDropdown">
+                            <li v-for="follower in fetchedFollowers">
+                                <input type="checkbox"
+                                       :id="follower"
+                                       :value="follower"
+                                       v-model="checkedFollowers" />
+                                <label :for="follower">{{ follower }}</label>
 
-                        </li>
-                    </ul>
+                            </li>
+                        </ul>
+                    </div>
 
                 </div>
-                <button class="btn modal-form__submit" type="submit">Create</button>
+                <button class="btn form-submit" type="submit">Create</button>
             </form>
 
         </template>
@@ -115,36 +120,37 @@ export default {
 </script>
 
 <style>
-#followersDropdown {
-    /* background-color: brown; */
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+.followers-dropdown {
+    background-color: var(--input-bg);
+    box-shadow: var(--container-shadow);
+    border-radius: 5px;
 }
 
-#followersDropdown button {
+.followers-dropdown button {
     padding: 7.5px;
-    border-radius: 5px;
-    background-color: var(--input-bg);
+
     border: none;
-    box-shadow: var(--container-shadow);
     font-family: 'Poppins', sans-serif;
     text-align: left;
     color: rgb(136, 136, 136);
     /* width: 250px; */
-
-
-}
-
-#followersDropdown .item-list {
+    position: relative;
+    background-color: transparent;
     width: 100%;
 }
 
-/* 
+.followers-dropdown .item-list {
+    padding: 7.5px;
+    width: 100%;
+}
+
+
+
 .checkedFollowersList {
     display: flex;
     gap: 5px;
-} */
+    padding: 5px 0;
+}
 
 .checkedFollowersList li {
     background-color: rgb(179, 179, 179);

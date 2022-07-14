@@ -13,7 +13,7 @@
                 <div class="form-input">
                     <label for="post_privacy">Post privacy</label>
                     <div class="select-wrapper">
-                        <img src="../assets/icons/angle-down.svg" alt="" srcset="">
+                        <img src="../assets/icons/angle-down.svg" class="dropdown-arrow">
 
                         <select v-model="newpost.privacy" @change="getFollowers" id="post_privacy"
                                 required>
@@ -182,5 +182,9 @@ const checkedFollowers = ref([])
 
 .start-post i {
     font-size: 1.25em;
+}
+
+.select-wrapper {
+    position: relative;
 }
 </style>

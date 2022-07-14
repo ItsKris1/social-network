@@ -71,7 +71,7 @@ export default {
     gap: 15px;
 }
 
-.btn.modal-form__submit {
+.modal-content form .btn.form-submit {
     align-self: flex-end;
 }
 </style>
