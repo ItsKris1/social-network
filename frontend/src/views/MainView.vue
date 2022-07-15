@@ -5,13 +5,8 @@
         <NewPost />
         <Groups />
         <AllPosts />
-
-        <MultiselectDropdown labelName="Select animals"
-                             :content="['cat', 'dog', 'mouse']"
-                             placeholder="Please choose" />
     </div>
 
-    <!-- ['hello', 'there', 'how are you'] -->
 </template>
 
 <script>
@@ -26,6 +21,7 @@ export default {
     name: 'MainView',
     components: { NavBarOn, NewPost, AllPosts, Groups, NewGroup, MultiselectDropdown },
 }
+
 </script>
 
 <style>

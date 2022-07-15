@@ -31,11 +31,23 @@
 
 <script>
 export default {
-    props: ['labelName', 'placeholder', 'content'],
+    props: ['labelName', 'placeholder', 'content', 'clearInput'],
     data() {
         return {
             checkedOptions: [],
             showDropdown: false,
+        }
+    },
+
+    watch: {
+        clearInput() {
+            if (this.clearInput) {
+                // console.log("Clearing inputs...")
+                this.showDropdown = false;
+                this.checkedOptions = [];
+                this.$emit("inputCleared");
+            }
+
         }
     }
 }

@@ -1,13 +1,13 @@
 <template>
     <button class="btn" @click="toggle">New group<i class="uil uil-plus"></i></button>
 
-    <Modal v-show="isOpen" @closeModal="toggle">
+    <Modal v-show="isOpen" @closeModal="toggle(); toggleClearInput();">
         <template #title>
             Create new group
         </template>
 
         <template #body>
-            <form @submit.prevent="submitNewGroup" v-if="fetchedFollowers">
+            <form @submit.prevent="submitNewGroup" ref="theForm">
                 <div class="form-input">
                     <label for="name">Name</label>
                     <input type="text" name="name" id="name">
@@ -23,7 +23,7 @@
                               placeholder="Describe here"></textarea>
                 </div>
 
-                <div class="form-input">
+                <!-- <div class="form-input">
                     <p class="custom-label">Invite users</p>
 
                     <ul class="checkedFollowersList" v-if="checkedFollowers.length !== 0">
@@ -48,7 +48,15 @@
                         </ul>
                     </div>
 
-                </div>
+                </div> -->
+                <MultiselectDropdown
+                                     v-if="fetchedFollowers"
+                                     @inputCleared="toggleClearInput"
+                                     :clear-input="clearInput"
+                                     :content="fetchedFollowers"
+                                     label-name="Invite users"
+                                     placeholder="Select users" />
+
                 <button class="btn form-submit" type="submit">Create</button>
             </form>
 
@@ -60,19 +68,21 @@
 
 <script>
 import Modal from "@/components/Modal.vue"
+import MultiselectDropdown from "./MultiselectDropdown.vue";
 
 export default {
     components: {
-        Modal
+        Modal,
+        MultiselectDropdown,
     },
     data() {
         return {
-            checkedFollowers: [],
             fetchedFollowers: null,
+            form: null,
 
-            // Element show/hide
-            showDropdown: false,
             isOpen: false,
+            clearInput: false,
+
         }
     },
 
@@ -80,10 +90,13 @@ export default {
         this.getFollowers();
     },
 
+    mounted() {
+        this.form = this.$refs.theForm
+    },
+
     methods: {
         async submitNewGroup(e) {
-            const form = e.currentTarget;
-            const formData = new FormData(form);
+            const formData = new FormData(this.form);
             const formDataObject = Object.fromEntries(formData.entries())
             formDataObject["invitations"] = this.checkedFollowers;
 
@@ -93,8 +106,9 @@ export default {
                 body: JSON.stringify(formDataObject)
             })
 
-            form.reset()
-            this.checkedFollowers = [];
+            this.form.reset()
+            this.toggle();
+            this.toggleClearInput();
 
             console.log("Submit new group", await response.json())
 
@@ -111,9 +125,18 @@ export default {
         },
 
         toggle() {
+            // if modal was open: clear input
+            if (this.isOpen) {
+                this.form.reset();
+            }
             this.isOpen = !this.isOpen
+
+
         },
 
+        toggleClearInput() {
+            this.clearInput = !this.clearInput
+        },
     }
 }
 

@@ -7,18 +7,10 @@
                 </h2>
                 <i class="uil uil-times close" @click="$emit('closeModal')"></i>
             </div>
-            <!-- MODAL BODY -->
             <slot name="body"></slot>
         </div>
     </div>
 </template>
-
-<script>
-export default {
-
-}
-
-</script>
 
 
 <style>
@@ -34,7 +26,6 @@ export default {
     justify-content: center;
     z-index: 2;
 
-    /* display: none; */
 }
 
 .modal-content {
