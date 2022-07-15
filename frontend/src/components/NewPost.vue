@@ -6,10 +6,10 @@
         <i class="uil uil-edit"></i>
     </button>
 
-    <Modal v-show="isOpen" @closeModal="toggle">
+    <Modal v-show="isOpen" @closeModal="toggle" v-if="fetchedFollowers">
         <template #title>Create a post</template>
         <template #body>
-            <form @submit.prevent="submitPost" id="newpost" ref="theForm">
+            <form @submit.prevent="submitPost" id="newpost">
                 <div class="form-input">
                     <label for="post_privacy">Post privacy</label>
                     <div class="select-wrapper">
@@ -24,7 +24,8 @@
 
                     </div>
 
-                    <MultiselectDropdown v-if="fetchedFollowers && newpost.privacy === 'almost-private'"
+                    <MultiselectDropdown v-if="newpost.privacy === 'almost-private'"
+                                         v-model:checkedOptions="newpost.checkedFollowers"
                                          placeholder="Select followers"
                                          :content="fetchedFollowers" />
                 </div>
@@ -70,6 +71,7 @@ export default {
             newpost: {
                 privacy: "",
                 body: "",
+                checkedFollowers: null,
                 image: null,
             },
             fetchedFollowers: null,
@@ -80,7 +82,11 @@ export default {
         this.getFollowers();
     },
 
-
+    // watch: {
+    //     'newpost.checkedFollowers'(newValue) {
+    //         console.log(newValue)
+    //     }
+    // },
 
     methods: {
         toggle() {
@@ -141,9 +147,9 @@ export default {
             formData.set("body", this.newpost.body)
             formData.set("image", this.newpost.image)
             formData.set("privacy", this.newpost.privacy)
-            f
+            formData.set("checkedfollowers", this.newpost.checkedFollowers)
 
-            console.log("Data", Object.fromEntries(formData.entries()))
+            // console.log("Data", Object.fromEntries(formData.entries()))
 
             const response = await fetch('http://localhost:8081/newPost', {
                 method: 'POST',

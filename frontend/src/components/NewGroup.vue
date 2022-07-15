@@ -25,7 +25,7 @@
 
                 <MultiselectDropdown
 
-                                     v-model="checkedFollowers"
+                                     v-model:checkedOptions="checkedFollowers"
                                      @inputCleared="toggleClearInput"
                                      :clear-input="clearInput"
                                      :content="fetchedFollowers"

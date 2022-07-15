@@ -2,8 +2,8 @@
     <div class="dropdown-wrapper">
         <p class="custom-label">{{ labelName }}</p>
 
-        <ul class="checkedOptionsList" v-if="checkedOptions.length !== 0">
-            <li v-for="checkedOption in checkedOptions"> {{ checkedOption }}</li>
+        <ul class="checkedOptionsList" v-if="dropdownCheckedOptions.length !== 0">
+            <li v-for="checkedOption in dropdownCheckedOptions"> {{ checkedOption }}</li>
         </ul>
 
         <div class="dropdown">
@@ -17,7 +17,7 @@
                     <input type="checkbox"
                            :id="option"
                            :value="option"
-                           v-model="checkedOptions" />
+                           v-model="dropdownCheckedOptions" />
                     <label :for="option">{{ option }}</label>
 
                 </li>
@@ -31,11 +31,12 @@
 
 <script>
 export default {
-    props: ['labelName', 'placeholder', 'content', 'clearInput', 'modelValue'],
+    props: ['labelName', 'placeholder', 'content', 'clearInput', 'checkedOptions'],
+    emits: ['update:checkedOptions', 'inputCleared'],
     data() {
 
         return {
-            checkedOptions: [],
+            dropdownCheckedOptions: [],
             showDropdown: false,
         }
     },
@@ -43,15 +44,15 @@ export default {
     watch: {
         clearInput() {
             if (this.clearInput) {
-                this.checkedOptions = [];
+                this.dropdownCheckedOptions = [];
                 this.showDropdown = false;
                 this.$emit("inputCleared");
             }
 
         },
 
-        checkedOptions(value) {
-            this.$emit('update:modelValue', value)
+        dropdownCheckedOptions(checkedOption) {
+            this.$emit('update:checkedOptions', checkedOption)
         }
     }
 }
