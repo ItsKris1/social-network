@@ -31,8 +31,9 @@
 
 <script>
 export default {
-    props: ['labelName', 'placeholder', 'content', 'clearInput'],
+    props: ['labelName', 'placeholder', 'content', 'clearInput', 'modelValue'],
     data() {
+
         return {
             checkedOptions: [],
             showDropdown: false,
@@ -42,12 +43,15 @@ export default {
     watch: {
         clearInput() {
             if (this.clearInput) {
-                // console.log("Clearing inputs...")
-                this.showDropdown = false;
                 this.checkedOptions = [];
+                this.showDropdown = false;
                 this.$emit("inputCleared");
             }
 
+        },
+
+        checkedOptions(value) {
+            this.$emit('update:modelValue', value)
         }
     }
 }

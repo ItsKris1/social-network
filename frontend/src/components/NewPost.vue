@@ -9,30 +9,29 @@
     <Modal v-show="isOpen" @closeModal="toggle">
         <template #title>Create a post</template>
         <template #body>
-            <form @submit.prevent="submitPost" id="newpost">
+            <form @submit.prevent="submitPost" id="newpost" ref="theForm">
                 <div class="form-input">
                     <label for="post_privacy">Post privacy</label>
                     <div class="select-wrapper">
                         <img src="../assets/icons/angle-down.svg" class="dropdown-arrow">
 
-                        <select v-model="newpost.privacy" @change="getFollowers" id="post_privacy"
-                                required>
-                            <option value="" selected disabled hidden>Choose here</option>
-                            <option value="public" selected>Everyone</option>
+                        <select id="post_privacy" v-model="newpost.privacy" required>
+                            <option value="" selected hidden>Choose here</option>
+                            <option value="public">Everyone</option>
                             <option value="private">Followers</option>
                             <option value="almost-private">Choosen followers</option>
                         </select>
 
                     </div>
 
-                    <div v-if="newpost.privacy === 'almost-private'">
-
-                    </div>
+                    <MultiselectDropdown v-if="fetchedFollowers && newpost.privacy === 'almost-private'"
+                                         placeholder="Select followers"
+                                         :content="fetchedFollowers" />
                 </div>
 
                 <div class="form-input">
                     <label for="description">Description</label>
-                    <textarea id="description" name="description" rows="4" cols="50" v-model="newpost.body"
+                    <textarea id="description" v-model="newpost.body" rows="4" cols="50"
                               placeholder="What are you thinking?" required></textarea>
                 </div>
 
@@ -41,8 +40,8 @@
                     <label for="upload-image">
                         <img src="../assets/addimg.png" />
                     </label>
-                    <input id="upload-image" @change="checkPicture" type="file"
-                           accept="image/png, image/gif, image/jpeg" />
+                    <input id="upload-image" type="file"
+                           accept="image/png, image/gif, image/jpeg" @change="checkPicture" />
 
                     <button class="btn" type="submit">Post</button>
 
@@ -58,9 +57,11 @@
 
 <script>
 import Modal from './Modal.vue'
+import MultiselectDropdown from './MultiselectDropdown.vue';
 export default {
     components: {
-        Modal
+        Modal,
+        MultiselectDropdown
     },
     name: 'Newpost',
     data() {
@@ -71,15 +72,26 @@ export default {
                 body: "",
                 image: null,
             },
-            fetchedFollowers: [],
+            fetchedFollowers: null,
         }
     },
 
+    created() {
+        this.getFollowers();
+    },
+
+
+
     methods: {
         toggle() {
-            this.newpost.privacy = "";
-            this.newpost.body = "";
-            this.newpost.image = "";
+            // this.newpost.privacy = "";
+            // this.newpost.body = "";
+            // this.newpost.image = "";
+
+            // if (this.$refs.theForm && this.isOpen) {
+            //     console.log(this.$refs.theForm);
+            //     this.$refs.theForm.reset()
+            // }
             this.isOpen = !this.isOpen
         },
 
@@ -116,26 +128,30 @@ export default {
             await fetch('https://9ec93652-e031-4f3e-a558-86f8ed7d624a.mock.pstmn.io/getfollowers')
                 .then((response => response.json()))
                 .then((json) => {
-                    this.fetchedFollowers = json
+                    this.fetchedFollowers = json.followers
                 })
             // .then((json => console.log(json)))
+
+
         },
 
         async submitPost() {
-            let formData = new FormData();
-            formData.set('privacy', this.newpost.privacy);
-            formData.set('body', this.newpost.body);
-            formData.set('image', this.newpost.image);
-            // console.log('checkedFollowers: ', this.checkedFollowers);
-            formData.set('checkedfollowers', this.checkedFollowers)
 
-            await fetch('http://localhost:8081/newPost', {
+            let formData = new FormData();
+            formData.set("body", this.newpost.body)
+            formData.set("image", this.newpost.image)
+            formData.set("privacy", this.newpost.privacy)
+            f
+
+            console.log("Data", Object.fromEntries(formData.entries()))
+
+            const response = await fetch('http://localhost:8081/newPost', {
                 method: 'POST',
                 credentials: 'include',
                 body: formData
             })
             this.$store.dispatch('fetchPosts')
-            console.log('Post submitted');
+            console.log('Post submitted', await response.json());
 
 
             this.toggle();
@@ -144,10 +160,6 @@ export default {
 }
 </script>
 
-<script setup>
-import { ref } from 'vue'
-const checkedFollowers = ref([])
-</script>
 
 <style>
 #newpost {

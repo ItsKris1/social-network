@@ -1,7 +1,7 @@
 <template>
-    <button class="btn" @click="toggle">New group<i class="uil uil-plus"></i></button>
+    <button class="btn" @click="toggleModal">New group<i class="uil uil-plus"></i></button>
 
-    <Modal v-show="isOpen" @closeModal="toggle(); toggleClearInput();">
+    <Modal v-show="isOpen" @closeModal="toggleModal(); toggleClearInput();" v-if="fetchedFollowers">
         <template #title>
             Create new group
         </template>
@@ -23,34 +23,9 @@
                               placeholder="Describe here"></textarea>
                 </div>
 
-                <!-- <div class="form-input">
-                    <p class="custom-label">Invite users</p>
-
-                    <ul class="checkedFollowersList" v-if="checkedFollowers.length !== 0">
-                        <li v-for="checkedFollower in checkedFollowers"> {{ checkedFollower }}</li>
-                    </ul>
-
-                    <div class="followers-dropdown">
-                        <button type="button" @click="showDropdown = !showDropdown">
-                            Select users
-                            <img class="dropdown-arrow" src="../assets/icons/angle-down.svg" alt="" srcset="">
-                        </button>
-
-                        <ul class="item-list" v-show="showDropdown">
-                            <li v-for="follower in fetchedFollowers">
-                                <input type="checkbox"
-                                       :id="follower"
-                                       :value="follower"
-                                       v-model="checkedFollowers" />
-                                <label :for="follower">{{ follower }}</label>
-
-                            </li>
-                        </ul>
-                    </div>
-
-                </div> -->
                 <MultiselectDropdown
-                                     v-if="fetchedFollowers"
+
+                                     v-model="checkedFollowers"
                                      @inputCleared="toggleClearInput"
                                      :clear-input="clearInput"
                                      :content="fetchedFollowers"
@@ -62,7 +37,6 @@
 
         </template>
     </Modal>
-
 </template>
 
 
@@ -78,39 +52,37 @@ export default {
     data() {
         return {
             fetchedFollowers: null,
-            form: null,
+            checkedFollowers: null,
 
             isOpen: false,
-            clearInput: false,
+            clearInput: false
 
         }
     },
 
     created() {
         this.getFollowers();
-    },
 
-    mounted() {
-        this.form = this.$refs.theForm
     },
 
     methods: {
         async submitNewGroup(e) {
-            const formData = new FormData(this.form);
+            const form = e.currentTarget;
+            const formData = new FormData(form);
             const formDataObject = Object.fromEntries(formData.entries())
-            formDataObject["invitations"] = this.checkedFollowers;
+            formDataObject["invitations"] = Object.values(this.checkedFollowers);
 
             const response = await fetch('http://localhost:8081/newGroup', {
                 method: 'post',
                 credentials: 'include',
                 body: JSON.stringify(formDataObject)
             })
+            console.log("Submit new group", await response.json())
 
-            this.form.reset()
-            this.toggle();
+            form.reset()
+            this.toggleModal();
             this.toggleClearInput();
 
-            console.log("Submit new group", await response.json())
 
 
         },
@@ -120,14 +92,13 @@ export default {
             const data = await response.json();
             this.fetchedFollowers = data.followers;
 
-            // console.log("Fetched followers", data)
-
         },
 
-        toggle() {
+        toggleModal() {
             // if modal was open: clear input
             if (this.isOpen) {
-                this.form.reset();
+                // this.form.reset();
+                this.$refs.theForm.reset();
             }
             this.isOpen = !this.isOpen
 
@@ -137,48 +108,8 @@ export default {
         toggleClearInput() {
             this.clearInput = !this.clearInput
         },
+
     }
 }
 
 </script>
-
-<style>
-/* .followers-dropdown {
-    background-color: var(--input-bg);
-    box-shadow: var(--container-shadow);
-    border-radius: 5px;
-}
-
-.followers-dropdown button {
-    padding: 7.5px;
-
-    border: none;
-    font-family: 'Poppins', sans-serif;
-    text-align: left;
-    color: rgb(136, 136, 136);
-    position: relative;
-    background-color: transparent;
-    width: 100%;
-    min-height: 35px;
-}
-
-.followers-dropdown .item-list {
-    padding: 7.5px;
-    width: 100%;
-}
-
-
-
-.checkedFollowersList {
-    display: flex;
-    gap: 5px;
-    padding: 5px 0;
-}
-
-.checkedFollowersList li {
-    background-color: rgb(179, 179, 179);
-    border-radius: 5px;
-    padding: 5px;
-    font-size: 14px;
-} */
-</style>
