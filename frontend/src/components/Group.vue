@@ -17,7 +17,6 @@ export default {
     name: "Group",
     created() {
         this.getGroupInfo();
-        // this.getGroupPosts();
     },
     watch: {
         $route() {
@@ -26,8 +25,7 @@ export default {
     },
     data() {
         return {
-            groupData: null,
-            // groupPosts: []
+            groupData: {},
         };
     },
     methods: {
@@ -37,19 +35,10 @@ export default {
             })
                 .then((r => r.json()))
                 .then((json => {
-                    console.log(json);
+                    // console.log("getGroupInfo",json);
                     this.groupData = json.groups[0];
                 }));
         },
-        // async getGroupPosts() {
-        //     await fetch("http://localhost:8081/groupPosts?groupId=" + this.$route.params.id, {
-        //         credentials: "include"
-        //     })
-        //     .then((r=>r.json()))
-        //     .then((json=>console.log(json)))
-
-        // }
-
     },
     components: { NewPost, GroupPosts }
 }

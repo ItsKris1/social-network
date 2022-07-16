@@ -16,6 +16,11 @@ export default {
     created() {
         this.getGroupPosts();
     },
+    watch:{
+        $route(){
+            this.getGroupPosts();
+        }
+    },
     methods: {
         async getGroupPosts() {
             await fetch("http://localhost:8081/groupPosts?groupId=" + this.$route.params.id, {
@@ -23,7 +28,7 @@ export default {
             })
                 .then((r => r.json()))
                 .then((json => {
-                    console.log(json)
+                    // console.log(json)
                     this.groupPosts = json.posts
                 }))
 
