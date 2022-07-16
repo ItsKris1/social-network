@@ -1,22 +1,17 @@
 <template>
-
     <div id="searchDiv" @click.stop>
-        <input @input="filtered(); toggleDropdown()"
-               @focus="toggleDropdown"
-               v-model="searchQuery"
-               :class="{ 'no-bottom-border': showDropdown }"
-               type="text"
-               placeholder="Search user or group">
+        <input @input="filtered(); toggleDropdown()" @focus="toggleDropdown" v-model="searchQuery"
+            :class="{ 'no-bottom-border': showDropdown }" type="text" placeholder="Search user or group">
 
-        <div id="dropdown"
-             v-show="showDropdown">
+        <div id="dropdown" v-show="showDropdown">
             <ul class="item-list">
-                <li @click="goToUserProfile(user.id); clearSearch()"
-                    id="dropdownitem"
-                    v-for="user in dropdownList">
+                <li @click="goToUserProfile(user.id); clearSearch()" id="dropdownitem" v-for="user in dropdownList">
                     <div class="user-picture small"
-                         :style="{ backgroundImage: `url(http://localhost:8081/${user.avatar})` }"></div>
+                        :style="{ backgroundImage: `url(http://localhost:8081/${user.avatar})` }"></div>
                     <div class="item-text">{{ user.nickname }}</div>
+                </li>
+                <li v-for="group in allGroups" @click="goToGroupPage(group.id); clearSearch()" id="dropdownitem">
+                    {{ group.name }}
                 </li>
                 <!-- <li>
                     <div class="user-picture small"></div>
@@ -43,6 +38,7 @@ export default {
     data() {
         return {
             allusers: [],
+            // allGroups: [],
             searchQuery: "",
             dropdownList: [],
             showDropdown: false,
@@ -50,16 +46,23 @@ export default {
     },
     created() {
         this.$store.dispatch('getAllUsers')
+        this.$store.dispatch('getAllGroups')
         window.addEventListener("click", this.hideDropDown)
     },
 
-    computed: mapGetters(['allUsers']),
+    computed: mapGetters(['allUsers', 'allGroups']),
     methods: {
+
         filtered() {
             this.dropdownList = this.$store.getters.filterUsers(this.searchQuery)
         },
+
         goToUserProfile(userid) {
             this.$router.push({ name: 'Profile', params: { id: userid } })
+        },
+
+        goToGroupPage(groupId){
+            this.$router.push({ name: 'Group', params: { id: groupId } })
         },
 
         toggleDropdown() {
@@ -70,8 +73,6 @@ export default {
             this.searchQuery = "";
             this.showDropdown = false;
         }
-
-
     },
 }
 </script>
