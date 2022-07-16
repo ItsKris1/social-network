@@ -5,35 +5,20 @@
 
 <script>
 import Post from './Post.vue'
+import { mapGetters } from 'vuex'
 export default {
     name: 'GroupPosts',
     components: { Post },
-    data() {
-        return {
-            groupPosts: []
-        }
-    },
     created() {
-        this.getGroupPosts();
+        this.$store.dispatch('getGroupPosts')
     },
+    computed: mapGetters(['groupPosts']),
     watch:{
         $route(){
-            this.getGroupPosts();
+            this.$store.dispatch('getGroupPosts')
         }
     },
-    methods: {
-        async getGroupPosts() {
-            await fetch("http://localhost:8081/groupPosts?groupId=" + this.$route.params.id, {
-                credentials: "include"
-            })
-                .then((r => r.json()))
-                .then((json => {
-                    // console.log(json)
-                    this.groupPosts = json.posts
-                }))
-
-        }
-    }
+    methods: {}
 }
 </script>
 

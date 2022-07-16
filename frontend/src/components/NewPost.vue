@@ -152,6 +152,7 @@ export default {
         },
 
         async submitPost() {
+
             let formData = new FormData();
             formData.set('privacy', this.newpost.privacy);
             formData.set('body', this.newpost.body);
@@ -165,12 +166,12 @@ export default {
                 body: formData
             })
             this.$store.dispatch('fetchPosts')
-            console.log('Post submitted');
-
-
+            // console.log('Post submitted');
             this.toggle();
         },
+
         async submitGroupPost() {
+            
             let formData = new FormData();
             formData.set('groupId', this.$route.params.id)
             formData.set('body', this.newpost.body);
@@ -183,8 +184,9 @@ export default {
             })
                 .then((r => r.json()))
             // .then((json => console.log(json)))
-            // console.log('Group Post Submitted');
+            this.$store.dispatch('getGroupPosts')
             this.toggle();
+            // console.log('Group Post Submitted');
         },
     },
 }

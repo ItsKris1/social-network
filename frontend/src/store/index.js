@@ -1,4 +1,5 @@
 import { createStore } from "vuex";
+import router from "@/router";
 
 export default createStore({
   //------------------------------------- state is like a variables, which hold a values.
@@ -7,6 +8,7 @@ export default createStore({
     posts: {
       allposts: [],
       myposts: [],
+      groupPosts: [],
     },
     users: {
       allusers: [],
@@ -22,6 +24,9 @@ export default createStore({
     },
     myPosts(state) {
       return state.posts.myposts;
+    },
+    groupPosts(state) {
+      return state.posts.groupPosts;
     },
     userInfo(state) {
       return state.profileInfo;
@@ -61,6 +66,9 @@ export default createStore({
     },
     updateAllGroups(state, groups) {
       state.groups.allGroups = groups;
+    },
+    updateGroupPosts(state, posts) {
+      state.posts.groupPosts = posts;
     },
   },
   //------------------------------------------Actions
@@ -144,6 +152,21 @@ export default createStore({
           let groups = json.groups;
           this.commit("updateAllGroups", groups);
           // console.log("Allgroups:", json.groups);
+        });
+    },
+    async getGroupPosts() {
+      await fetch(
+        "http://localhost:8081/groupPosts?groupId=" +
+          router.currentRoute.value.params.id,
+        {
+          credentials: "include",
+        }
+      )
+        .then((r) => r.json())
+        .then((json) => {
+          // console.log(json)
+          let posts = json.posts;
+          this.commit("updateGroupPosts", posts);
         });
     },
   },
