@@ -11,25 +11,6 @@
         <template #body>
             <form v-if="this.isGroupPage" @submit.prevent="submitGroupPost" id="newpost">
                 <div class="form-input">
-                    <label for="post_privacy">Post privacy</label>
-                    <div class="select-wrapper">
-                        <img src="../assets/icons/angle-down.svg" class="dropdown-arrow">
-
-                        <select v-model="newpost.privacy" @change="getFollowers" id="post_privacy" required>
-                            <option value="" selected disabled hidden>Choose here</option>
-                            <option value="public" selected>Everyone</option>
-                            <option value="private">Followers</option>
-                            <option value="almost-private">Choosen followers</option>
-                        </select>
-
-                    </div>
-
-                    <div v-if="newpost.privacy === 'almost-private'">
-
-                    </div>
-                </div>
-
-                <div class="form-input">
                     <label for="description">Description</label>
                     <textarea id="description" name="description" rows="4" cols="50" v-model="newpost.body"
                         placeholder="What are you thinking?" required></textarea>
@@ -192,20 +173,17 @@ export default {
         async submitGroupPost() {
             let formData = new FormData();
             formData.set('groupId', this.$route.params.id)
-            formData.set('privacy', this.newpost.privacy);
             formData.set('body', this.newpost.body);
             formData.set('image', this.newpost.image);
-            formData.set('checkedfollowers', this.checkedFollowers)
 
             await fetch('http://localhost:8081/newGroupPost', {
                 method: 'POST',
                 credentials: 'include',
                 body: formData
             })
-            .then((r=>r.json()))
-            .then((json=>console.log(json)))
-            // this.$store.dispatch('fetchPosts')
-            console.log('Group Post Submitted');
+                .then((r => r.json()))
+            // .then((json => console.log(json)))
+            // console.log('Group Post Submitted');
             this.toggle();
         },
     },
