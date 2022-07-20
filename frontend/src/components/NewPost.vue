@@ -1,12 +1,14 @@
 
 
 <template>
+
     <button class="start-post" @click="toggle">
         <span>Start post</span>
         <i class="uil uil-edit"></i>
     </button>
 
-    <Modal v-show="isOpen" @closeModal="toggle" v-if="fetchedFollowers">
+    <!-- {{ fetchedFollowers }} -->
+    <Modal v-show="isOpen" @closeModal="toggle" v-if="myFollowers">
         <template #title>Create a post</template>
         <template #body>
             <form @submit.prevent="submitPost" id="newpost">
@@ -27,7 +29,7 @@
                     <MultiselectDropdown v-if="newpost.privacy === 'almost-private'"
                                          v-model:checkedOptions="newpost.checkedFollowers"
                                          placeholder="Select followers"
-                                         :content="fetchedFollowerNames" />
+                                         :content="getMyFollowersNames" />
                 </div>
 
                 <div class="form-input">
@@ -74,29 +76,30 @@ export default {
                 checkedFollowers: null,
                 image: null,
             },
-            fetchedFollowers: null,
             userid: null,
         }
     },
 
     created() {
-        this.getFollowers();
+        this.getMyFollowers();
 
     },
 
     computed: {
-        fetchedFollowerNames() {
-            return this.fetchedFollowers.map((follower) => {
-                if (follower.nickname) {
-                    return follower.nickname
-                } else {
-                    return follower.firstName + follower.lastName
-                }
-            })
+        getMyFollowersNames() {
+            return this.$store.getters.getMyFollowersNames;
+        },
+
+        myFollowers() {
+            return this.$store.state.myFollowers;
         }
     },
 
     methods: {
+        getMyFollowers() {
+            this.$store.dispatch("getMyFollowers")
+        },
+
         toggle() {
             // this.newpost.privacy = "";
             // this.newpost.body = "";

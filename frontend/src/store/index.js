@@ -4,6 +4,7 @@ export default createStore({
   //------------------------------------- state is like a variables, which hold a values.
   state: {
     profileInfo: {},
+    myFollowers: {},
     posts: {
       allposts: [],
       myposts: [],
@@ -44,6 +45,16 @@ export default createStore({
       });
       return arr;
     },
+
+    getMyFollowersNames({ myFollowers }) {
+      return myFollowers.map((follower) => {
+        if (follower.nickname) {
+          return follower.nickname
+        } else {
+          return follower.firstName + follower.lastName
+        }
+      })
+    }
   },
   //-------------------------------------- mutations is a way for change state.
   mutations: {
@@ -61,6 +72,10 @@ export default createStore({
     },
     updateAllGroups(state, groups) {
       state.groups.allGroups = groups;
+    },
+
+    updateMyFollowers(state, followers) {
+      state.myFollowers = followers;
     },
   },
   //------------------------------------------Actions
@@ -146,6 +161,23 @@ export default createStore({
           // console.log("Allgroups:", json.groups);
         });
     },
+
+    async getMyFollowers(context) {
+      await context.dispatch("getMyProfileInfo");
+      const myID = context.state.profileInfo.id;
+
+      const response = await fetch(`http://localhost:8081/followers?userId=${myID}`, {
+        credentials: 'include'
+      });
+
+      // const data = await response.json();
+
+      // console.log("getMyFollowers response", data);
+      context.commit("updateMyFollowers", (await response.json()).users)
+
+      console.log(context.state.myFollowers)
+
+    }
   },
   modules: {},
 });
