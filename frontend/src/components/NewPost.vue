@@ -27,7 +27,7 @@
                     <MultiselectDropdown v-if="newpost.privacy === 'almost-private'"
                                          v-model:checkedOptions="newpost.checkedFollowers"
                                          placeholder="Select followers"
-                                         :content="fetchedFollowers" />
+                                         :content="fetchedFollowerNames" />
                 </div>
 
                 <div class="form-input">
@@ -75,18 +75,26 @@ export default {
                 image: null,
             },
             fetchedFollowers: null,
+            userid: null,
         }
     },
 
     created() {
         this.getFollowers();
+
     },
 
-    // watch: {
-    //     'newpost.checkedFollowers'(newValue) {
-    //         console.log(newValue)
-    //     }
-    // },
+    computed: {
+        fetchedFollowerNames() {
+            return this.fetchedFollowers.map((follower) => {
+                if (follower.nickname) {
+                    return follower.nickname
+                } else {
+                    return follower.firstName + follower.lastName
+                }
+            })
+        }
+    },
 
     methods: {
         toggle() {
@@ -131,10 +139,16 @@ export default {
 
         async getFollowers() {
             // console.log('fetching followers');
-            await fetch('https://9ec93652-e031-4f3e-a558-86f8ed7d624a.mock.pstmn.io/getfollowers')
+            await this.$store.dispatch('getMyProfileInfo');
+            const userid = this.$store.state.profileInfo.id
+
+            await fetch(`http://localhost:8081/followers?userId=${userid}`, {
+                credentials: 'include'
+            })
                 .then((response => response.json()))
                 .then((json) => {
-                    this.fetchedFollowers = json.followers
+                    this.fetchedFollowers = json.users
+                    // console.log(json)
                 })
             // .then((json => console.log(json)))
 

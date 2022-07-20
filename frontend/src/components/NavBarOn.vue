@@ -103,6 +103,7 @@ export default {
     font-weight: 300;
     display: inline-block;
     margin-left: 20px;
+    cursor: pointer;
 }
 
 

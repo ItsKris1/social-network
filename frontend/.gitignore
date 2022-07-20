@@ -4,8 +4,7 @@ node_modules
 run.go
 # .dockerignore
 ndc.sh
-todo
-backend/tempDB.db
+../backend/tempDB.db
 
 
 

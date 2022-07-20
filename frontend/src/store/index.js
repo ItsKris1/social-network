@@ -4,16 +4,15 @@ export default createStore({
   //------------------------------------- state is like a variables, which hold a values.
   state: {
     profileInfo: {},
-    // notifications: {
-    //   isNotificationsOpen: false,
-    // },
     posts: {
       allposts: [],
       myposts: [],
     },
     users: {
-
       allusers: [],
+    },
+    groups: {
+      allGroups: [],
     },
   },
   //------------------------------------ getters is a way for check state values.
@@ -30,8 +29,13 @@ export default createStore({
     allUsers(state) {
       return state.users.allusers;
     },
+    allGroups(state) {
+      return state.groups.allGroups;
+    },
     filterUsers: (state) => (searchquery) => {
-      if (searchquery === "") { return [] }
+      if (searchquery === "") {
+        return [];
+      }
       let arr = [];
       state.users.allusers.filter((user) => {
         if (user.nickname.includes(searchquery)) {
@@ -54,6 +58,9 @@ export default createStore({
     },
     updateAllUsers(state, users) {
       state.users.allusers = users;
+    },
+    updateAllGroups(state, groups) {
+      state.groups.allGroups = groups;
     },
   },
   //------------------------------------------Actions
@@ -92,7 +99,7 @@ export default createStore({
           const myposts = r.posts;
           this.commit("updateMyPosts", myposts);
           // console.log(myposts);
-        })
+        });
 
       // .then((json) => console.log("get posts -", json));
     },
@@ -126,6 +133,17 @@ export default createStore({
           let users = json.users;
           this.commit("updateAllUsers", users);
           // console.log("allUsers:", json.users);
+        });
+    },
+    async getAllGroups() {
+      await fetch("http://localhost:8081/allGroups", {
+        credentials: "include",
+      })
+        .then((r) => r.json())
+        .then((json) => {
+          let groups = json.groups;
+          this.commit("updateAllGroups", groups);
+          // console.log("Allgroups:", json.groups);
         });
     },
   },

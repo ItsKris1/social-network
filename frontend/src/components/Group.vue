@@ -1,16 +1,16 @@
 <template>
-<div class="temporary">
-    <div>{{this.groupData.name}}</div>
-    <div>{{this.groupData.description}}</div>
-</div>
-    
+    <div class="temporary">
+        <div>{{ this.groupData.name }}</div>
+        <div>{{ this.groupData.description }}</div>
+    </div>
+
 </template>
 
 
 <script>
 export default {
     name: 'Group',
-    created(){
+    created() {
         this.getGroupInfo()
     },
     watch: {
@@ -18,9 +18,9 @@ export default {
             this.getGroupInfo()
         }
     },
-    data(){
-        return{
-            groupData:null
+    data() {
+        return {
+            groupData: null
         }
     },
     methods: {
@@ -28,10 +28,10 @@ export default {
             await fetch("http://localhost:8081/groupInfo?groupId=" + this.$route.params.id, {
                 credentials: "include"
             })
-            .then((r=>r.json()))
-            .then((json=>{
-                console.log(json)
-                this.groupData = json.groups[0]
+                .then((r => r.json()))
+                .then((json => {
+                    console.log(json)
+                    this.groupData = json.groups[0]
                 }))
 
         },
@@ -41,7 +41,7 @@ export default {
 
 
 <style>
-.temporary{
+.temporary {
     margin-top: 100px;
 }
 </style>

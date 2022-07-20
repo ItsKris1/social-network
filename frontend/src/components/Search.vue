@@ -1,34 +1,19 @@
 <template>
-
     <div id="searchDiv" @click.stop>
-        <input @input="filtered(); toggleDropdown()"
-               @focus="toggleDropdown"
-               v-model="searchQuery"
-               :class="{ 'no-bottom-border': showDropdown }"
-               type="text"
-               placeholder="Search user or group">
+        <input @input="filterSearch" @focus="toggleDropdown" v-model="searchQuery"
+               :class="{ 'no-bottom-border': showDropdown }" type="text" placeholder="Search user or group">
 
-        <div id="dropdown"
-             v-show="showDropdown">
+        <div id="dropdown" v-show="showDropdown">
             <ul class="item-list">
-                <li @click="goToUserProfile(user.id); clearSearch()"
-                    id="dropdownitem"
-                    v-for="user in dropdownList">
+                <li @click="goToUserProfile(user.id)" id="dropdownitem" v-for="user in dropdownList">
                     <div class="user-picture small"
                          :style="{ backgroundImage: `url(http://localhost:8081/${user.avatar})` }"></div>
                     <div class="item-text">{{ user.nickname }}</div>
                 </li>
-                <!-- <li>
-                    <div class="user-picture small"></div>
-                    <div class="item-text">John Mayer</div>
+                <li v-for="group in allGroups" @click="goToGroupPage(group.id)" id="dropdownitem">
+                    {{ group.name }}
                 </li>
 
-                <li>
-                    <img class="small"
-                         src="../assets/icons/users-alt.svg"
-                         alt="">
-                    <div class="item-text">Garrisons</div>
-                </li> -->
             </ul>
         </div>
     </div>
@@ -43,6 +28,7 @@ export default {
     data() {
         return {
             allusers: [],
+            // allGroups: [],
             searchQuery: "",
             dropdownList: [],
             showDropdown: false,
@@ -50,28 +36,43 @@ export default {
     },
     created() {
         this.$store.dispatch('getAllUsers')
-        window.addEventListener("click", this.hideDropDown)
+        this.$store.dispatch('getAllGroups')
+        window.addEventListener("click", this.hideDropdown)
     },
 
-    computed: mapGetters(['allUsers']),
+    computed: mapGetters(['allUsers', 'allGroups']),
     methods: {
-        filtered() {
+
+        filterSearch() {
             this.dropdownList = this.$store.getters.filterUsers(this.searchQuery)
+            this.toggleDropdown();
         },
+
         goToUserProfile(userid) {
             this.$router.push({ name: 'Profile', params: { id: userid } })
+            this.clearSearch();
+            this.hideDropdown();
+
+        },
+
+        goToGroupPage(groupId) {
+            this.$router.push({ name: 'Group', params: { id: groupId } })
+            this.clearSearch();
+            this.hideDropdown();
         },
 
         toggleDropdown() {
-            this.showDropdown = this.dropdownList.length > 0;
+            this.dropdownList.length > 0 ? this.showDropdown = true : this.showDropdown = false
+
         },
 
         clearSearch() {
             this.searchQuery = "";
+        },
+
+        hideDropdown() {
             this.showDropdown = false;
-        }
-
-
+        },
     },
 }
 </script>
