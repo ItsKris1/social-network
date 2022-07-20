@@ -47,7 +47,6 @@ export default createStore({
     },
 
     getMyFollowersNames({ myFollowers }) {
-      console.log(myFollowers)
       return myFollowers.map((follower) => {
         if (follower.nickname) {
           return follower.nickname

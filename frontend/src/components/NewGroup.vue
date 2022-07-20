@@ -1,8 +1,7 @@
 <template>
     <button class="btn" @click="toggleModal">New group<i class="uil uil-plus"></i></button>
 
-    <Modal v-show="isOpen" @closeModal="toggleModal(); toggleClearInput();"
-           v-if="isMyFollowersFetched">
+    <Modal v-show="isOpen" @closeModal="toggleModal(); toggleClearInput();" v-if="isMyFollowersFetched">
         <template #title>
             Create new group
         </template>
@@ -54,7 +53,6 @@ export default {
         return {
             fetchedFollowers: null,
             checkedFollowers: null,
-            myFollowers: {},
             isOpen: false,
             clearInput: false
 
@@ -70,10 +68,33 @@ export default {
         getMyFollowersNames() {
             return this.$store.getters.getMyFollowersNames;
         },
+
+        isMyFollowersFetched() {
+            const myFollowers = this.$store.state.myFollowers
+            return Object.keys(myFollowers).length !== 0
+        },
     },
 
 
     methods: {
+        getMyFollowers() {
+            this.$store.dispatch("getMyFollowers")
+        },
+
+        toggleModal() {
+            // if modal was open: clear input
+            if (this.isOpen) {
+                // this.form.reset();
+                this.$refs.theForm.reset();
+            }
+            this.isOpen = !this.isOpen
+
+        },
+
+        toggleClearInput() {
+            this.clearInput = !this.clearInput
+        },
+
         async submitNewGroup(e) {
             const form = e.currentTarget;
             const formData = new FormData(form);
@@ -95,29 +116,6 @@ export default {
 
         },
 
-        getMyFollowers() {
-            this.$store.dispatch("getMyFollowers")
-        },
-
-        isMyFollowersFetched() {
-            const myFollowers = this.$store.state.myFollowers
-            return Object.keys(myFollowers.length !== 0)
-        },
-
-        toggleModal() {
-            // if modal was open: clear input
-            if (this.isOpen) {
-                // this.form.reset();
-                this.$refs.theForm.reset();
-            }
-            this.isOpen = !this.isOpen
-
-
-        },
-
-        toggleClearInput() {
-            this.clearInput = !this.clearInput
-        },
 
     }
 }
