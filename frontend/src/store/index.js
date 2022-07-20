@@ -47,6 +47,7 @@ export default createStore({
     },
 
     getMyFollowersNames({ myFollowers }) {
+      console.log(myFollowers)
       return myFollowers.map((follower) => {
         if (follower.nickname) {
           return follower.nickname
@@ -170,12 +171,8 @@ export default createStore({
         credentials: 'include'
       });
 
-      // const data = await response.json();
 
-      // console.log("getMyFollowers response", data);
       context.commit("updateMyFollowers", (await response.json()).users)
-
-      console.log(context.state.myFollowers)
 
     }
   },

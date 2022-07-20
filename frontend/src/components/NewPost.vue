@@ -2,13 +2,12 @@
 
 <template>
 
-    <button class="start-post" @click="toggle">
+    <button class="start-post" @click="toggleModal">
         <span>Start post</span>
         <i class="uil uil-edit"></i>
     </button>
 
-    <!-- {{ fetchedFollowers }} -->
-    <Modal v-show="isOpen" @closeModal="toggle" v-if="myFollowers">
+    <Modal v-show="isOpen" @closeModal="toggleModal" v-if="myFollowers">
         <template #title>Create a post</template>
         <template #body>
             <form @submit.prevent="submitPost" id="newpost">
@@ -29,7 +28,9 @@
                     <MultiselectDropdown v-if="newpost.privacy === 'almost-private'"
                                          v-model:checkedOptions="newpost.checkedFollowers"
                                          placeholder="Select followers"
-                                         :content="getMyFollowersNames" />
+                                         :content="getMyFollowersNames"
+                                         :clearInput="clearInput"
+                                         @inputCleared="toggleClearInput" />
                 </div>
 
                 <div class="form-input">
@@ -77,6 +78,7 @@ export default {
                 image: null,
             },
             userid: null,
+            clearInput: false,
         }
     },
 
@@ -96,20 +98,21 @@ export default {
     },
 
     methods: {
-        getMyFollowers() {
-            this.$store.dispatch("getMyFollowers")
+        toggleModal() {
+            // if modal was open, clear the form
+            if (this.isOpen) { this.clearForm(); }
+            this.isOpen = !this.isOpen
         },
 
-        toggle() {
-            // this.newpost.privacy = "";
-            // this.newpost.body = "";
-            // this.newpost.image = "";
+        toggleClearInput() {
+            this.clearInput = !this.clearInput
+        },
 
-            // if (this.$refs.theForm && this.isOpen) {
-            //     console.log(this.$refs.theForm);
-            //     this.$refs.theForm.reset()
-            // }
-            this.isOpen = !this.isOpen
+        clearForm() {
+            this.newpost.privacy = "";
+            this.newpost.body = "";
+            this.newpost.image = "";
+            this.toggleClearInput();
         },
 
         checkPicture(e) {
@@ -140,22 +143,8 @@ export default {
 
         },
 
-        async getFollowers() {
-            // console.log('fetching followers');
-            await this.$store.dispatch('getMyProfileInfo');
-            const userid = this.$store.state.profileInfo.id
-
-            await fetch(`http://localhost:8081/followers?userId=${userid}`, {
-                credentials: 'include'
-            })
-                .then((response => response.json()))
-                .then((json) => {
-                    this.fetchedFollowers = json.users
-                    // console.log(json)
-                })
-            // .then((json => console.log(json)))
-
-
+        getMyFollowers() {
+            this.$store.dispatch("getMyFollowers")
         },
 
         async submitPost() {
@@ -166,7 +155,6 @@ export default {
             formData.set("privacy", this.newpost.privacy)
             formData.set("checkedfollowers", this.newpost.checkedFollowers)
 
-            // console.log("Data", Object.fromEntries(formData.entries()))
 
             const response = await fetch('http://localhost:8081/newPost', {
                 method: 'POST',
@@ -177,7 +165,7 @@ export default {
             console.log('Post submitted', await response.json());
 
 
-            this.toggle();
+            this.toggleModal();
         },
     },
 }

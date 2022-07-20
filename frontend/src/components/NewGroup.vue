@@ -1,7 +1,8 @@
 <template>
     <button class="btn" @click="toggleModal">New group<i class="uil uil-plus"></i></button>
 
-    <Modal v-show="isOpen" @closeModal="toggleModal(); toggleClearInput();" v-if="fetchedFollowers">
+    <Modal v-show="isOpen" @closeModal="toggleModal(); toggleClearInput();"
+           v-if="isMyFollowersFetched">
         <template #title>
             Create new group
         </template>
@@ -28,7 +29,7 @@
                                      v-model:checkedOptions="checkedFollowers"
                                      @inputCleared="toggleClearInput"
                                      :clear-input="clearInput"
-                                     :content="fetchedFollowers"
+                                     :content="getMyFollowersNames"
                                      label-name="Invite users"
                                      placeholder="Select users" />
 
@@ -53,7 +54,7 @@ export default {
         return {
             fetchedFollowers: null,
             checkedFollowers: null,
-
+            myFollowers: {},
             isOpen: false,
             clearInput: false
 
@@ -61,9 +62,16 @@ export default {
     },
 
     created() {
-        this.getFollowers();
+        this.getMyFollowers();
 
     },
+
+    computed: {
+        getMyFollowersNames() {
+            return this.$store.getters.getMyFollowersNames;
+        },
+    },
+
 
     methods: {
         async submitNewGroup(e) {
@@ -87,11 +95,13 @@ export default {
 
         },
 
-        async getFollowers() {
-            const response = await fetch('https://9ec93652-e031-4f3e-a558-86f8ed7d624a.mock.pstmn.io/getfollowers')
-            const data = await response.json();
-            this.fetchedFollowers = data.followers;
+        getMyFollowers() {
+            this.$store.dispatch("getMyFollowers")
+        },
 
+        isMyFollowersFetched() {
+            const myFollowers = this.$store.state.myFollowers
+            return Object.keys(myFollowers.length !== 0)
         },
 
         toggleModal() {

@@ -46,6 +46,8 @@ export default {
             if (this.clearInput) {
                 this.dropdownCheckedOptions = [];
                 this.showDropdown = false;
+                console.log("Cleared input")
+
                 this.$emit("inputCleared");
             }
 
