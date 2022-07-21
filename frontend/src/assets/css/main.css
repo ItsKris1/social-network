@@ -177,6 +177,14 @@ select {
     width: 3em;
 }
 
+.additional-info {
+    color: rgb(95, 95, 95);
+    font-weight: 300;
+}
+
+.additional-info.large {
+    font-size: 1.5rem;
+}
 
 .btn {
     display: flex;

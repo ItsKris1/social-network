@@ -149,6 +149,7 @@ export default {
 .middle-section {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 50px;
 }
 
@@ -205,6 +206,7 @@ export default {
     background: var(--color-white);
     box-shadow: var(--container-shadow);
     border-radius: var(--container-border-radius);
+    width: 550px;
 
 }
 </style>
