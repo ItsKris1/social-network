@@ -191,10 +191,17 @@ func (handler *Handler) Follow(w http.ResponseWriter, r *http.Request) {
 		}
 	} else if reqUserStatus == "PRIVATE" {
 		//SAVE IN NOTIFICATIONS as pending folllow request
-		notification := models.Notification{ID: utils.UniqueId(), TargetID: reqUserId, Type: "FOLLOW", Content: currentUserId}
-		err := handler.repos.NotifRepo.Save(notification)
+		// notification := models.Notification{ID: utils.UniqueId(), TargetID: reqUserId, Type: "FOLLOW", Content: currentUserId}
+		// err := handler.repos.NotifRepo.Save(notification)
+		// if err != nil {
+		// 	utils.RespondWithError(w, "Error on save", 200)
+		// 	return
+		// }
+
+		// Temporary save followers without sending a request
+		err := handler.repos.UserRepo.SaveFollower(reqUserId, currentUserId)
 		if err != nil {
-			utils.RespondWithError(w, "Error on save", 200)
+			utils.RespondWithError(w, "Error on saving follower", 200)
 			return
 		}
 	}

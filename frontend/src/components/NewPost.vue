@@ -7,7 +7,7 @@
         <i class="uil uil-edit"></i>
     </button>
 
-    <Modal v-show="isOpen" @closeModal="toggleModal" v-if="isMyFollowersFetched">
+    <Modal v-show="isOpen" @closeModal="toggleModal">
         <template #title>Create a post</template>
         <template #body>
             <form @submit.prevent="submitPost" id="newpost">
@@ -70,27 +70,25 @@ export default {
     name: 'Newpost',
     data() {
         return {
-            isOpen: false,
             newpost: {
                 privacy: "",
                 body: "",
                 checkedFollowers: null,
                 image: null,
             },
-            userid: null,
+            isOpen: false,
             clearInput: false,
         }
     },
 
     created() {
         this.getMyFollowers();
-
     },
 
     computed: {
         getMyFollowersNames() {
             return this.$store.getters.getMyFollowersNames;
-        },
+        }
     },
 
     methods: {
@@ -104,10 +102,7 @@ export default {
             this.clearInput = !this.clearInput
         },
 
-        isMyFollowersFetched() {
-            const myFollowers = this.$store.state.myFollowers
-            return Object.keys(myFollowers).length !== 0
-        },
+
 
         getMyFollowers() {
             this.$store.dispatch("getMyFollowers")

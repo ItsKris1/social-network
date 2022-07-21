@@ -14,23 +14,28 @@
                     </div>
 
                     <PrivacyBtn v-if="isMyProfile" :status="user.status" />
-                    <UnfollowBtn @unfollow=toggleFollowing v-else-if="following" />
-                    <FollowBtn @follow="toggleFollowing" v-else />
+                    <UnfollowBtn @unfollow="toggleFollowingThisUser" v-else-if="user.following" />
+                    <FollowBtn @follow="toggleFollowingThisUser" v-else />
 
                 </div>
-                <div class="multiple-item-list">
+                <div class="multiple-item-list" v-if="showProfileData">
                     <Following />
                     <Followers />
                 </div>
+
             </div>
 
-            <div class="middle-section ">
+            <div class="middle-section" v-if="showProfileData">
+
                 <div class="about" v-if="user.about !== ''">
                     <h2 class="about-title">About me</h2>
                     <p class="about-text">{{ user.about }}</p>
                 </div>
                 <AllMyPosts v-bind:userid="this.user.id" />
+
             </div>
+
+            <p v-else class="additional-info large"> This profile is private</p>
 
         </div>
     </div>
@@ -52,94 +57,52 @@ export default {
         return {
             user: null,
             isMyProfile: false,
-            following: false,
         }
     },
     created() {
-        // this.getUserInfo()
-        this.getUserId()
+        this.getUserData()
         this.checkProfile()
     },
     computed: {
-        // ...mapGetters(['userInfo']),
-        // ...getUserId()
-
-        isUserFollowing() {
-            console.log("here")
-
-            if (this.user.following) {
-                return true
-            } else {
-                return false
-            }
-
-        }
+        showProfileData() {
+            console.log(this.isMyProfile)
+            return (this.user.following || this.isMyProfile || this.user.status === "PUBLIC") ? true : false
+        },
     },
 
     methods: {
-        getUserInfo() {
-            this.$store.dispatch('getMyProfileInfo')
-        },
-        async getUserId() {
+        async getUserData() {
             await fetch("http://localhost:8081/userData?userId=" + this.$route.params.id, {
                 credentials: "include",
             })
                 .then((r) => r.json())
                 .then((json) => {
-                    // console.log("profile.vue/getuserid",json);
                     this.user = json.users[0];
-                    this.following = this.user.following
+                    // this.following = this.user.following
                     console.log("user", this.user)
-
-                    // if (this.$route.params.id === this.user.id) {
-                    //     console.log("my user")
-                    // }
-                    // console.log(userInfo);
-                    // this.commit("updateProfileInfo", userInfo);
-                    // console.log("user profile info -", json);
                 });
-            // this.isOwnerProfile()
+
         },
-        // isOwnerProfile() {
-        //     console.log("cookie",document.cookie);
-        //     console.log("user id",this.user.id);
-        //     let activeCookie = document.cookie.slice(11)
-        //     if (activeCookie === this.user.id) {
-        //         console.log("It's a owner");
-        //     } else { console.log("It's NOT a owner") }
 
-        // }
-
-        async getLoggedUserId() {
-            const response = await fetch("http://localhost:8081/currentUser", {
-                credentials: "include",
-            })
-
-            const data = await response.json();
-            this.loggedUserID = data.users[0].id;
-
-            return data.users[0].id
-
-            // .then((r) => r.json())
-            // .then((json => {
-            //     this.loggedUserID = json.users[0].id
-            // }))
+        async getMyUserID() {
+            this.$store.dispatch("getMyUserID")
         },
 
         async checkProfile() {
+            await this.getMyUserID();
+            const myID = this.$store.state.id;
             const profileID = this.$route.params.id;
-            const loggedUserID = await this.getLoggedUserId();
-            this.isMyProfile = (profileID === loggedUserID)
+            this.isMyProfile = (profileID === myID)
         },
 
 
-        toggleFollowing() {
-            this.following = !this.following
+        toggleFollowingThisUser() {
+            this.user.following = !this.user.following
         }
     },
     watch: { //watching changes in route
         $route() {
-            this.getUserId()
+            this.getMyUserID()
             this.checkProfile();
         }
     }
@@ -152,7 +115,7 @@ export default {
     grid-template-columns: 1fr minmax(min-content, 550px) 1fr;
     column-gap: 50px;
     margin-top: 100px;
-    justify-items: flex-end;
+    justify-items: center;
 
 }
 
@@ -169,6 +132,7 @@ export default {
     gap: 50px;
     max-width: max-content;
     min-width: min-content;
+    justify-self: flex-end;
 
 }
 

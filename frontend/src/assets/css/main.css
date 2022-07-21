@@ -179,7 +179,8 @@ select {
 
 .additional-info {
     color: rgb(95, 95, 95);
-    font-weight: 300;
+    font-weight: 400;
+
 }
 
 .additional-info.large {

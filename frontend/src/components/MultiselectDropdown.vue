@@ -13,7 +13,7 @@
             </button>
 
             <ul class="item-list" v-show="showDropdown">
-                <li v-for="option in content">
+                <li v-if="content !== null" v-for="option in content">
                     <input type="checkbox"
                            :id="option"
                            :value="option"
@@ -21,6 +21,8 @@
                     <label :for="option">{{ option }}</label>
 
                 </li>
+
+                <p class="additional-info" v-else>No followers</p>
             </ul>
         </div>
 
@@ -34,20 +36,18 @@ export default {
     props: ['labelName', 'placeholder', 'content', 'clearInput', 'checkedOptions'],
     emits: ['update:checkedOptions', 'inputCleared'],
     data() {
-
         return {
             dropdownCheckedOptions: [],
             showDropdown: false,
         }
     },
 
+
     watch: {
         clearInput() {
             if (this.clearInput) {
                 this.dropdownCheckedOptions = [];
                 this.showDropdown = false;
-                console.log("Cleared input")
-
                 this.$emit("inputCleared");
             }
 
@@ -62,7 +62,7 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 .dropdown-wrapper {
     display: flex;
     flex-direction: column;
@@ -106,5 +106,9 @@ export default {
     border-radius: 5px;
     padding: 5px;
     font-size: 14px;
+}
+
+.item-list p {
+    font-size: 0.85em;
 }
 </style>

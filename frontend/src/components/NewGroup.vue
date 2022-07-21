@@ -1,7 +1,7 @@
 <template>
     <button class="btn" @click="toggleModal">New group<i class="uil uil-plus"></i></button>
 
-    <Modal v-show="isOpen" @closeModal="toggleModal(); toggleClearInput();" v-if="isMyFollowersFetched">
+    <Modal v-show="isOpen" @closeModal="toggleModal(); toggleClearInput();">
         <template #title>
             Create new group
         </template>
@@ -51,7 +51,6 @@ export default {
     },
     data() {
         return {
-            fetchedFollowers: null,
             checkedFollowers: null,
             isOpen: false,
             clearInput: false
@@ -67,18 +66,13 @@ export default {
     computed: {
         getMyFollowersNames() {
             return this.$store.getters.getMyFollowersNames;
-        },
-
-        isMyFollowersFetched() {
-            const myFollowers = this.$store.state.myFollowers
-            return Object.keys(myFollowers).length !== 0
-        },
+        }
     },
 
 
     methods: {
-        getMyFollowers() {
-            this.$store.dispatch("getMyFollowers")
+        async getMyFollowers() {
+            await this.$store.dispatch("getMyFollowers")
         },
 
         toggleModal() {
@@ -111,9 +105,6 @@ export default {
             form.reset()
             this.toggleModal();
             this.toggleClearInput();
-
-
-
         },
 
 

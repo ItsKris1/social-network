@@ -5,7 +5,7 @@ export default createStore({
   state: {
     id: "",
     profileInfo: {},
-    myFollowers: {},
+    myFollowers: null,
     posts: {
       allposts: [],
       myposts: [],
@@ -61,6 +61,10 @@ export default createStore({
     },
 
     getMyFollowersNames({ myFollowers }) {
+      if (myFollowers === null) {
+        return null
+      }
+
       return myFollowers.map((follower) => {
         if (follower.nickname) {
           return follower.nickname
@@ -193,8 +197,9 @@ export default createStore({
         credentials: 'include'
       });
 
+      const data = await response.json();
 
-      context.commit("updateMyFollowers", (await response.json()).users)
+      context.commit("updateMyFollowers", data.users)
 
     }
   },
