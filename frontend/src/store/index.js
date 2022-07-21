@@ -46,6 +46,19 @@ export default createStore({
       return arr;
     },
 
+    filterGroups: (state) => (searchquery) => {
+      if (searchquery === "") {
+        return [];
+      }
+      let arr = [];
+      state.groups.allGroups.filter((group) => {
+        if (group.name.includes(searchquery)) {
+          arr.push(group);
+        }
+      });
+      return arr;
+    },
+
     getMyFollowersNames({ myFollowers }) {
       return myFollowers.map((follower) => {
         if (follower.nickname) {

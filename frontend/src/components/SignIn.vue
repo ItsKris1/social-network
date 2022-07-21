@@ -1,7 +1,10 @@
 <template>
 
   <div class="sign-in__wrapper">
-    <img src="../assets/toa-heftiba-l_ExpFwwOEg-unsplash.jpg" alt="people hanging out">
+    <div>
+      <img src="../assets/toa-heftiba-l_ExpFwwOEg-unsplash.jpg" alt="people hanging out">
+
+    </div>
 
     <div class="sign-in">
       <h1>Sign in</h1>

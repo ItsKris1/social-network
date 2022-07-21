@@ -5,13 +5,15 @@
 
         <div id="dropdown" v-show="showDropdown">
             <ul class="item-list">
-                <li @click="goToUserProfile(user.id)" id="dropdownitem" v-for="user in dropdownList">
+                <li @click="goToUserProfile(user.id)" id="dropdownitem" v-for="user in filteredUsers">
                     <div class="user-picture small"
                          :style="{ backgroundImage: `url(http://localhost:8081/${user.avatar})` }"></div>
                     <div class="item-text">{{ user.nickname }}</div>
                 </li>
-                <li v-for="group in allGroups" @click="goToGroupPage(group.id)" id="dropdownitem">
-                    {{ group.name }}
+
+                <li @click="goToGroupPage(group.id)" id="dropdownitem" v-for="group in filteredGroups">
+                    <img src="../assets/icons/users-alt.svg" alt="" class="small">
+                    <div class="item-text">{{ group.name }}</div>
                 </li>
 
             </ul>
@@ -27,10 +29,10 @@ export default {
     name: 'Search',
     data() {
         return {
-            allusers: [],
-            // allGroups: [],
             searchQuery: "",
-            dropdownList: [],
+            filteredUsers: [],
+            filteredGroups: [],
+
             showDropdown: false,
         }
     },
@@ -40,11 +42,13 @@ export default {
         window.addEventListener("click", this.hideDropdown)
     },
 
-    computed: mapGetters(['allUsers', 'allGroups']),
+
+    computed: mapGetters(['allUsers', 'allGroups', 'filterUsers', 'filterGroups']),
     methods: {
 
         filterSearch() {
-            this.dropdownList = this.$store.getters.filterUsers(this.searchQuery)
+            this.filteredUsers = this.filterUsers(this.searchQuery)
+            this.filteredGroups = this.filterGroups(this.searchQuery)
             this.toggleDropdown();
         },
 
@@ -62,7 +66,7 @@ export default {
         },
 
         toggleDropdown() {
-            this.dropdownList.length > 0 ? this.showDropdown = true : this.showDropdown = false
+            this.filteredUsers.length > 0 || this.filteredGroups.length > 0 ? this.showDropdown = true : this.showDropdown = false
 
         },
 
