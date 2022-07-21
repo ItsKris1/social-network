@@ -1,5 +1,5 @@
 <template>
-    <button class="btn" @click="unfollow">Unfollow<i class="uil uil-user-plus"></i></button>
+    <button class="btn active" @click="unfollow">Unfollow<i class="uil uil-user-plus"></i></button>
 </template>
 
 <script>
@@ -16,7 +16,7 @@ export default {
     //     this.checkProfile();
     //     this.$store.dispatch("getMyUserID").then(() => console.log(this.$store.state.id))
     // },
-
+    emits: ["unfollow"],
 
     watch: { //watching changes in route
         $route() {
@@ -30,7 +30,11 @@ export default {
                 credentials: "include",
             })
                 .then((r) => r.json())
-                .then((json => console.log("server response:", json)))
+                .then(json => {
+                    console.log("server response:", json)
+                    this.$emit("unfollow")
+
+                })
         },
 
         // async getLoggedUserId() {

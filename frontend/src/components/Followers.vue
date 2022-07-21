@@ -9,7 +9,7 @@
             </li>
         </ul>
 
-        <p class="additional-info" v-else>You dont have any followers</p>
+        <p class="additional-info" v-else>No followers</p>
     </div>
 
 </template>

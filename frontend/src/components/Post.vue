@@ -43,7 +43,7 @@
     <div class="post-wrapper">
         <div class="post">
             <div class="user-picture medium"
-                :style="{ backgroundImage: `url(http://localhost:8081/${postData.author.avatar})` }"></div>
+                 :style="{ backgroundImage: `url(http://localhost:8081/${postData.author.avatar})` }"></div>
             <div class="post-content">
                 <p class="post-author">{{ postData.author.nickname }}</p>
                 <p class="post-body">{{ postData.content }}</p>
@@ -54,13 +54,11 @@
 
         </div>
 
-
-
         <div v-if="isCommentsOpen">
 
             <div class="create-comment">
                 <textarea v-model="this.comment.body" name="" id="" cols="30" rows="4"
-                    placeholder="Add your comment here"></textarea>
+                          placeholder="Add your comment here"></textarea>
 
                 <div class="create-comment__btns">
                     <button class="btn outline" @click="toggleComments">Hide comments</button>
@@ -71,38 +69,29 @@
                             <img src="../assets/addimg.png" />
                         </label>
                         <input id="upload-image" @change="checkPicture" type="file"
-                            accept="image/png, image/gif, image/jpeg" style="display: none" />
-
-
+                               accept="image/png, image/gif, image/jpeg" style="display: none" />
 
                         <button class="btn" @click="submitComment(postData.id)">Comment</button>
 
                     </div>
 
-
-
-
                 </div>
             </div>
-
-
-
 
             <div class="comments" v-if="postData.comments">
                 <div class="comment" lang="en" v-for="comment in postData.comments">
                     <div class="user-picture medium"
-                        :style="{ backgroundImage: `url(http://localhost:8081/${comment.author.avatar})` }"></div>
+                         :style="{ backgroundImage: `url(http://localhost:8081/${comment.author.avatar})` }"></div>
                     <div class="comment-content">
                         <p class="comment-author">{{ comment.author.nickname }}</p>
                         <p class="comment-body">{{ comment.content }}</p>
                         <img class="comment-image" v-if="comment.image" :src="'http://localhost:8081/' + comment.image"
-                            alt="">
+                             alt="">
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 
 </template>
 

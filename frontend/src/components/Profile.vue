@@ -14,8 +14,8 @@
                     </div>
 
                     <PrivacyBtn v-if="isMyProfile" :status="user.status" />
-                    <UnfollowBtn v-else-if="isUserFollowing" />
-                    <FollowBtn v-else />
+                    <UnfollowBtn @unfollow=toggleFollowing v-else-if="following" />
+                    <FollowBtn @follow="toggleFollowing" v-else />
 
                 </div>
                 <div class="multiple-item-list">
@@ -52,6 +52,7 @@ export default {
         return {
             user: null,
             isMyProfile: false,
+            following: false,
         }
     },
     created() {
@@ -64,11 +65,14 @@ export default {
         // ...getUserId()
 
         isUserFollowing() {
+            console.log("here")
+
             if (this.user.following) {
                 return true
             } else {
                 return false
             }
+
         }
     },
 
@@ -84,6 +88,7 @@ export default {
                 .then((json) => {
                     // console.log("profile.vue/getuserid",json);
                     this.user = json.users[0];
+                    this.following = this.user.following
                     console.log("user", this.user)
 
                     // if (this.$route.params.id === this.user.id) {
@@ -125,6 +130,11 @@ export default {
             const profileID = this.$route.params.id;
             const loggedUserID = await this.getLoggedUserId();
             this.isMyProfile = (profileID === loggedUserID)
+        },
+
+
+        toggleFollowing() {
+            this.following = !this.following
         }
     },
     watch: { //watching changes in route
