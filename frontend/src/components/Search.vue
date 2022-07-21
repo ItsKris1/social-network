@@ -1,6 +1,6 @@
 <template>
     <div id="searchDiv" @click.stop>
-        <input @input="filterSearch" @focus="toggleDropdown" v-model="searchQuery"
+        <input @focus="toggleDropdown" v-model="searchQuery"
                :class="{ 'no-bottom-border': showDropdown }" type="text" placeholder="Search user or group">
 
         <div id="dropdown" v-show="showDropdown">
@@ -29,11 +29,10 @@ export default {
     name: 'Search',
     data() {
         return {
-            searchQuery: "",
             filteredUsers: [],
             filteredGroups: [],
-
             showDropdown: false,
+            searchQuery: ""
         }
     },
     created() {
@@ -42,16 +41,18 @@ export default {
         window.addEventListener("click", this.hideDropdown)
     },
 
-
-    computed: mapGetters(['allUsers', 'allGroups', 'filterUsers', 'filterGroups']),
-    methods: {
-
-        filterSearch() {
+    watch: {
+        searchQuery() {
             this.filteredUsers = this.filterUsers(this.searchQuery)
             this.filteredGroups = this.filterGroups(this.searchQuery)
             this.toggleDropdown();
-        },
+        }
+    },
 
+    computed: {
+        ...mapGetters(['allUsers', 'allGroups', 'filterUsers', 'filterGroups'])
+    },
+    methods: {
         goToUserProfile(userid) {
             this.$router.push({ name: 'Profile', params: { id: userid } })
             this.clearSearch();

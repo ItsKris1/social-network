@@ -69,6 +69,8 @@ export default {
         },
     },
 
+
+
     methods: {
         async getUserData() {
             await fetch("http://localhost:8081/userData?userId=" + this.$route.params.id, {
@@ -77,6 +79,8 @@ export default {
                 .then((r) => r.json())
                 .then((json) => {
                     this.user = json.users[0];
+                    // console.log("User", this.user)
+
                 });
 
         },
@@ -94,12 +98,18 @@ export default {
 
 
         toggleFollowingThisUser() {
+            this.getUserData();
             this.user.following = !this.user.following
         }
     },
     watch: { //watching changes in route
+
+        // showProfileData() {
+        //     this.getUserData();
+        // },
         $route() {
-            this.getMyUserID()
+            // this.getMyUserID()
+            this.getUserData();
             this.checkProfile();
         }
     }

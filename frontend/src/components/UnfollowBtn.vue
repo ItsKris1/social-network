@@ -18,11 +18,6 @@ export default {
     // },
     emits: ["unfollow"],
 
-    watch: { //watching changes in route
-        $route() {
-            this.checkProfile()
-        }
-    },
     methods: {
         async unfollow() {
             // console.log('subscribe function:')
