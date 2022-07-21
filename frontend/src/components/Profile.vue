@@ -65,7 +65,6 @@ export default {
     },
     computed: {
         showProfileData() {
-            console.log(this.isMyProfile)
             return (this.user.following || this.isMyProfile || this.user.status === "PUBLIC") ? true : false
         },
     },
@@ -78,8 +77,6 @@ export default {
                 .then((r) => r.json())
                 .then((json) => {
                     this.user = json.users[0];
-                    // this.following = this.user.following
-                    console.log("user", this.user)
                 });
 
         },

@@ -39,7 +39,7 @@ export default {
             })
                 .then((response => response.json()))
                 .then((json => {
-                    console.log("Followers:", json)
+                    // console.log("Followers:", json)
                     this.followers = json.users
                 }))
         }
