@@ -209,10 +209,14 @@ select {
     box-shadow: var(--container-shadow);
     border-radius: var(--container-border-radius);
     color: var(--color-lg-black);
+    align-items: flex-start;
     /* width: max-content; */
 }
 
-
+.item-list__wrapper:is(#following, #followers) {
+    align-items: initial;
+    text-align: center;
+}
 
 .item-list {
     display: flex;
@@ -233,12 +237,6 @@ select {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-
-#following,
-#followers:is(h3) {
-    text-align: center;
-}
-
 
 
 /* Multiple item list together */

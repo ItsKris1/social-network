@@ -3,6 +3,7 @@ import { createStore } from "vuex";
 export default createStore({
   //------------------------------------- state is like a variables, which hold a values.
   state: {
+    id: "",
     profileInfo: {},
     myFollowers: {},
     posts: {
@@ -90,6 +91,10 @@ export default createStore({
     updateMyFollowers(state, followers) {
       state.myFollowers = followers;
     },
+
+    updateMyUserID(state, id) {
+      state.id = id;
+    }
   },
   //------------------------------------------Actions
   actions: {
@@ -131,17 +136,22 @@ export default createStore({
 
       // .then((json) => console.log("get posts -", json));
     },
-    async getMyProfileInfo() {
-      let id = "";
+
+    async getMyUserID({ commit }) {
       await fetch("http://localhost:8081/currentUser", {
         credentials: "include",
       })
         .then((r) => r.json())
         .then((json) => {
-          id = json.users[0].id;
+          commit("updateMyUserID", json.users[0].id)
         });
+    },
 
-      await fetch("http://localhost:8081/userData?userId=" + id, {
+    async getMyProfileInfo(context) {
+      await context.dispatch("getMyUserID");
+
+      const userID = context.state.id;
+      await fetch("http://localhost:8081/userData?userId=" + userID, {
         credentials: "include",
       })
         .then((r) => r.json())

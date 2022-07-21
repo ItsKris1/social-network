@@ -3,11 +3,11 @@
     <div class="item-list__wrapper" id="groups">
         <h3>My groups</h3>
         <ul class="item-list">
-            <li>
+            <li v-for="group in allGroups">
                 <img class="small" src="../assets/icons/users-alt.svg" alt="">
-                <div class="item-text">Group 1</div>
+                <div class="item-text">{{ group.name }}</div>
             </li>
-            <li>
+            <!-- <li>
                 <img class="small" src="../assets/icons/users-alt.svg" alt="">
                 <div class="item-text">Group 2</div>
             </li>
@@ -18,7 +18,7 @@
             <li>
                 <img class="small" src="../assets/icons/users-alt.svg" alt="">
                 <div class="item-text">Group 4</div>
-            </li>
+            </li> -->
 
         </ul>
         <NewGroup />
@@ -36,9 +36,13 @@ export default {
         NewGroup
     },
 
-    methods: {
-        createNewGroup() {
+    created() {
+        this.$store.dispatch('getAllGroups');
+    },
 
+    computed: {
+        allGroups() {
+            return this.$store.state.groups.allGroups
         }
     }
 }
@@ -46,4 +50,7 @@ export default {
 
 
 <style>
+/* .item-list__wrapper#groups {
+    align-items: flex-start;
+} */
 </style>

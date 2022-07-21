@@ -14,6 +14,7 @@
                     </div>
 
                     <PrivacyBtn v-if="isMyProfile" :status="user.status" />
+                    <UnfollowBtn v-else-if="isUserFollowing" />
                     <FollowBtn v-else />
 
                 </div>
@@ -42,10 +43,11 @@ import Following from './Following.vue'
 import Followers from './Followers.vue'
 import FollowBtn from './FollowBtn.vue'
 import PrivacyBtn from './PrivacyBtn.vue'
+import UnfollowBtn from './UnfollowBtn.vue'
 // import { mapGetters } from 'vuex'
 export default {
     name: 'Profile',
-    components: { AllMyPosts, Followers, Following, FollowBtn, PrivacyBtn },
+    components: { AllMyPosts, Followers, Following, FollowBtn, PrivacyBtn, UnfollowBtn },
     data() {
         return {
             user: null,
@@ -60,6 +62,14 @@ export default {
     computed: {
         // ...mapGetters(['userInfo']),
         // ...getUserId()
+
+        isUserFollowing() {
+            if (this.user.following) {
+                return true
+            } else {
+                return false
+            }
+        }
     },
 
     methods: {
@@ -74,7 +84,7 @@ export default {
                 .then((json) => {
                     // console.log("profile.vue/getuserid",json);
                     this.user = json.users[0];
-                    // console.log("user", this.user)
+                    console.log("user", this.user)
 
                     // if (this.$route.params.id === this.user.id) {
                     //     console.log("my user")
