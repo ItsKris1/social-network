@@ -167,6 +167,14 @@ select {
 
 }
 
+.accept {
+    color: green;
+}
+
+.decline {
+    color: red;
+}
+
 .small {
     height: 1.5em;
     width: 1.5em;
@@ -246,6 +254,20 @@ select {
 
 }
 
+.item-list .row1 {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+
+}
+
+.item-list .row2 {
+    font-size: 1.25em;
+    min-width: max-content;
+    flex-shrink: 0;
+}
+
+
 
 .item-text {
     white-space: nowrap;
@@ -275,4 +297,20 @@ select {
     border-radius: 0;
     box-shadow: none;
     background: none;
+}
+
+.about {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: var(--container-padding);
+    gap: 15px;
+
+    background: var(--color-white);
+    box-shadow: var(--container-shadow);
+    border-radius: var(--container-border-radius);
+    width: 550px;
+
 }
