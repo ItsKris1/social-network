@@ -4,69 +4,85 @@
     <!-- I am using other components just for designing the layout. Later we can replace those with the right components -->
     <div class="content">
 
-        <!-- Start post -->
-        <NewPost></NewPost>
-        <!-- Group about -->
-        <div class="about">
-            <h2 class="about-title">Group name</h2>
-            <p class="about-text">Group description</p>
+        <div class="left-section">
+            <!-- Members -->
+            <Groups></Groups>
+            <!-- Events -->
+            <Groups></Groups>
+
         </div>
 
-        <!-- Group posts -->
-        <AllPosts></AllPosts>
+        <div class="middle-section">
+            <!-- Group about -->
 
-        <!-- Members -->
-        <Groups></Groups>
+            <div class="about">
+                <h2 class="about-title">Group name</h2>
+                <p class="about-text">Group description</p>
+            </div>
 
-        <!-- Events -->
-        <Groups></Groups>
+            <!-- Start post -->
+            <NewPost></NewPost>
 
-        <!-- Group requests -->
-        <div class="item-list__wrapper" id="requests">
-            <h3>Requests</h3>
-            <ul class="item-list">
-                <li>
-                    <div class="row1">
-                        <img class="small" src="../assets/icons/default-profile.svg">
+            <!-- Group posts -->
 
-                        <div>
-                            <span class="who">John Smith</span>
-                        </div>
-                    </div>
-                    <div class="row2">
-                        <i class="uil uil-times accept"></i>
-                        <i class="uil uil-check decline"></i>
-                    </div>
-                </li>
-                <li>
-                    <div class="row1">
-                        <img class="small" src="../assets/icons/default-profile.svg">
-                        <div>
-                            <span class="who">Chris Brown</span>
-                        </div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
 
-                    </div>
-                    <div class="row2">
-                        <i class="uil uil-times accept"></i>
-                        <i class="uil uil-check decline"></i>
-                    </div>
-                </li>
-                <li>
-                    <div class="row1">
-                        <img class="small" src="../assets/icons/default-profile.svg">
-
-                        <div>
-                            <span class="who">Goblins</span>
-                        </div>
-                    </div>
-                    <div class="row2">
-                        <i class="uil uil-times accept"></i>
-                        <i class="uil uil-check decline"></i>
-                    </div>
-                </li>
-
-            </ul>
         </div>
+
+        <div class="right-section">
+            <!-- Group requests -->
+            <div class="item-list__wrapper" id="requests">
+                <h3>Requests</h3>
+                <ul class="item-list">
+                    <li>
+                        <div class="row1">
+                            <img class="small" src="../assets/icons/default-profile.svg">
+
+                            <div>
+                                <span class="who">John Smith</span>
+                            </div>
+                        </div>
+                        <div class="row2">
+                            <i class="uil uil-times accept"></i>
+                            <i class="uil uil-check decline"></i>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="row1">
+                            <img class="small" src="../assets/icons/default-profile.svg">
+                            <div>
+                                <span class="who">Chris Brown</span>
+                            </div>
+
+                        </div>
+                        <div class="row2">
+                            <i class="uil uil-times accept"></i>
+                            <i class="uil uil-check decline"></i>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="row1">
+                            <img class="small" src="../assets/icons/default-profile.svg">
+
+                            <div>
+                                <span class="who">Goblins</span>
+                            </div>
+                        </div>
+                        <div class="row2">
+                            <i class="uil uil-times accept"></i>
+                            <i class="uil uil-check decline"></i>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+
     </div>
 
 </template>
@@ -112,14 +128,76 @@ export default {
 <style>
 .content {
     margin-top: 100px;
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(min-content, 550px) minmax(min-content, 1fr);
+    column-gap: 50px;
 }
 
+
+
+.middle-section {
+    justify-self: center;
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+
+}
+
+
+.left-section {
+    justify-self: flex-end;
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+}
+
+.right-section {
+    justify-self: flex-start;
+}
+
+
 #requests .item-list {
-    gap: 15px;
+    gap: 10px;
 }
 
 #requests .item-list li {
     justify-content: space-between;
     gap: 20px;
+}
+
+.box {
+    height: 300px;
+    width: 550px;
+    border: 2px solid blue;
+}
+
+@media only screen and (max-width: 1176px) {
+
+    .content {
+        grid-template-columns: repeat(2, max-content);
+        grid-template-rows: repeat(2, minmax(auto, max-content));
+        row-gap: 35px;
+        justify-content: center;
+        grid-template-areas:
+            "groups middle-section"
+            "requests middle-section"
+            "... middle-section";
+
+    }
+
+
+    .middle-section {
+        grid-area: middle-section;
+    }
+
+    .left-section {
+        grid-area: groups;
+    }
+
+    .right-section {
+        grid-area: requests;
+    }
+
 }
 </style>
