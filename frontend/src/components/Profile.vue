@@ -14,15 +14,13 @@
                     </div>
 
                     <div class="btns-wrapper">
-                        <!-- Privacy button -->
+                        <!-- Privacy and follow/unfollow button-->
                         <PrivacyBtn v-if="isMyProfile" :status="user.status" />
-
-                        <!-- Follow/unfollow button -->
-                        <FollowBtn v-if="!user.following" @follow="toggleFollowingThisUser" />
+                        <FollowBtn v-else-if="!user.following" @follow="toggleFollowingThisUser" />
                         <UnfollowBtn v-else @unfollow="toggleFollowingThisUser" />
 
-                        <!-- Send message if user PUBLIC but not following -->
-                        <button v-if="user.status === 'PUBLIC' && !user.following"
+                        <!-- Send message button -->
+                        <button v-if="showSendButton"
                                 class="btn">Send message
                             <i class="uil uil-message"></i></button>
                     </div>
@@ -48,6 +46,7 @@
             <p v-else class="additional-info large"> This profile is private</p>
 
         </div>
+
     </div>
 
 </template>
@@ -75,8 +74,12 @@ export default {
     },
     computed: {
         showProfileData() {
-            return (this.user.following || this.isMyProfile || this.user.status === "PUBLIC") ? true : false
+            return this.user.following || this.isMyProfile || this.user.status === "PUBLIC"
         },
+
+        showSendButton() {
+            return !this.isMyProfile && this.user.status === "PUBLIC" && !this.user.following
+        }
     },
 
 
@@ -96,12 +99,12 @@ export default {
         },
 
         async getMyUserID() {
-            this.$store.dispatch("getMyUserID")
+            await this.$store.dispatch("getMyUserID")
         },
 
         async checkProfile() {
             await this.getMyUserID();
-            const myID = this.$store.state.id;
+            let myID = this.$store.getters.getId;
             const profileID = this.$route.params.id;
             this.isMyProfile = (profileID === myID)
         },

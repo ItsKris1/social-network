@@ -19,6 +19,9 @@ export default createStore({
   },
   //------------------------------------ getters is a way for check state values.
   getters: {
+    getId(state) {
+      return state.id;
+    },
     allPosts(state) {
       return state.posts.allposts;
     },
@@ -147,6 +150,7 @@ export default createStore({
       })
         .then((r) => r.json())
         .then((json) => {
+          console.log("JSON response", json)
           commit("updateMyUserID", json.users[0].id)
         });
     },
