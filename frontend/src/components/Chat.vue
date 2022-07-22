@@ -1,11 +1,11 @@
 <template>
-    <div class="messaging">
+    <div class="messaging" @click="toggleShowContent">
         <div class="messaging-header">
-            <h3>Messaging</h3>
+            <p>Messaging</p>
             <i class="uil uil-angle-down"></i>
         </div>
 
-        <div class="messaging-content">
+        <div class="messaging-content" v-show="showContent">
             <ul class="item-list">
                 <li>
                     <div class="user-picture small"></div>
@@ -46,42 +46,45 @@
 <script>
 export default {
     name: '',
+    data() {
+        return {
+            showContent: false,
+        }
+    },
+
+    methods: {
+        toggleShowContent() {
+            this.showContent = !this.showContent
+        }
+    }
 }
 </script>
 
 
 <style scoped>
 .messaging {
-    /* border: 2px solid blue; */
-    width: 315px;
     position: fixed;
     bottom: 0;
     right: 0;
+    width: 315px;
 }
 
 .messaging-header {
     display: flex;
     justify-content: space-between;
-    padding: 15px 20px;
+    padding: 12px 20px;
     background-color: var(--color-blue);
     border-top-left-radius: 5px;
+    color: var(--color-white);
 }
 
 .messaging-header i {
-    color: var(--color-white);
     font-size: 18px;
 }
 
-.messaging-header h3 {
-    color: var(--color-white);
+.messaging-header p {
     font-weight: 300;
     letter-spacing: 0.35px;
-
-}
-
-.messaging .item-list {
-    /* padding: 0 20px;
-    padding-top: 20px; */
 }
 
 .messaging-content {

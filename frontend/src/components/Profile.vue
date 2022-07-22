@@ -13,9 +13,19 @@
                         <p class="user-dateOfBirth" v-if="user.dateOfBirth">{{ user.dateOfBirth }}</p>
                     </div>
 
-                    <PrivacyBtn v-if="isMyProfile" :status="user.status" />
-                    <UnfollowBtn @unfollow="toggleFollowingThisUser" v-else-if="user.following" />
-                    <FollowBtn @follow="toggleFollowingThisUser" v-else />
+                    <div class="btns-wrapper">
+                        <!-- Privacy button -->
+                        <PrivacyBtn v-if="isMyProfile" :status="user.status" />
+
+                        <!-- Follow/unfollow button -->
+                        <FollowBtn v-if="!user.following" @follow="toggleFollowingThisUser" />
+                        <UnfollowBtn v-else @unfollow="toggleFollowingThisUser" />
+
+                        <!-- Send message if user PUBLIC but not following -->
+                        <button v-if="user.status === 'PUBLIC' && !user.following"
+                                class="btn">Send message
+                            <i class="uil uil-message"></i></button>
+                    </div>
 
                 </div>
                 <div class="multiple-item-list" v-if="showProfileData">
@@ -189,5 +199,12 @@ export default {
     border-radius: var(--container-border-radius);
     width: 550px;
 
+}
+
+.btns-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
 }
 </style>

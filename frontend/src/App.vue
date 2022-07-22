@@ -1,6 +1,7 @@
 <template>
     <router-view></router-view>
-    <Chat />
+
+    <Chat v-if="$route.name !== 'sign-in' && $route.name !== 'register'" />
 </template>
 
 <script>

@@ -171,7 +171,7 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 .post-wrapper {
     display: inline-block;
     box-shadow: var(--container-shadow);
