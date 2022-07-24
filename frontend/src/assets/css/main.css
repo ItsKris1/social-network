@@ -74,6 +74,10 @@ a {
 
 } */
 
+label {
+    margin: 0;
+}
+
 input,
 select,
 textarea {
@@ -120,6 +124,10 @@ option {
 select {
     -webkit-appearance: none;
     appearance: none;
+}
+
+.select-wrapper {
+    position: relative;
 }
 
 

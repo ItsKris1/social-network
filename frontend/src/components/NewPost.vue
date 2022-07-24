@@ -10,7 +10,27 @@
     <Modal v-show="isOpen" @closeModal="toggleModal">
         <template #title>Create a post</template>
         <template #body>
-            <form @submit.prevent="submitPost" id="newpost">
+            <form v-if="this.isGroupPage" @submit.prevent="submitGroupPost" id="newpost">
+                <div class="form-input">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="4" cols="50" v-model="newpost.body"
+                              placeholder="What are you thinking?" required></textarea>
+                </div>
+
+                <div class="btns-wrapper">
+
+                    <label for="upload-image">
+                        <img src="../assets/addimg.png" />
+                    </label>
+                    <input id="upload-image" @change="checkPicture" type="file"
+                           accept="image/png, image/gif, image/jpeg" />
+
+                    <button class="btn" type="submit">Post</button>
+
+                </div>
+            </form>
+
+            <form v-else @submit.prevent="submitPost" id="newpost">
                 <div class="form-input">
                     <label for="post_privacy">Post privacy</label>
                     <div class="select-wrapper">
@@ -19,6 +39,8 @@
                         <select id="post_privacy" v-model="newpost.privacy" required>
                             <option value="" selected hidden>Choose here</option>
                             <option value="public">Everyone</option>
+                            <!-- <select v-model="newpost.privacy" @change="getFollowers" id="post_privacy" required>
+                            <option value="" selected disabled hidden>Choose here</option> -->
                             <option value="private">Followers</option>
                             <option value="almost-private">Choosen followers</option>
                         </select>
@@ -35,17 +57,19 @@
 
                 <div class="form-input">
                     <label for="description">Description</label>
+
                     <textarea id="description" v-model="newpost.body" rows="4" cols="50"
                               placeholder="What are you thinking?" required></textarea>
+
                 </div>
 
                 <div class="btns-wrapper">
 
                     <label for="upload-image">
                         <img src="../assets/addimg.png" />
+                        <input id="upload-image" type="file"
+                               accept="image/png, image/gif, image/jpeg" @change="checkPicture" />
                     </label>
-                    <input id="upload-image" type="file"
-                           accept="image/png, image/gif, image/jpeg" @change="checkPicture" />
 
                     <button class="btn" type="submit">Post</button>
 
@@ -70,19 +94,21 @@ export default {
     name: 'Newpost',
     data() {
         return {
+            isOpen: false,
+            isGroupPage: null,
             newpost: {
                 privacy: "",
                 body: "",
                 checkedFollowers: null,
                 image: null,
             },
-            isOpen: false,
             clearInput: false,
         }
     },
 
     created() {
         this.getMyFollowers();
+        this.isGroupPageCheck()
     },
 
     computed: {
@@ -115,6 +141,14 @@ export default {
             this.toggleClearInput();
         },
 
+        isGroupPageCheck() {
+            if (this.$route.path.includes("group")) {
+                this.isGroupPage = true
+            } else {
+                this.isGroupPage = false
+            }
+        },
+
         checkPicture(e) {
             let files = e.target.files
             if (!files.length) {
@@ -143,8 +177,6 @@ export default {
 
         },
 
-
-
         async submitPost() {
 
             let formData = new FormData();
@@ -161,11 +193,30 @@ export default {
             })
             this.$store.dispatch('fetchPosts')
             console.log('Post submitted', await response.json());
+            // console.log('Post submitted');
+            this.toggle();
+        },
 
+        async submitGroupPost() {
+
+            let formData = new FormData();
+            formData.set('groupId', this.$route.params.id)
+            formData.set('body', this.newpost.body);
+            formData.set('image', this.newpost.image);
 
             this.toggleModal();
+            await fetch('http://localhost:8081/newGroupPost', {
+                method: 'POST',
+                credentials: 'include',
+                body: formData
+            })
+                .then((r => r.json()))
+            // .then((json => console.log(json)))
+            this.$store.dispatch('getGroupPosts')
+            this.toggle();
+            // console.log('Group Post Submitted');
         },
-    },
+    }
 }
 </script>
 
@@ -176,7 +227,7 @@ export default {
     flex-direction: column;
 }
 
-.image-upload>input {
+#upload-image {
     display: none;
 }
 
@@ -206,7 +257,21 @@ export default {
     font-size: 1.25em;
 }
 
-.select-wrapper {
-    position: relative;
+
+
+.btns-wrapper {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-end;
+
+}
+
+.btns-wrapper input {
+    display: none;
+}
+
+.btns-wrapper label img {
+    vertical-align: middle;
 }
 </style>

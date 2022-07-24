@@ -1,4 +1,5 @@
 import { createStore } from "vuex";
+import router from "@/router";
 
 export default createStore({
   //------------------------------------- state is like a variables, which hold a values.
@@ -9,6 +10,7 @@ export default createStore({
     posts: {
       allposts: [],
       myposts: [],
+      groupPosts: [],
     },
     users: {
       allusers: [],
@@ -27,6 +29,9 @@ export default createStore({
     },
     myPosts(state) {
       return state.posts.myposts;
+    },
+    groupPosts(state) {
+      return state.posts.groupPosts;
     },
     userInfo(state) {
       return state.profileInfo;
@@ -101,7 +106,10 @@ export default createStore({
 
     updateMyUserID(state, id) {
       state.id = id;
-    }
+    },
+    updateGroupPosts(state, posts) {
+      state.posts.groupPosts = posts;
+    },
   },
   //------------------------------------------Actions
   actions: {
@@ -150,7 +158,7 @@ export default createStore({
       })
         .then((r) => r.json())
         .then((json) => {
-          console.log("JSON response", json)
+          // console.log("JSON response", json)
           commit("updateMyUserID", json.users[0].id)
         });
     },
@@ -205,7 +213,22 @@ export default createStore({
 
       context.commit("updateMyFollowers", data.users)
 
-    }
+    },
+    async getGroupPosts() {
+      await fetch(
+        "http://localhost:8081/groupPosts?groupId=" +
+        router.currentRoute.value.params.id,
+        {
+          credentials: "include",
+        }
+      )
+        .then((r) => r.json())
+        .then((json) => {
+          // console.log(json)
+          let posts = json.posts;
+          this.commit("updateGroupPosts", posts);
+        });
+    },
   },
   modules: {},
 });

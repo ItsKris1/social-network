@@ -2,7 +2,7 @@
 
     <!-- READ ME -->
     <!-- I am using other components just for designing the layout. Later we can replace those with the right components -->
-    <div class="content">
+    <div class="content" v-if="groupData">
 
         <div class="left-section">
             <!-- Members -->
@@ -14,23 +14,16 @@
 
         <div class="middle-section">
             <!-- Group about -->
-
             <div class="about">
-                <h2 class="about-title">Group name</h2>
-                <p class="about-text">Group description</p>
+                <h2 class="about-title">{{ this.groupData.name }}</h2>
+                <p class="about-text">{{ this.groupData.description }}</p>
             </div>
 
             <!-- Start post -->
             <NewPost></NewPost>
 
             <!-- Group posts -->
-
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
+            <GroupPosts></GroupPosts>
 
         </div>
 
@@ -85,6 +78,14 @@
 
     </div>
 
+    <!-- <div class="temporary">
+        <div>
+            <div>{{ this.groupData.name }}</div>
+            <div>{{ this.groupData.description }}</div>
+        </div>
+        <NewPost />
+        <GroupPosts />
+    </div> -->
 </template>
 
 
@@ -93,6 +94,7 @@ import AllPosts from './AllPosts.vue'
 import Groups from './Groups.vue';
 import Notifications from './Notifications.vue';
 import NewPost from './NewPost.vue';
+import GroupPosts from './GroupPosts.vue';
 export default {
     name: "Group",
     created() {
@@ -106,6 +108,7 @@ export default {
     data() {
         return {
             groupData: null
+            // groupData: {},
         };
     },
     methods: {
@@ -116,11 +119,12 @@ export default {
                 .then((r => r.json()))
                 .then((json => {
                     console.log(json);
+                    // console.log("getGroupInfo",json);
                     this.groupData = json.groups[0];
                 }));
         },
     },
-    components: { AllPosts, Groups, Notifications, NewPost }
+    components: { AllPosts, Groups, Notifications, NewPost, GroupPosts }
 }
 </script>
 

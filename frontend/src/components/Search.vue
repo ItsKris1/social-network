@@ -66,6 +66,10 @@ export default {
             this.hideDropdown();
         },
 
+        goToGroupPage(groupId) {
+            this.$router.push({ name: 'Group', params: { id: groupId } })
+        },
+
         toggleDropdown() {
             this.filteredUsers.length > 0 || this.filteredGroups.length > 0 ? this.showDropdown = true : this.showDropdown = false
 

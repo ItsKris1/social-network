@@ -245,10 +245,6 @@ export default {
 
 }
 
-.btns-wrapper label {
-    margin: 0;
-}
-
 .btns-wrapper input {
     display: none;
 }

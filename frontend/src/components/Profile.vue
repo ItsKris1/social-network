@@ -64,7 +64,7 @@ export default {
     components: { AllMyPosts, Followers, Following, FollowBtn, PrivacyBtn, UnfollowBtn },
     data() {
         return {
-            user: null,
+            user: {},
             isMyProfile: false,
         }
     },
