@@ -6,8 +6,8 @@
 
         <div class="left-section">
             <!-- Members -->
-            <Groups></Groups>
-            <!-- Events -->
+            <GroupMembers />
+            <div>(Events)</div>
             <Groups></Groups>
 
         </div>
@@ -27,7 +27,7 @@
 
         </div>
 
-        <div class="right-section">
+        <div v-if="this.groupData.admin" class="right-section">
             <!-- Group requests -->
             <div class="item-list__wrapper" id="requests">
                 <h3>Requests</h3>
@@ -77,15 +77,6 @@
         </div>
 
     </div>
-
-    <!-- <div class="temporary">
-        <div>
-            <div>{{ this.groupData.name }}</div>
-            <div>{{ this.groupData.description }}</div>
-        </div>
-        <NewPost />
-        <GroupPosts />
-    </div> -->
 </template>
 
 
@@ -95,6 +86,7 @@ import Groups from './Groups.vue';
 import Notifications from './Notifications.vue';
 import NewPost from './NewPost.vue';
 import GroupPosts from './GroupPosts.vue';
+import GroupMembers from './GroupMembers.vue';
 export default {
     name: "Group",
     created() {
@@ -108,7 +100,6 @@ export default {
     data() {
         return {
             groupData: null
-            // groupData: {},
         };
     },
     methods: {
@@ -119,12 +110,12 @@ export default {
                 .then((r => r.json()))
                 .then((json => {
                     console.log(json);
-                    // console.log("getGroupInfo",json);
+                    console.log("getGroupInfo",json);
                     this.groupData = json.groups[0];
                 }));
         },
     },
-    components: { AllPosts, Groups, Notifications, NewPost, GroupPosts }
+    components: { AllPosts, Groups, Notifications, NewPost, GroupPosts, GroupMembers }
 }
 </script>
 

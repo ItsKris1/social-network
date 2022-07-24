@@ -14,7 +14,7 @@
                 <div class="form-input">
                     <label for="description">Description</label>
                     <textarea id="description" name="description" rows="4" cols="50" v-model="newpost.body"
-                              placeholder="What are you thinking?" required></textarea>
+                        placeholder="What are you thinking?" required></textarea>
                 </div>
 
                 <div class="btns-wrapper">
@@ -23,7 +23,7 @@
                         <img src="../assets/addimg.png" />
                     </label>
                     <input id="upload-image" @change="checkPicture" type="file"
-                           accept="image/png, image/gif, image/jpeg" />
+                        accept="image/png, image/gif, image/jpeg" />
 
                     <button class="btn" type="submit">Post</button>
 
@@ -48,18 +48,15 @@
                     </div>
 
                     <MultiselectDropdown v-if="newpost.privacy === 'almost-private'"
-                                         v-model:checkedOptions="newpost.checkedFollowers"
-                                         placeholder="Select followers"
-                                         :content="getMyFollowersNames"
-                                         :clearInput="clearInput"
-                                         @inputCleared="toggleClearInput" />
+                        v-model:checkedOptions="newpost.checkedFollowers" placeholder="Select followers"
+                        :content="getMyFollowersNames" :clearInput="clearInput" @inputCleared="toggleClearInput" />
                 </div>
 
                 <div class="form-input">
                     <label for="description">Description</label>
 
                     <textarea id="description" v-model="newpost.body" rows="4" cols="50"
-                              placeholder="What are you thinking?" required></textarea>
+                        placeholder="What are you thinking?" required></textarea>
 
                 </div>
 
@@ -67,8 +64,8 @@
 
                     <label for="upload-image">
                         <img src="../assets/addimg.png" />
-                        <input id="upload-image" type="file"
-                               accept="image/png, image/gif, image/jpeg" @change="checkPicture" />
+                        <input id="upload-image" type="file" accept="image/png, image/gif, image/jpeg"
+                            @change="checkPicture" />
                     </label>
 
                     <button class="btn" type="submit">Post</button>

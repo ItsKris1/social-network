@@ -37,9 +37,9 @@ export default {
                     console.log("server response:", json)
                 }))
         },
-        unfollow() {
-            console.log('unsubscribe function')
-        },
+        // unfollow() {
+        //     console.log('unsubscribe function')
+        // },
         async getLoggedUserId() {
             await fetch("http://localhost:8081/currentUser", {
                 credentials: "include",
