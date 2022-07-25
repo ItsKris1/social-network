@@ -109,6 +109,9 @@ export default {
             })
             this.$store.dispatch('fetchPosts')
             this.$store.dispatch('fetchMyPosts')
+
+            this.comment.body = "";
+            this.removeImage();
             console.log('Comment submitted.');
         },
         showPostId(postId) {

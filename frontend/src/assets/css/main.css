@@ -6,6 +6,7 @@
     --color-black: #0000;
     --color-lg-black: #202020;
     --color-blue: #4B5283;
+    --color-placeholder: rgb(136, 136, 136);
 
     --button-content: #D7D7D7;
 
@@ -117,8 +118,12 @@ option {
     color: var(--color-lg-black)
 }
 
+option:hover {
+    color: orange;
+}
+
 ::placeholder {
-    color: rgb(136, 136, 136);
+    color: var(--color-placeholder);
 }
 
 select {

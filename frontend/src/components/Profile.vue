@@ -13,7 +13,7 @@
                         <p class="user-dateOfBirth" v-if="user.dateOfBirth">{{ user.dateOfBirth }}</p>
                     </div>
 
-                    <div class="btns-wrapper">
+                    <div class="profile-btns">
                         <!-- Privacy and follow/unfollow button-->
                         <PrivacyBtn v-if="isMyProfile" :status="user.status" />
                         <FollowBtn v-else-if="!user.following" @follow="toggleFollowingThisUser" />
@@ -204,7 +204,7 @@ export default {
 
 }
 
-.btns-wrapper {
+.profile-btns {
     display: flex;
     flex-direction: column;
     align-items: center;

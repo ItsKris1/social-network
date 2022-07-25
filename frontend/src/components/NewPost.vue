@@ -210,7 +210,7 @@ export default {
             this.$store.dispatch('fetchPosts')
             console.log('Post submitted', await response.json());
             // console.log('Post submitted');
-            this.toggle();
+            this.toggleModal();
         },
 
         async submitGroupPost() {
@@ -229,7 +229,7 @@ export default {
                 .then((r => r.json()))
             // .then((json => console.log(json)))
             this.$store.dispatch('getGroupPosts')
-            this.toggle();
+            this.toggleModal();
             // console.log('Group Post Submitted');
         },
     }
