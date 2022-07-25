@@ -87,13 +87,7 @@ export default {
 
     computed: {
         fileAdded() {
-
-            if (this.comment.image.name !== undefined) {
-                return true
-            } else {
-                return false
-            }
-
+            return this.comment.image.name !== undefined
         },
     },
 
@@ -242,38 +236,6 @@ export default {
     justify-content: space-between;
     width: 100%;
 
-}
-
-/* ADD IMAGE */
-.add-image {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    overflow: hidden;
-}
-
-.add-image label {
-    background-image: url('../assets/icons/image-plus.svg');
-    height: 30px;
-    width: 30px;
-
-    position: relative;
-}
-
-.add-image input {
-    position: absolute;
-    opacity: 0;
-}
-
-
-.selected-image {
-    display: flex;
-    align-items: center;
-    gap: 7.5px;
-    padding: 7.5px;
-    border-radius: 5px;
-    background-color: rgb(221, 221, 221);
-    overflow: hidden;
 }
 
 

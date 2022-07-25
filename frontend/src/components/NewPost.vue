@@ -63,16 +63,24 @@
                 </div>
 
                 <div class="btns-wrapper">
+                    <div class="add-image">
+                        <div class="selected-image" v-if="fileAdded">
+                            <p class="additional-info">{{ newpost.image.name }}</p>
+                            <i class="uil uil-times close" @click="removeImage"></i>
+                        </div>
 
-                    <label for="upload-image">
-                        <img src="../assets/addimg.png" />
-                        <input id="upload-image" type="file" accept="image/png, image/gif, image/jpeg"
-                               @change="checkPicture" />
-                    </label>
+                        <p class="additional-info" v-else>No file chosen
+                        </p>
+
+                        <label for="upload-image">
+                            <input type="file" accept="image/png, image/gif, image/jpeg" style=""
+                                   @change="checkPicture" ref="fileUpload" />
+                        </label>
+                    </div>
 
                     <button class="btn" type="submit">Post</button>
-
                 </div>
+
             </form>
 
         </template>
@@ -99,7 +107,7 @@ export default {
                 privacy: "",
                 body: "",
                 checkedFollowers: null,
-                image: null,
+                image: {},
             },
             clearInput: false,
         }
@@ -113,7 +121,11 @@ export default {
     computed: {
         getMyFollowersNames() {
             return this.$store.getters.getMyFollowersNames;
-        }
+        },
+
+        fileAdded() {
+            return this.newpost.image.name !== undefined
+        },
     },
 
     methods: {
@@ -174,6 +186,11 @@ export default {
             }
             this.newpost.image = file;
 
+        },
+
+        removeImage() {
+            this.comment.image = {};
+            this.$refs.fileUpload.value = "";
         },
 
         async submitPost() {
@@ -255,20 +272,16 @@ export default {
 }
 
 
+.additional-info {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 .btns-wrapper {
     display: flex;
+    flex-direction: column;
+    align-items: flex-end;
     gap: 10px;
-    align-items: center;
-    justify-content: flex-end;
-
-}
-
-.btns-wrapper input {
-    display: none;
-}
-
-.btns-wrapper label img {
-    vertical-align: middle;
 }
 </style>
