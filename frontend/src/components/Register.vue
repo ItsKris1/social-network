@@ -1,52 +1,6 @@
 <template>
-    <!-- <form @submit.prevent="submitRegData">
-        <div id="frame1">
-            <div id="frame3">
-                <div id="form-input">
-                    <label for="email">Email</label>
-                    <input v-model="form.email" id="email" type="email">
-                </div>
-                <div id="form-input">
-                    <label for="">Password</label>
-                    <input v-model="form.password" type="password">
-                </div>
-                <div id="form-input">
-                    <label for="">First Name</label>
-                    <input v-model="form.firstname" type="text">
-                </div>
-                <div id="lastname-input">
-                    <label for="">Last Name</label>
-                    <input v-model="form.lastname" type="text">
-                </div>
-                <div id="birtday-input">
-                    <label for="">Date Of Birth</label>
-                    <input v-model="form.dateofbirth" type="date">
-                </div>
-                <div id="nickname-input">
-                    <label for="nickname">Nickname</label>
-                    <input v-model="form.nickname" id="nickname" type="text">
-                </div>
-                <div id="avatar-input">
-                    <label placeholder="avatar">Avatar</label>
-                    <input @change="checkPicture" type="file" accept="image/png, image/gif, image/jpeg">
-                </div>
-                <div id="about-me-input">
-                    <label for="">About me</label>
-                    <input v-model="form.aboutme" type="text">
-                </div>
-                <button id="regBtn" type="submit">Register</button>
-            </div>
-        </div>
-    </form> -->
-
     <div class="register__wrapper">
-
-
-
         <img src="../assets/pexels-cottonbro-5053739.jpg" alt="man holding phone">
-
-
-
 
         <div class="register">
             <h1>Create your account</h1>
@@ -83,7 +37,6 @@
                         <label for="password">Password</label>
                         <input v-model="form.password" type="password" name="password" id="password">
                     </div>
-
 
                     <div class="form-input">
                         <label for="nickname">Nickname</label>
@@ -200,8 +153,8 @@ export default {
     min-height: 650px;
     max-height: 700px;
     width: 80vw;
-    min-width: min-content;
-    max-width: max-content;
+    max-width: 1050px;
+    min-width: 950px;
     margin: auto;
     background-color: var(--color-white);
     box-shadow: var(--container-shadow);
@@ -211,7 +164,6 @@ export default {
 }
 
 .register {
-    flex: 0 1 50%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;

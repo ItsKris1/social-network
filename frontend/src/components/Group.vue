@@ -110,7 +110,7 @@ export default {
                 .then((r => r.json()))
                 .then((json => {
                     console.log(json);
-                    console.log("getGroupInfo",json);
+                    console.log("getGroupInfo", json);
                     this.groupData = json.groups[0];
                 }));
         },
