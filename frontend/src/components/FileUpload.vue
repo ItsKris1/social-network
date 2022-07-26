@@ -1,19 +1,58 @@
 <template>
-    <p class="label">Avatar</p>
+    <div class="wrapper">
+        <p class="label">Avatar</p>
 
-    <label for="fileUpload">
-        <p class="placeholder">Choose a file...</p>
-        <div class="btn">Browse</div>
-    </label>
+        <label for="fileUpload">
+            <div class="btn">Browse</div>
 
-    <input type="file" name="fileUpload" id="fileUpload">
+            <p :class="textClass">{{ fileName }}</p>
+        </label>
+
+        <input type="file" name="fileUpload" id="fileUpload" @change="printFile">
+    </div>
 
 </template>
 
+<script>
+export default {
+    data() {
+        return {
+            fileName: ""
+        }
+    },
+
+    methods: {
+        printFile(e) {
+            const file = e.target.files[0];
+            this.fileName = file.name;
+        }
+    },
+
+
+    computed: {
+        fileName() {
+            if (this.fileName === "") {
+                return "Choose a file...gweeeeeeeeeeeeeeeeeeggggggggggggggggggggggggggggggggggggggggggggggggggasfffffffffffffffffffffffffff"
+            } else {
+                return this.fileName
+            }
+        },
+
+        textClass() {
+            if (this.fileName === "") {
+                return { placeholder: true }
+            } else {
+                return { selected: true }
+            }
+        }
+    }
+}
+</script>
 
 <style scoped>
-.label {
-    margin-bottom: 5px;
+.wrapper {
+    flex-grow: 0;
+    max-width: 100%;
 }
 
 label {
@@ -28,6 +67,7 @@ label {
     border-radius: 5px;
 
     cursor: pointer;
+    font-size: 14px;
 }
 
 input {
@@ -40,16 +80,19 @@ input {
 
 }
 
-
-
 .placeholder {
-    font-size: 14px;
     padding: 7.5px;
     color: var(--color-placeholder);
+    position: absolute;
+    white-space: nowrap;
 
 }
 
-
+.selected {
+    padding: 7.5px;
+    color: var(--color-lg-black);
+    width: 100%;
+}
 
 .btn {
     border-radius: 5px;

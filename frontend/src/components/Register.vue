@@ -46,10 +46,8 @@
                         <label for="avatar">Avatar</label>
                         <input id="avatar" @change="checkPicture" type="file" accept="image/png, image/gif, image/jpeg">
                     </div> -->
-                    <div>
-                        <FileUpload></FileUpload>
 
-                    </div>
+                    <FileUpload></FileUpload>
                 </div>
             </form>
 
@@ -186,11 +184,10 @@ export default {
     gap: 40px;
 }
 
-.register form>* {
-    flex: 1;
-}
+
 
 .register .form-group {
     gap: 25px;
+    flex: 1;
 }
 </style>
