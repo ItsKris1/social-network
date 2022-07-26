@@ -43,7 +43,7 @@
                         <input v-model="form.nickname" type="text" name="nickname" id="nickname">
                     </div>
 
-                    <FileUpload @fileUploaded="saveImage" labelName="Avatar"></FileUpload>
+                    <FileUpload v-model:file="form.avatar" labelName="Avatar"></FileUpload>
                 </div>
             </form>
 
@@ -114,10 +114,6 @@ export default {
                     }
                 });
         },
-
-        saveImage(file) {
-            this.form.avatar = file;
-        }
     },
     components: { FileUpload }
 }
