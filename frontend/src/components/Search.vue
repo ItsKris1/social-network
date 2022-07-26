@@ -94,15 +94,17 @@ export default {
     align-self: flex-start;
     min-width: 250px;
     max-width: 250px;
+    border-radius: 10px;
+    background-color: var(--color-white);
 }
 
 #searchDiv input[type="text"] {
     background-image: url(../assets/icons/glass.svg);
     background-repeat: no-repeat;
     background-position: left 10px center;
+    border-radius: 10px;
     padding: 10px;
     padding-left: calc(17px + 20px);
-    border-radius: 10px;
     box-shadow: var(--container-shadow);
 }
 
@@ -113,7 +115,7 @@ export default {
 
 #dropdown {
 
-    background-color: var(--input-bg);
+    background-color: var(--color-white);
     color: var(--color-lg-black);
     width: 100%;
     padding: 0 10px;
