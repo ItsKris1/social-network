@@ -42,12 +42,8 @@
                         <label for="nickname">Nickname</label>
                         <input v-model="form.nickname" type="text" name="nickname" id="nickname">
                     </div>
-                    <!-- <div class="form-input">
-                        <label for="avatar">Avatar</label>
-                        <input id="avatar" @change="checkPicture" type="file" accept="image/png, image/gif, image/jpeg">
-                    </div> -->
 
-                    <FileUpload @fileUploaded="saveImage"></FileUpload>
+                    <FileUpload @fileUploaded="saveImage" labelName="Avatar"></FileUpload>
                 </div>
             </form>
 

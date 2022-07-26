@@ -1,6 +1,6 @@
 <template>
     <div class="form-input">
-        <p class="label">Avatar</p>
+        <p class="label">{{ labelName }}</p>
 
         <label for="fileUpload">
             <div class="btn">Browse</div>
@@ -17,10 +17,22 @@
 <script>
 
 export default {
-    emits: ['fileUploaded'],
+    emits: ['update:file', 'inputCleared'],
+    props: ['clearInput', 'file', 'labelName'],
+
     data() {
         return {
             imageFile: null,
+        }
+    },
+
+    watch: {
+        clearInput() {
+            if (this.clearInput) {
+                this.removeImage();
+                this.$emit("inputCleared");
+            }
+
         }
     },
 
@@ -28,6 +40,8 @@ export default {
         removeImage() {
             this.imageFile = null;
             this.$refs.fileUpload.value = "";
+            this.$emit("update:file", this.imageFile)
+
         },
 
         checkPicture(e) {
@@ -54,7 +68,7 @@ export default {
                 return;
             }
             this.imageFile = file;
-            this.$emit("fileUploaded", this.imageFile)
+            this.$emit("update:file", this.imageFile)
 
         }
     },
@@ -80,13 +94,7 @@ export default {
 </script>
 
 <style scoped>
-.wrapper {}
-
 label {
-    /* display: flex;
-    justify-content: flex-end;
-    align-items: center; */
-
     display: block;
     position: relative;
 
@@ -97,7 +105,6 @@ label {
     cursor: pointer;
     font-size: 14px;
     overflow: hidden;
-    /* width: 100%; */
 }
 
 input {
