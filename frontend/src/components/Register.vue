@@ -47,7 +47,7 @@
                         <input id="avatar" @change="checkPicture" type="file" accept="image/png, image/gif, image/jpeg">
                     </div> -->
 
-                    <FileUpload></FileUpload>
+                    <FileUpload @fileUploaded="saveImage"></FileUpload>
                 </div>
             </form>
 
@@ -118,29 +118,8 @@ export default {
                     }
                 });
         },
-        checkPicture(e) {
-            let files = e.target.files;
-            if (!files.length) {
-                return;
-            }
-            const file = files[0];
-            const [extension] = file.type.split("/");
-            if ((!(extension == "image"))) {
-                console.log("File is not an image.");
-                this.$toast.open({
-                    message: "File is not an image.",
-                    type: "error", //One of success, info, warning, error, default
-                });
-                return;
-            }
-            if (file.size > 2048000) {
-                console.log("File size is more than 2 MB.");
-                this.$toast.open({
-                    message: "File size is more than 2 MB.",
-                    type: "error", //One of success, info, warning, error, default
-                });
-                return;
-            }
+
+        saveImage(file) {
             this.form.avatar = file;
         }
     },

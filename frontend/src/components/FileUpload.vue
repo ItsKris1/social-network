@@ -7,9 +7,9 @@
             <p class="text" :class="textClass">{{ getFileName }}</p>
         </label>
 
-        <div v-if="fileName !== ''" @click=removeImage class="btn" style="width: max-content">Remove image</div>
+        <div v-if="imageFile" @click=removeImage class="btn" style="width: max-content">Remove image</div>
 
-        <input type="file" name="fileUpload" id="fileUpload" @change="getFileName = $event" ref="fileUpload">
+        <input type="file" name="fileUpload" id="fileUpload" @change="checkPicture" ref="fileUpload">
     </div>
 
 </template>
@@ -17,46 +17,62 @@
 <script>
 
 export default {
+    emits: ['fileUploaded'],
     data() {
         return {
-            fileName: ""
+            imageFile: null,
         }
     },
 
     methods: {
-        // getFileName(e) {
-        //     const file = e.target.files[0];
-        //     this.fileName = file.name;
-        // },
-
         removeImage() {
-            this.fileName = "";
+            this.imageFile = null;
             this.$refs.fileUpload.value = "";
+        },
+
+        checkPicture(e) {
+            let files = e.target.files;
+            if (!files.length) {
+                return;
+            }
+            const file = files[0];
+            const [extension] = file.type.split("/");
+            if ((!(extension == "image"))) {
+                console.log("File is not an image.");
+                this.$toast.open({
+                    message: "File is not an image.",
+                    type: "error", //One of success, info, warning, error, default
+                });
+                return;
+            }
+            if (file.size > 2048000) {
+                console.log("File size is more than 2 MB.");
+                this.$toast.open({
+                    message: "File size is more than 2 MB.",
+                    type: "error", //One of success, info, warning, error, default
+                });
+                return;
+            }
+            this.imageFile = file;
+            this.$emit("fileUploaded", this.imageFile)
+
         }
     },
 
     computed: {
         textClass() {
-            if (this.fileName === "") {
+            if (this.imageFile === null) {
                 return { placeholder: true }
             } else {
                 return { selected: true }
             }
         },
 
-        getFileName: {
-            get() {
-                if (this.fileName === "") {
-                    return "Choose a file..."
-
-                } else {
-                    return this.fileName
-                }
-            },
-
-            set(e) {
-                const file = e.target.files[0];
-                this.fileName = file.name;
+        getFileName() {
+            if (this.imageFile === null) {
+                return "Choose a file..."
+            } else {
+                return this.imageFile.name
             }
         },
     }
