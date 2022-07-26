@@ -9,8 +9,6 @@
         </div>
     </div> -->
 
-
-
     <div class="relative-wrapper">
         Notifications
         <div class="item-list__wrapper" id="notifications">
@@ -72,7 +70,6 @@
         </div>
     </div>
 
-
 </template>
 
 <script>
@@ -117,28 +114,6 @@ export default {
     gap: 20px;
 }
 
-.item-list .row1 {
-    display: flex;
-    gap: 5px;
-    align-items: center;
-
-}
-
-.item-list .row2 {
-    font-size: 1.25em;
-    min-width: max-content;
-    flex-shrink: 0;
-}
-
-
-
-.accept {
-    color: green;
-}
-
-.decline {
-    color: red;
-}
 
 .who {
     font-weight: 500;
