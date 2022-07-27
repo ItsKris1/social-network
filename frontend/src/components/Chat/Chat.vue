@@ -1,7 +1,13 @@
 <template>
 
     <div class="messaging-wrapper">
-        <ChatBox></ChatBox>
+
+        <component v-for="chat in chats"
+                   :is="{ ...chat.ChatBox }"
+                   :key="chat.id"
+                   :name="chat.name"
+                   @closeChat="removeChat">
+        </component>
 
         <div class="messaging" @click="toggleShowContent">
 
@@ -14,15 +20,15 @@
                 <ul class="item-list">
                     <li>
                         <div class="user-picture small"></div>
-                        <div class="item-text">User 1</div>
+                        <div class="item-text" @click.stop="openChat">User 1</div>
                     </li>
                     <li>
                         <div class="user-picture small"></div>
-                        <div class="item-text">User 2</div>
+                        <div class="item-text" @click.stop="openChat">User 2</div>
                     </li>
                     <li>
                         <div class="user-picture small"></div>
-                        <div class="item-text">User 3</div>
+                        <div class="item-text" @click.stop="openChat">User 3</div>
                     </li>
 
                 </ul>
@@ -57,12 +63,47 @@ export default {
     data() {
         return {
             showContent: false,
+            chats: [],
+            chatID: 0,
         }
     },
 
     methods: {
         toggleShowContent() {
+            // console.log("Content toggled!")
             this.showContent = !this.showContent
+        },
+
+        openChat(e) {
+            // console.log("Trying to add a chatbox")
+            // console.log(e.target.textContent)
+
+            const found = this.chats.some(chat => chat.name === e.target.textContent);
+            if (!found) {
+                this.chats.push({
+                    id: this.chatID,
+                    "name": e.target.textContent,
+                    ChatBox
+                });
+
+                this.chatID++;
+
+            }
+
+        },
+
+
+        removeChat(name) {
+            // console.log(name)
+            // console.log("Removing chat")
+            this.chats = this.chats.filter((chat) => {
+                return chat.name !== name
+
+            })
+
+
+
+
         }
     }
 }

@@ -1,8 +1,8 @@
 <template>
     <div class="chatbox-wrapper">
         <div class="header">
-            <p>Roy Jones</p>
-            <i class="uil uil-times close"></i>
+            <p>{{ this.name }}</p>
+            <i class="uil uil-times close" @click="$emit('closeChat', this.name)"></i>
         </div>
         <div class="content">
             <div class="recieved-messages">
@@ -47,6 +47,13 @@
 
 </template>
 
+<script>
+export default {
+    props: ["name"],
+    emits: ['closeChat']
+
+}
+</script>
 <style scoped>
 .chatbox-wrapper {
     height: 400px;
