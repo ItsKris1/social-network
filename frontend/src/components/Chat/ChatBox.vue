@@ -4,8 +4,8 @@
             <p>{{ this.name }}</p>
             <i class="uil uil-times close" @click.stop="$emit('closeChat', this.name)"></i>
         </div>
-        <div class="content">
-            <div class="recieved-messages">
+        <div class="content" ref="contentDiv">
+            <!-- <div class="recieved-messages">
                 <p class="message-author">Roy Jones</p>
                 <p class="recieved-message">Hello there!</p>
                 <p class="recieved-message">How are you?</p>
@@ -34,14 +34,25 @@
 
             <div class="sent-messages">
                 <p class="sent-message">Indeed!</p>
+            </div> -->
+
+            <!-- <p v-if="!sequentMessage">User 1</p>
+            <p :class="getClass(message)" v-for="message in allMessages">{{ message.msg }}</p> -->
+
+            <div class="message" v-for="message in allMessages" :style="getStyle(message)">
+                <p v-if="!message.sequentMessage && allMessages.length > 0 && message.type === 'recieved'">User 1</p>
+                <p :class="getClass(message)">{{ message.msg }}</p>
             </div>
 
         </div>
-        <div class="send-message">
-            <form>
-                <input type="text" name="sent-message" id="sent-message__input" placeholder="Send a message">
-                <button><i class="uil uil-message"></i></button>
+        <div class=" send-message">
+            <form @submit.prevent="sendMessage">
+                <input type="text" name="sent-message" id="sent-message__input" placeholder="Send a message"
+                       ref="sendMessageInput">
+                <button type="submit"><i class="uil uil-message"></i></button>
             </form>
+
+            <button type="button" @click="recieveMsg">Recieve msg</button>
         </div>
     </div>
 
@@ -50,7 +61,82 @@
 <script>
 export default {
     props: ["name"],
-    emits: ['closeChat']
+    emits: ['closeChat'],
+
+    data() {
+        return {
+            sentMessages: [],
+            recievedMessages: [],
+            allMessages: [],
+            sequentMessage: false, // tracks if user sent two or more messages before recieving
+        }
+    },
+
+    methods: {
+        sendMessage() {
+            if (this.allMessages.length !== 0 && this.allMessages[this.allMessages.length - 1].type === "sent") {
+                console.log("Subsequent sent message")
+            } else {
+                console.log("Create div")
+
+            }
+            const sendMessageInput = this.$refs.sendMessageInput;
+            console.log("Message", sendMessageInput.value)
+            console.log(this.$refs.contentDiv)
+            this.allMessages.push({ msg: sendMessageInput.value, type: "sent" })
+
+            sendMessageInput.value = "";
+
+            // waits for DOM update
+            this.$nextTick(() => {
+                this.$refs.contentDiv.scrollTop = this.$refs.contentDiv.scrollHeight;
+
+            })
+            // console.log("Event", e.currentTarget)
+            // const data = new FormData(e.currentTarget);
+            // console.log(data)
+            // console.log(this.$refs.sendMessageInput.value)
+            // console.log("Message", data.get("sent-message"))
+            // e.currentTarget.reset();
+
+
+
+
+        },
+
+        recieveMsg() {
+            let val;
+
+            if (this.allMessages.length !== 0 && this.allMessages[this.allMessages.length - 1].type === "recieved") {
+                console.log("Subsequent recieved message")
+                val = true;
+            } else {
+                console.log("Display author and create div")
+                val = false;
+            }
+            this.allMessages.push({ msg: "Hey!", type: "recieved", sequentMessage: val })
+        },
+
+        getClass(message) {
+            if (message.type === "recieved") {
+                return { "recieved-message": true }
+            } else {
+                return { "sent-message": true }
+            }
+        },
+
+        getStyle(message) {
+            console.log("Bois")
+            if (message.type === "recieved") {
+                return { "alignSelf": "flex-start" }
+            } else {
+                return { "alignSelf": "flex-end" }
+            }
+        }
+
+    },
+
+
 
 }
 </script>
@@ -84,6 +170,9 @@ export default {
     color: var(--color-lg-black);
     font-size: 14px;
     overflow-y: auto;
+    overscroll-behavior: contain;
+    display: flex;
+    flex-direction: column;
 }
 
 .content>*:not(:last-child) {
@@ -114,6 +203,7 @@ export default {
 
 .recieved-message {
     background-color: rgb(185, 185, 185);
+    align-self: flex-start;
 }
 
 
@@ -127,6 +217,7 @@ export default {
 
 .sent-message {
     background-color: rgb(212, 212, 212);
+    align-self: flex-end;
 
 }
 
