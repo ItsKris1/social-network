@@ -2,7 +2,7 @@
     <div class="chatbox-wrapper">
         <div class="header">
             <p>{{ this.name }}</p>
-            <i class="uil uil-times close" @click="$emit('closeChat', this.name)"></i>
+            <i class="uil uil-times close" @click.stop="$emit('closeChat', this.name)"></i>
         </div>
         <div class="content">
             <div class="recieved-messages">
@@ -61,7 +61,8 @@ export default {
     display: flex;
     flex-direction: column;
     box-shadow: var(--container-shadow);
-
+    border-radius: 5px 5px 0 0;
+    overflow: hidden;
     --padding: 15px;
     --msg-border-rad: 13px;
     --msg-padding: 7.5px 10px;
@@ -80,6 +81,7 @@ export default {
     flex: 1;
     background-color: var(--color-white);
     padding: var(--padding);
+    color: var(--color-lg-black);
     font-size: 14px;
     overflow-y: auto;
 }
@@ -111,7 +113,7 @@ export default {
 
 
 .recieved-message {
-    background-color: gray;
+    background-color: rgb(185, 185, 185);
 }
 
 
@@ -124,7 +126,7 @@ export default {
 }
 
 .sent-message {
-    background-color: rgb(168, 168, 168);
+    background-color: rgb(212, 212, 212);
 
 }
 
@@ -138,7 +140,7 @@ export default {
 .send-message form {
     display: flex;
     border-radius: 30px;
-    padding: 12.5px 20px;
+    padding: 10px 20px;
     overflow: hidden;
     box-shadow: var(--container-shadow);
 }
@@ -152,5 +154,6 @@ export default {
 .send-message form button {
     border: none;
     background-color: inherit;
+    font-size: 1.25em;
 }
 </style>

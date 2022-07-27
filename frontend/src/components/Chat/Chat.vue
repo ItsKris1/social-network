@@ -13,7 +13,7 @@
 
             <div class="messaging-header">
                 <p>Messaging</p>
-                <i class="uil uil-angle-down"></i>
+                <i class="uil uil-angle-up" :class="{ rotate: showContent }"></i>
             </div>
 
             <div class="messaging-content" v-show="showContent">
@@ -149,5 +149,9 @@ export default {
 
 .messaging .item-list:first-of-type {
     padding-bottom: 20px;
+}
+
+.rotate {
+    transform: rotate(180deg);
 }
 </style>
