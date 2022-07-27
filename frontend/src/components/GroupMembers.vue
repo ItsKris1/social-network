@@ -14,7 +14,7 @@
             <template #body>
                 {{ this.checkedNames }}
                 <div v-for="user in this.allUsers">
-                    <input type="checkbox" :value="user.nickname" v-model="checkedNames">{{ user.nickname }}
+                    <input type="checkbox" :value="user.id" v-model="checkedNames">{{ user.nickname }}
                 </div>
                 <button class="btn form-submit" @click="toggleModal() ; inviteUsersToGroup()">Invite</button>
             </template>
@@ -70,15 +70,10 @@ export default {
             this.isOpen = !this.isOpen;
         },
         async inviteUsersToGroup() {
-
-            let formData = new FormData();
-            formData.set("checkedNames", this.checkedNames)
-            formData.set("groupId", this.$route.params.id)
-
             await fetch("http://localhost:8081/newGroupInvite", {
                 method: 'POST',
                 credentials: 'include',
-                body: formData
+                body: JSON.stringify({ invitations: this.checkedNames, id: this.$route.params.id})
             })
                 .then((response => response.json()))
                 .then((json => {
