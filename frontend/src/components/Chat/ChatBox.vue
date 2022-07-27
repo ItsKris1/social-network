@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div class="chatbox-wrapper">
         <div class="header">
             <p>Roy Jones</p>
             <i class="uil uil-times close"></i>
@@ -48,16 +48,17 @@
 </template>
 
 <style scoped>
-.wrapper {
+.chatbox-wrapper {
     height: 400px;
-    width: 350px;
+    width: 300px;
     display: flex;
     flex-direction: column;
     box-shadow: var(--container-shadow);
-    --padding: 10px 12px;
+
+    --padding: 15px;
     --msg-border-rad: 13px;
     --msg-padding: 7.5px 10px;
-    --msg-margin-b: 7.5px;
+    --msg-margin-b: 5px;
 }
 
 .header {
@@ -77,64 +78,71 @@
 }
 
 .content>*:not(:last-child) {
-    margin-bottom: calc(var(--msg-margin-b) * 2);
+    margin-bottom: calc(var(--msg-margin-b) * 4);
 }
 
+.recieved-messages,
+.sent-messages {
+    display: flex;
+    flex-direction: column;
+}
 
+.sent-messages>*:not(:last-child),
+.recieved-messages>*:not(:last-child) {
+    margin-bottom: var(--msg-margin-b);
+}
+
+.sent-message,
 .recieved-message {
-    background-color: gray;
     padding: var(--msg-padding);
     border-radius: var(--msg-border-rad);
 }
 
 .recieved-messages {
-    display: flex;
-    flex-direction: column;
     align-items: flex-start;
 }
 
-.recieved-messages>*:not(:last-child) {
-    margin-bottom: var(--msg-margin-b);
+
+.recieved-message {
+    background-color: gray;
 }
 
-.recieved-messages :first-child {
-    /* padding-left: 5px; */
-    margin-bottom: 3.5px;
+
+.recieved-message .message-author {
+    padding-bottom: 3.5px;
+}
+
+.sent-messages {
+    align-items: flex-end;
 }
 
 .sent-message {
     background-color: rgb(168, 168, 168);
-    padding: var(--msg-padding);
-    border-radius: var(--msg-border-rad);
+
 }
 
-.sent-messages {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-}
 
-.sent-messages>*:not(:last-child) {
-    margin-bottom: var(--msg-margin-b);
-}
-
+/* SEND MESSAGE FORM */
 .send-message {
-    background-color: orange;
-    padding: var(--padding);
+    background-color: var(--color-white);
+    padding: 10px;
 }
 
 .send-message form {
     display: flex;
-    /* padding: var(--padding); */
-
-    background-color: var(--color-white);
-
-    background-color: blue;
+    border-radius: 30px;
+    padding: 12.5px 20px;
+    overflow: hidden;
+    box-shadow: var(--container-shadow);
 }
 
-.send-message input {}
+.send-message form input {
+    padding: 0;
+    box-shadow: none;
+    background-color: inherit;
+}
 
-.send-message button {
+.send-message form button {
     border: none;
     background-color: inherit;
 }

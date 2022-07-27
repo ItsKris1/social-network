@@ -80,7 +80,7 @@ export default {
 
 .messaging {
 
-    width: 315px;
+    width: 300px;
     background-color: var(--color-white);
 }
 
