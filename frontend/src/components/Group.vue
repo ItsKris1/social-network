@@ -7,9 +7,7 @@
         <div class="left-section">
             <!-- Members -->
             <GroupMembers />
-            
-            <div>(Events)</div>
-            <Groups></Groups>
+            <GroupEvents />
 
         </div>
 
@@ -89,6 +87,7 @@ import NewPost from './NewPost.vue';
 import GroupPosts from './GroupPosts.vue';
 import GroupMembers from './GroupMembers.vue';
 import Modal from './Modal.vue';
+import GroupEvents from './GroupEvents.vue';
 export default {
     name: "Group",
     created() {
@@ -117,7 +116,7 @@ export default {
                 }));
         },
     },
-    components: { AllPosts, Groups, Notifications, NewPost, GroupPosts, GroupMembers, Modal }
+    components: { AllPosts, Groups, Notifications, NewPost, GroupPosts, GroupMembers, Modal, GroupEvents }
 }
 </script>
 
