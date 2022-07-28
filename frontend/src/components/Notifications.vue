@@ -66,6 +66,20 @@
                     </div>
                 </li>
 
+                <li>
+                    <div class="row1">
+                        <img class="small" src="../assets/icons/users-alt.svg">
+
+                        <div>
+                            <span class="who">ItsKris</span> did something very longworthy notification!
+                        </div>
+                    </div>
+                    <div class="row2">
+                        <i class="uil uil-times accept"></i>
+                        <i class="uil uil-check decline"></i>
+                    </div>
+                </li>
+
             </ul>
         </div>
     </div>
@@ -98,9 +112,9 @@ export default {
     left: 50%;
     font-weight: 400;
     margin-top: 5px;
-    min-width: 500px;
+    min-width: 400px;
 
-    display: none;
+    /* display: none; */
 }
 
 

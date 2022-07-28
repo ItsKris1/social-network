@@ -270,14 +270,15 @@ select {
 .item-list .row1 {
     display: flex;
     gap: 5px;
-    align-items: center;
+    /* align-items: center; */
 
 }
 
 .item-list .row2 {
-    font-size: 1.25em;
+    font-size: 1.4em;
     min-width: max-content;
     flex-shrink: 0;
+    align-self: flex-start;
 }
 
 
