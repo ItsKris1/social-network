@@ -35,7 +35,7 @@ export default {
     align-items: flex-start;
     row-gap: 50px;
     column-gap: 50px;
-    margin-top: 100px;
+    margin-top: 50px;
     margin-bottom: 50px;
 }
 

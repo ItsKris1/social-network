@@ -86,6 +86,10 @@ export default {
     background-color: var(--color-blue);
     color: var(--color-white);
 
+    position: relative;
+
+
+
 
 }
 
@@ -94,13 +98,17 @@ export default {
     color: var(--color-white);
 }
 
+
+
+
+
 #nav-title {
     font-size: 24px;
     font-weight: 400;
 }
 
 
-.nav-links>li {
+.nav-links li {
     font-weight: 300;
     display: inline-block;
     margin-left: 20px;
@@ -133,5 +141,48 @@ a:hover {
 
 a:active {
     text-decoration: none;
+}
+
+/* .nav-links li:hover {
+    color: rgb(241, 181, 181)
+} */
+
+
+#navbar li:hover {
+    /* color: rgb(255, 255, 255); */
+    /* background-color: rgb(95, 107, 175);
+    padding: 5px 7.5px;
+    border-radius: 10px; */
+
+    /* text-decoration: underline;
+    text-decoration-color: rgb(132, 148, 236);
+    text-decoration-thickness: 2px; */
+
+    color: red;
+    line-height: 0;
+    border-bottom: 2px solid rgb(132, 148, 236);
+}
+
+#nav-title {
+    padding: 2px;
+}
+
+#nav-title:hover {
+    /* color: rgb(95, 107, 175); */
+    /* text-shadow: 2px 2px 5px rgb(95, 107, 175); */
+    /* text-transform: uppercase; */
+    /* color: white; */
+
+    /* text-decoration: underline;
+    text-decoration-color: rgb(132, 148, 236);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 5px; */
+    border-bottom: 2px solid rgb(132, 148, 236);
+    padding-bottom: 0px;
+    /* padding: 3px; */
+    /* line-height: 1; */
+    /* padding: 0px 7.5px; */
+    /* border-radius: 10px; */
+
 }
 </style>

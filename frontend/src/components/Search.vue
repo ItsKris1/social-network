@@ -95,7 +95,6 @@ export default {
     min-width: 250px;
     max-width: 250px;
     border-radius: 10px;
-    background-color: var(--color-white);
 }
 
 #searchDiv input[type="text"] {
@@ -106,6 +105,7 @@ export default {
     padding: 10px;
     padding-left: calc(17px + 20px);
     box-shadow: var(--container-shadow);
+    background-color: var(--input-bg);
 }
 
 #searchDiv input[type="text"].no-bottom-border {
@@ -115,7 +115,7 @@ export default {
 
 #dropdown {
 
-    background-color: var(--color-white);
+    background-color: var(--input-bg);
     color: var(--color-lg-black);
     width: 100%;
     padding: 0 10px;

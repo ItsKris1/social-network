@@ -1,21 +1,12 @@
 <template>
-    <!-- <div @click="toggle" id="notificationsBtn">
-        <img src="../assets/bell.png" alt="bell.png">
-        <span id="notifications_text">Notifications</span>
-        <div v-if="this.$store.state.isNotificationsOpen" id="notificationsContent">
-            <div>1</div>
-            <div>2</div>
-            <div>3</div>
-        </div>
-    </div> -->
 
-    <div class="relative-wrapper">
+    <div class="relative-wrapper" @click="toggleShowNotifications">
         Notifications
-        <div class="item-list__wrapper" id="notifications">
+        <div class="item-list__wrapper" id="notifications" v-show="showNotifications">
             <ul class="item-list">
                 <li>
-                    <div class="row1">
-                        <img class="small" src="../assets/icons/default-profile.svg">
+                    <div class="row1 ">
+                        <img class="" src="../assets/icons/default-profile.svg">
 
                         <div>
                             <span class="who">John Smith</span> sent you a follow request
@@ -28,7 +19,7 @@
                 </li>
                 <li>
                     <div class="row1">
-                        <img class="small" src="../assets/icons/default-profile.svg">
+                        <img class="" src="../assets/icons/default-profile.svg">
                         <div>
                             <span class="who">Chris Brown</span> wants to join your group
                         </div>
@@ -41,7 +32,7 @@
                 </li>
                 <li>
                     <div class="row1">
-                        <img class="small" src="../assets/icons/default-profile.svg">
+                        <img class="" src="../assets/icons/default-profile.svg">
 
                         <div>
                             <span class="who">Goblins</span> invited you to join their group
@@ -54,7 +45,7 @@
                 </li>
                 <li>
                     <div class="row1">
-                        <img class="small" src="../assets/icons/users-alt.svg">
+                        <img class="" src="../assets/icons/users-alt.svg">
 
                         <div>
                             <span class="who">ItsKris</span> did something
@@ -68,7 +59,7 @@
 
                 <li>
                     <div class="row1">
-                        <img class="small" src="../assets/icons/users-alt.svg">
+                        <img class="" src="../assets/icons/users-alt.svg">
 
                         <div>
                             <span class="who">ItsKris</span> did something very longworthy notification!
@@ -89,12 +80,18 @@
 <script>
 export default {
     name: "notifications",
-    methods: {
-        toggle() {
-            this.$store.commit("CHANGE_NOTIFICATIONS_STATE")
-            console.log(this.$store.state.isNotificationsOpen)
-        },
+    data() {
+        return {
+            showNotifications: false
+        }
     },
+
+    methods: {
+        toggleShowNotifications() {
+            this.showNotifications = !this.showNotifications
+        }
+    },
+
 }
 
 </script>
@@ -105,16 +102,25 @@ export default {
 
 }
 
+
+#notifications .row1 :is(img, i) {
+    height: 2.25em;
+    width: 2.25em;
+}
+
 #notifications {
 
     position: absolute;
     transform: translateX(-50%);
     left: 50%;
     font-weight: 400;
-    margin-top: 5px;
-    min-width: 400px;
-
+    margin-top: 10px;
+    /* min-width: 400px; */
+    /* max-width: 450px; */
+    /* right: 5px; */
+    /* top: 50px; */
     /* display: none; */
+    width: 400px;
 }
 
 
