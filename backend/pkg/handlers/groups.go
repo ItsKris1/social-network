@@ -128,6 +128,10 @@ func (handler *Handler) GroupEvents(w http.ResponseWriter, r *http.Request) {
 		utils.RespondWithError(w, "Error on getting event data", 200)
 		return
 	}
+	/* ----------------------- attach author to each event ---------------------- */
+	for i := 0; i < len(events); i++ {
+		events[i].Author, _ = handler.repos.UserRepo.GetDataMin(events[i].AuthorID)
+	}
 	utils.RespondWithEvents(w, events, 200)
 }
 

@@ -24,6 +24,24 @@ func (handler *Handler) NewEvent(w http.ResponseWriter, r *http.Request) {
 	}
 	event.ID = utils.UniqueId()
 	event.AuthorID = r.Context().Value(utils.UserKey).(string)
+	/* -------------------- check if user is a meber of group ------------------- */
+	var isMember = false
+	isAdmin, err := handler.repos.GroupRepo.IsAdmin(event.GroupID, event.AuthorID)
+	if err != nil {
+		utils.RespondWithError(w, "Error on reading role", 200)
+		return
+	}
+	if !isAdmin {
+		isMember, err = handler.repos.GroupRepo.IsMember(event.GroupID, event.AuthorID)
+		if err != nil {
+			utils.RespondWithError(w, "Error on checking if is group member", 200)
+			return
+		}
+	}
+	if !isMember && !isAdmin {
+		utils.RespondWithError(w, "Not a member", 200)
+		return
+	}
 	/* ------------------------- save event in database ------------------------- */
 	if err = handler.repos.EventRepo.Save(event); err != nil {
 		utils.RespondWithError(w, "Internal server error", 200)
