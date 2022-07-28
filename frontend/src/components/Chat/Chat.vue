@@ -1,13 +1,14 @@
 <template>
 
     <div class="messaging-wrapper">
-
-        <component v-for="chat in chats"
+        <!-- <component v-for="chat in chats"
                    :is="{ ...chat.ChatBox }"
                    :key="chat.id"
                    :name="chat.name"
                    @closeChat="removeChat">
-        </component>
+        </component> -->
+
+        <ChatBox v-for="chat in chats" :name="chat.name" @closeChat="removeChat" :key="chat.id"></ChatBox>
 
         <div class="messaging" @click="toggleShowContent">
 

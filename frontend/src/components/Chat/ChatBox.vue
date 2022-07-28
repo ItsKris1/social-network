@@ -5,40 +5,6 @@
             <i class="uil uil-times close" @click.stop="$emit('closeChat', this.name)"></i>
         </div>
         <div class="content" ref="contentDiv">
-            <!-- <div class="recieved-messages">
-                <p class="message-author">Roy Jones</p>
-                <p class="recieved-message">Hello there!</p>
-                <p class="recieved-message">How are you?</p>
-            </div>
-
-            <div class="sent-messages">
-                <p class="sent-message">I am good mate!</p>
-                <p class="sent-message">This is a longer text</p>
-                <p class="sent-message">This is even a lot more longer text helwhwehlwehwhlw</p>
-            </div>
-
-            <div class="recieved-messages">
-                <p class="message-author">Roy Jones</p>
-                <p class="recieved-message">Hello there!</p>
-                <p class="recieved-message">How are you?</p>
-            </div>
-
-            <div class="sent-messages">
-                <p class="sent-message">I am good mate!</p>
-            </div>
-
-            <div class="recieved-messages">
-                <p class="message-author">Roy Jones</p>
-                <p class="recieved-message">Good to know!</p>
-            </div>
-
-            <div class="sent-messages">
-                <p class="sent-message">Indeed!</p>
-            </div> -->
-
-            <!-- <p v-if="!sequentMessage">User 1</p>
-            <p :class="getClass(message)" v-for="message in allMessages">{{ message.msg }}</p> -->
-
             <div class="message" v-for="message in allMessages" :style="getStyle(message)">
                 <p v-if="!message.sequentMessage && allMessages.length > 0 && message.type === 'recieved'">User 1</p>
                 <p :class="getClass(message)">{{ message.msg }}</p>
@@ -65,24 +31,30 @@ export default {
 
     data() {
         return {
-            sentMessages: [],
-            recievedMessages: [],
             allMessages: [],
-            sequentMessage: false, // tracks if user sent two or more messages before recieving
         }
+    },
+
+    mounted() {
+        console.log("Mounted!")
     },
 
     methods: {
         sendMessage() {
-            if (this.allMessages.length !== 0 && this.allMessages[this.allMessages.length - 1].type === "sent") {
-                console.log("Subsequent sent message")
-            } else {
-                console.log("Create div")
+            // if (this.allMessages.length !== 0 && this.allMessages[this.allMessages.length - 1].type === "sent") {
+            //     console.log("Subsequent sent message")
+            // } else {
+            //     console.log("Create div")
 
-            }
+            // }
+
             const sendMessageInput = this.$refs.sendMessageInput;
-            console.log("Message", sendMessageInput.value)
-            console.log(this.$refs.contentDiv)
+            // console.log("Message", sendMessageInput.value)
+            // console.log(this.$refs.contentDiv)
+
+            if (sendMessageInput.value === "") {
+                return
+            }
             this.allMessages.push({ msg: sendMessageInput.value, type: "sent" })
 
             sendMessageInput.value = "";
@@ -105,16 +77,18 @@ export default {
         },
 
         recieveMsg() {
-            let val;
+            let isSequentMessage = false; // tracks if user sent more than two messages in a row
 
             if (this.allMessages.length !== 0 && this.allMessages[this.allMessages.length - 1].type === "recieved") {
-                console.log("Subsequent recieved message")
-                val = true;
-            } else {
-                console.log("Display author and create div")
-                val = false;
+                isSequentMessage = true;
             }
-            this.allMessages.push({ msg: "Hey!", type: "recieved", sequentMessage: val })
+
+            this.allMessages.push({ msg: "Hey! How are you mate?", type: "recieved", sequentMessage: isSequentMessage })
+        },
+
+        // determines whether to display sender name in chatbox
+        displayAuthor(message) {
+            return this.allMessages.length > 0 && message.type === 'recieved' && message.sequentMessage === false;
         },
 
         getClass(message) {
@@ -126,7 +100,6 @@ export default {
         },
 
         getStyle(message) {
-            console.log("Bois")
             if (message.type === "recieved") {
                 return { "alignSelf": "flex-start" }
             } else {
@@ -173,27 +146,29 @@ export default {
     overscroll-behavior: contain;
     display: flex;
     flex-direction: column;
+    gap: 10px;
 }
 
-.content>*:not(:last-child) {
-    margin-bottom: calc(var(--msg-margin-b) * 4);
-}
-
-.recieved-messages,
+/* .recieved-messages,
 .sent-messages {
     display: flex;
     flex-direction: column;
-}
+} */
 
-.sent-messages>*:not(:last-child),
+/* .sent-messages>*:not(:last-child),
 .recieved-messages>*:not(:last-child) {
     margin-bottom: var(--msg-margin-b);
-}
+} */
 
 .sent-message,
 .recieved-message {
     padding: var(--msg-padding);
     border-radius: var(--msg-border-rad);
+    word-break: break-word;
+}
+
+.message {
+    max-width: 80%;
 }
 
 .recieved-messages {
@@ -203,7 +178,7 @@ export default {
 
 .recieved-message {
     background-color: rgb(185, 185, 185);
-    align-self: flex-start;
+    /* align-self: flex-start; */
 }
 
 
@@ -211,13 +186,10 @@ export default {
     padding-bottom: 3.5px;
 }
 
-.sent-messages {
-    align-items: flex-end;
-}
 
 .sent-message {
     background-color: rgb(212, 212, 212);
-    align-self: flex-end;
+    /* align-self: flex-end; */
 
 }
 
