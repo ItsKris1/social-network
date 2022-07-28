@@ -18,7 +18,7 @@
                 <button type="submit"><i class="uil uil-message"></i></button>
             </form>
 
-            <button type="button" @click="recieveMsg">Recieve msg</button>
+            <!-- <button type="button" @click="recieveMsg">Recieve msg</button> -->
         </div>
     </div>
 

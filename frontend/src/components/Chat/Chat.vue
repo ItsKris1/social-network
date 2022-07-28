@@ -1,13 +1,6 @@
 <template>
 
-    <div class="messaging-wrapper">
-        <!-- <component v-for="chat in chats"
-                   :is="{ ...chat.ChatBox }"
-                   :key="chat.id"
-                   :name="chat.name"
-                   @closeChat="removeChat">
-        </component> -->
-
+    <div class="messaging-wrapper" ref="messagingWrapper">
         <ChatBox v-for="chat in chats" :name="chat.name" @closeChat="removeChat" :key="chat.id"></ChatBox>
 
         <div class="messaging" @click="toggleShowContent">
@@ -32,6 +25,14 @@
                         <div class="item-text" @click.stop="openChat">User 3</div>
                     </li>
 
+                    <li>
+                        <div class="user-picture small"></div>
+                        <div class="item-text" @click.stop="openChat">User 4</div>
+                    </li>
+                    <li>
+                        <div class="user-picture small"></div>
+                        <div class="item-text" @click.stop="openChat">User 5</div>
+                    </li>
                 </ul>
 
                 <ul class="item-list">
@@ -80,16 +81,29 @@ export default {
             // console.log(e.target.textContent)
 
             const found = this.chats.some(chat => chat.name === e.target.textContent);
-            if (!found) {
-                this.chats.push({
-                    id: this.chatID,
-                    "name": e.target.textContent,
-                    ChatBox
-                });
+            if (found) {
+                return
+            };
 
-                this.chatID++;
-
+            if (this.$refs.messagingWrapper.clientWidth + 300 > window.innerWidth) {
+                this.chats.shift();
             }
+            this.chats.push({
+                id: this.chatID,
+                "name": e.target.textContent,
+            });
+
+            this.chatID++;
+
+
+            // this.$nextTick(() => {
+            //     console.log("Viewport width", window.innerWidth)
+            //     console.log("Messaging area width", this.$refs.messagingWrapper.clientWidth)
+
+            // })
+
+
+
 
         },
 
