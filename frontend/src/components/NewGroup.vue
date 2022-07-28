@@ -51,7 +51,7 @@ export default {
     },
     data() {
         return {
-            checkedFollowers: null,
+            checkedFollowers: {},
             isOpen: false,
             clearInput: false
 

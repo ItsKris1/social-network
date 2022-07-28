@@ -4,7 +4,7 @@
         <ul class="item-list">
             <li v-for="event in this.groupEvents">
                 <img class="small" src="../assets/icons/users-alt.svg" alt="">
-                <div class="item-text">{{ event }}</div>
+                <div class="item-text">{{ event.title }}</div>
             </li>
         </ul>
         <button class="btn form-submit" @click="toggleModal">New event</button>
