@@ -105,6 +105,7 @@ label {
     cursor: pointer;
     font-size: 14px;
     overflow: hidden;
+    transition: box-shadow 0.25s ease-in;
 }
 
 input {
@@ -145,5 +146,15 @@ input {
     width: 70.25px;
 
     margin-left: auto;
+}
+
+
+label:hover {
+    box-shadow: var(--hover-box-shadow);
+}
+
+.btn:hover {
+    background-color: rgb(209, 209, 209);
+    ;
 }
 </style>

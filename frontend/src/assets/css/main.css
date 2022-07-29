@@ -17,6 +17,7 @@
 
     --hover-background-color: #7373a8;
     --hover-box-shadow: 0 0 3px 1px rgb(132, 148, 236);
+    --hover-box-shadow-transition: box-shadow 0.25s ease-in;
     --hover-color: rgb(132, 148, 236);
 
 }
@@ -97,6 +98,17 @@ textarea {
     transition: box-shadow 0.25s ease-in;
 
 }
+
+input:is(:hover, :focus),
+select:is(:hover, :focus),
+textarea:is(:hover, :focus) {
+    /* border: none; */
+    outline: none;
+    box-shadow: var(--hover-box-shadow);
+
+}
+
+
 
 input[type="checkbox"] {
     width: initial;
@@ -296,6 +308,7 @@ select {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    cursor: pointer;
 }
 
 
@@ -304,7 +317,6 @@ select {
     display: flex;
     flex-direction: column;
     gap: 40px;
-    /* width: max-content; */
     overflow: hidden;
     padding: var(--container-padding);
     box-shadow: var(--container-shadow);
@@ -343,7 +355,8 @@ select {
     display: flex;
     align-items: center;
     gap: 5px;
-    overflow: hidden;
+    position: relative;
+
 }
 
 .add-image label {
@@ -367,12 +380,64 @@ select {
     padding: 7.5px;
     border-radius: 5px;
     background-color: rgb(221, 221, 221);
-    overflow: hidden;
 }
 
-input:hover {
-    box-shadow: var(--hover-box-shadow);
+/* Element states */
+
+/* .add-image {
+    z-index: 555;
+    transition: transform 0.5s ease-in-out;
+} */
+
+/* .add-image-wrapper {
+    position: relative;
+    z-index: 2;
+
 }
+
+.add-image-wrapper::after {
+    content: "";
+    box-shadow: var(--hover-box-shadow);
+
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    border-radius: 5px;
+
+    opacity: 0;
+
+    transition: opacity, transform 0.5s ease-in-out;
+}
+
+
+.add-image-wrapper:hover .add-image {
+    transform: translateX(-5px);
+}
+
+.add-image-wrapper:hover::after {
+    opacity: 1;
+    transform: scale(1.15) translateX(-5px);
+} */
+
+
+
+.item-list .item-text::after {
+    content: "";
+    width: 100%;
+    height: 2px;
+    background-color: var(--hover-background-color);
+    display: block;
+    opacity: 0;
+    transition: opacity 0.25s ease-in;
+}
+
+
+.item-list .item-text:hover::after {
+    opacity: 1;
+}
+
 
 .btn:hover {
     background-color: var(--hover-background-color);

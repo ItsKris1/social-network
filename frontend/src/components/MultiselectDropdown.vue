@@ -74,6 +74,7 @@ export default {
     background-color: var(--input-bg);
     box-shadow: var(--container-shadow);
     border-radius: 5px;
+    transition: var(--hover-box-shadow-transition);
 }
 
 .dropdown button {
@@ -110,5 +111,10 @@ export default {
 
 .item-list p {
     font-size: 0.85em;
+}
+
+
+.dropdown:hover {
+    box-shadow: var(--hover-box-shadow);
 }
 </style>

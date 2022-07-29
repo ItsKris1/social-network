@@ -54,6 +54,8 @@
 .modal-header i {
     font-size: 1.25em;
     cursor: pointer;
+
+    transition: transform 0.25s ease-in-out;
 }
 
 .modal-content form {
@@ -64,5 +66,9 @@
 
 .modal-content form .btn.form-submit {
     align-self: flex-end;
+}
+
+.modal-header i:hover {
+    transform: scale(1.25);
 }
 </style>

@@ -165,7 +165,8 @@ export default {
     box-shadow: var(--container-shadow);
     padding: 30px;
     background-color: var(--color-white);
-    width: 550px;
+    /* width: 550px; */
+    width: 100%;
     border-radius: 10px;
 }
 
@@ -255,5 +256,7 @@ export default {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+
+    font-size: 14px;
 }
 </style>
