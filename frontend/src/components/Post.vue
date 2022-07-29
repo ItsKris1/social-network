@@ -35,8 +35,11 @@
 
                         <label for="upload-image">
                             <input type="file" accept="image/png, image/gif, image/jpeg" style=""
-                                   @change="checkPicture" ref="fileUpload" />
+                                   @change="checkPicture" ref="fileUpload" id="upload-image" />
+
+                            <div></div>
                         </label>
+
                     </div>
 
                 </div>
@@ -235,7 +238,7 @@ export default {
 
 .btns-wrapper {
     display: flex;
-    gap: 10px;
+    gap: 15px;
     align-items: center;
     justify-content: space-between;
     width: 100%;

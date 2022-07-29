@@ -356,16 +356,20 @@ select {
     align-items: center;
     gap: 5px;
     position: relative;
+    min-width: 0;
 
 }
 
-.add-image label {
+.add-image label div {
     background-image: url('../icons/image-plus.svg');
     height: 30px;
     width: 30px;
 
-    position: relative;
 }
+
+/* .add-image label {
+    position: relative;
+} */
 
 .add-image input {
     position: absolute;
@@ -380,6 +384,8 @@ select {
     padding: 7.5px;
     border-radius: 5px;
     background-color: rgb(221, 221, 221);
+
+    min-width: 0;
 }
 
 /* Element states */
