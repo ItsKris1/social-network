@@ -203,6 +203,7 @@ export default {
     font-size: 16px;
     border-radius: var(--container-border-radius);
     cursor: pointer;
+    transition: box-shadow 0.25s ease-in;
 }
 
 .start-post i {
@@ -228,6 +229,6 @@ export default {
 }
 
 .start-post:hover {
-    box-shadow: var(--input-hover-shadow);
+    box-shadow: var(--hover-box-shadow);
 }
 </style>

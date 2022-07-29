@@ -94,6 +94,8 @@ textarea {
     width: 100%;
     /* max-width: 250px; */
 
+    transition: box-shadow 0.25s ease-in;
+
 }
 
 input[type="checkbox"] {
