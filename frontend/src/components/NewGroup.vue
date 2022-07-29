@@ -105,6 +105,7 @@ export default {
             form.reset()
             this.toggleModal();
             this.toggleClearInput();
+            this.$store.dispatch('getAllGroups');
         },
 
 

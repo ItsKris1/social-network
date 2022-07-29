@@ -19,7 +19,7 @@
                     placeholder="What is this about?"></textarea>
                 <span>Date</span>
                 <input v-model="this.formData.date" type="date">
-                <span>Going</span>
+                <span>Going?</span>
                 <select v-model="this.formData.going" name="going">
                     <option value="YES">Yes</option>
                     <option value="NO">No</option>
