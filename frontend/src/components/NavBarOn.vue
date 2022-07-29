@@ -105,6 +105,7 @@ export default {
 #nav-title {
     font-size: 24px;
     font-weight: 400;
+    position: relative;
 }
 
 
@@ -113,6 +114,8 @@ export default {
     display: inline-block;
     margin-left: 20px;
     cursor: pointer;
+
+    position: relative;
 }
 
 
@@ -126,6 +129,26 @@ export default {
 }
 
 
+
+
+
+#navbar li::after,
+#nav-title::after {
+    content: "";
+    height: 2.5px;
+    width: 0;
+    display: block;
+
+    position: absolute;
+
+    transition: width 0.35s ease-out;
+}
+
+#navbar li:hover::after,
+#nav-title:hover::after {
+    width: 100%;
+    background-color: rgb(132, 148, 236);
+}
 
 a:link {
     text-decoration: none;
@@ -141,48 +164,5 @@ a:hover {
 
 a:active {
     text-decoration: none;
-}
-
-/* .nav-links li:hover {
-    color: rgb(241, 181, 181)
-} */
-
-
-#navbar li:hover {
-    /* color: rgb(255, 255, 255); */
-    /* background-color: rgb(95, 107, 175);
-    padding: 5px 7.5px;
-    border-radius: 10px; */
-
-    /* text-decoration: underline;
-    text-decoration-color: rgb(132, 148, 236);
-    text-decoration-thickness: 2px; */
-
-    color: red;
-    line-height: 0;
-    border-bottom: 2px solid rgb(132, 148, 236);
-}
-
-#nav-title {
-    padding: 2px;
-}
-
-#nav-title:hover {
-    /* color: rgb(95, 107, 175); */
-    /* text-shadow: 2px 2px 5px rgb(95, 107, 175); */
-    /* text-transform: uppercase; */
-    /* color: white; */
-
-    /* text-decoration: underline;
-    text-decoration-color: rgb(132, 148, 236);
-    text-decoration-thickness: 2px;
-    text-underline-offset: 5px; */
-    border-bottom: 2px solid rgb(132, 148, 236);
-    padding-bottom: 0px;
-    /* padding: 3px; */
-    /* line-height: 1; */
-    /* padding: 0px 7.5px; */
-    /* border-radius: 10px; */
-
 }
 </style>

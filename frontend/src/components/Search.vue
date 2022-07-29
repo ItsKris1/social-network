@@ -106,7 +106,10 @@ export default {
     padding-left: calc(17px + 20px);
     box-shadow: var(--container-shadow);
     background-color: var(--input-bg);
+    cursor: pointer;
 }
+
+
 
 #searchDiv input[type="text"].no-bottom-border {
     border-bottom-left-radius: 0;
@@ -147,5 +150,21 @@ export default {
 
 *:focus {
     outline: none;
+}
+
+
+#searchDiv input[type="text"]:hover,
+#searchDiv input[type="text"]:focus {
+    /* position: relative; */
+    /* z-index: 2; */
+    box-shadow: 0 0 2px 2px var(--hover-color);
+}
+
+#searchDiv input[type="text"]:hover~#dropdown,
+#searchDiv input[type="text"]:focus~#dropdown {
+    box-shadow: 0 3px 2px 0 var(--hover-color);
+    /* content: "";
+    display: block; */
+
 }
 </style>

@@ -202,6 +202,7 @@ export default {
     font-family: inherit;
     font-size: 16px;
     border-radius: var(--container-border-radius);
+    cursor: pointer;
 }
 
 .start-post i {
@@ -224,5 +225,9 @@ export default {
 
 .submitPost {
     margin-left: auto;
+}
+
+.start-post:hover {
+    box-shadow: var(--input-hover-shadow);
 }
 </style>
