@@ -2,9 +2,20 @@
     <div class="item-list__wrapper" id="groups">
         <h3>Events:</h3>
         <ul class="item-list">
-            <li v-for="event in this.groupEvents">
+            <li v-for="event in this.groupEvents">                
                 <img class="small" src="../assets/icons/users-alt.svg" alt="">
-                <div class="item-text">{{ event.title }}</div>
+                <div class="item-text" @click="this.showEvent(event)">{{ event.title }}</div>
+
+                <Modal v-if="this.eventIsOpen" @closeModal="closeEvent">
+                    <template #title>
+                        {{ this.eventData.title }}
+                    </template>
+                    <template #body>
+                        <div>{{this.eventData.date}}</div>
+                        <div>{{this.eventData.content}}</div>
+
+                    </template>
+                </Modal>
             </li>
         </ul>
         <button class="btn form-submit" @click="toggleModal">New event</button>
@@ -38,8 +49,15 @@ export default {
     name: "GroupEvents",
     data() {
         return {
-            groupEvents: ["a", "b", "c"],
+            groupEvents: [],
             isOpen: false,
+            eventIsOpen: false,
+            eventData: {
+                title: "",
+                date: "",
+                content: "",
+                going: "",
+            },
             formData: {
                 title: "",
                 content: "",
@@ -79,10 +97,21 @@ export default {
                 .then((json => {
                     console.log("newEvent", json);
                 }))
-                this.getGroupEvents()
+            this.getGroupEvents()
         },
         toggleModal() {
             this.isOpen = !this.isOpen;
+        },
+        showEvent(event) {
+            this.eventData.title = event.title
+            this.eventData.date = event.date
+            this.eventData.content = event.content
+            this.eventData.going = event.going
+
+            this.eventIsOpen = true
+        },
+        closeEvent() {
+            this.eventIsOpen = false
         },
     },
     components: { Modal }
@@ -91,4 +120,7 @@ export default {
 
 
 <style>
+.item-text{
+    cursor: pointer;
+}
 </style>
