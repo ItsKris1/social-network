@@ -4,7 +4,7 @@
         <ul class="item-list">
             <li v-for="event in this.groupEvents">                
                 <img class="small" src="../assets/icons/users-alt.svg" alt="">
-                <div class="item-text" @click="this.showEvent(event)">{{ event.title }}</div>
+                <div class="item-text" style="cursor:pointer" @click="this.showEvent(event)">{{ event.title }}</div>
 
                 <Modal v-if="this.eventIsOpen" @closeModal="closeEvent">
                     <template #title>
@@ -120,7 +120,4 @@ export default {
 
 
 <style>
-.item-text{
-    cursor: pointer;
-}
 </style>
