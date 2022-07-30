@@ -38,6 +38,16 @@ type EventMessage struct {
 	Events []models.Event `json:"events"`
 }
 
+type NotifMessage struct {
+	Type          string                `json:"type"`
+	Notifications []models.Notification `json:"notifications"`
+}
+
+type ChatMsgMessage struct {
+	Type     string               `json:"type"`
+	Messages []models.ChatMessage `json:"chatMessage"`
+}
+
 // Error takes writer, message, status code and additional error property
 // Sets status code in header and encode resp in json
 func RespondWithError(w http.ResponseWriter, message string, code int) {
@@ -83,6 +93,22 @@ func RespondWithPosts(w http.ResponseWriter, posts []models.Post, code int) {
 func RespondWithEvents(w http.ResponseWriter, events []models.Event, code int) {
 	w.WriteHeader(code)
 	err := EventMessage{Events: events, Type: "Success"}
+	jsonResp, _ := json.Marshal(err)
+	w.Write(jsonResp)
+}
+
+// responds with success notifs
+func RespondWithNotifications(w http.ResponseWriter, notifs []models.Notification, code int) {
+	w.WriteHeader(code)
+	err := NotifMessage{Notifications: notifs, Type: "Success"}
+	jsonResp, _ := json.Marshal(err)
+	w.Write(jsonResp)
+}
+
+// responds with success chat msg
+func RespondWithMessages(w http.ResponseWriter, msgs []models.ChatMessage, code int) {
+	w.WriteHeader(code)
+	err := ChatMsgMessage{Messages: msgs, Type: "Success"}
 	jsonResp, _ := json.Marshal(err)
 	w.Write(jsonResp)
 }

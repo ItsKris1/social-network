@@ -5,10 +5,11 @@ import (
 	"net/http"
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
+	ws "social-network/pkg/wsServer"
 	"strings"
 )
 
-func (handler *Handler) NewEvent(w http.ResponseWriter, r *http.Request) {
+func (handler *Handler) NewEvent(wsServer *ws.Server, w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)
 	if r.Method != "POST" {
 		utils.RespondWithError(w, "Error on form submittion", 200)
@@ -68,6 +69,7 @@ func (handler *Handler) NewEvent(w http.ResponseWriter, r *http.Request) {
 			TargetID: members[i].ID,
 			Type:     "EVENT",
 			Content:  event.ID,
+			Sender:   event.AuthorID,
 		}
 		// save notification in database
 		err = handler.repos.NotifRepo.Save(newNotif)
@@ -75,8 +77,14 @@ func (handler *Handler) NewEvent(w http.ResponseWriter, r *http.Request) {
 			utils.RespondWithError(w, "Internal server error", 200)
 			return
 		}
+		// NOTIFY  GROUP MEMBER ABOUT THE NEW EVENT IF ONLINE
+		for client := range wsServer.Clients {
+			if client.ID == members[i].ID {
+				client.SendNotification(newNotif)
+			}
+		}
+
 	}
-	// NOTIFY ALL GROUP MEMBERS ABOUT THE NEW EVENT
 	utils.RespondWithEvents(w, []models.Event{event}, 200)
 }
 

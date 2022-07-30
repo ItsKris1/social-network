@@ -13,9 +13,10 @@ type Event struct {
 }
 
 type EventRepository interface {
-	GetAll(groupId string) ([]Event, error)         //get all events for group
-	Save(Event) error                               // save new event
-	AddParticipant(eventID, userID string) error    // save new participant
+	GetAll(groupId string) ([]Event, error)      //get all events for group
+	GetData(eventID string)(Event, error)
+	Save(Event) error                            // save new event
+	AddParticipant(eventID, userID string) error // save new participant
 	RemoveParticipant(eventID, userID string) error // remove participant
 	IsParticipating(eventID, userID string) (bool, error)
 }

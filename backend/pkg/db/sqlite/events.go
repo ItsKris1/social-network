@@ -23,6 +23,15 @@ func (repo *EventRepository) GetAll(groupID string) ([]models.Event, error) {
 	return events, nil
 }
 
+func (repo *EventRepository) GetData(eventId string) (models.Event, error) {
+	row := repo.DB.QueryRow("SELECT title, content, event_id, group_id, strftime('%d.%m.%Y', date), created_by FROM events WHERE event_id = ? ", eventId)
+	var event models.Event
+	if err := row.Scan(&event.Title, &event.Content, &event.ID, &event.GroupID, &event.Date, &event.AuthorID); err != nil {
+		return event, err
+	}
+	return event, nil
+}
+
 func (repo *EventRepository) Save(event models.Event) error {
 	stmt, err := repo.DB.Prepare("INSERT INTO event (event_id, group_id, created_by, content, title, date) values (?,?,?,?,?,?)")
 	if err != nil {
