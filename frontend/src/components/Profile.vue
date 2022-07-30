@@ -1,6 +1,6 @@
 <template>
 
-    <div v-if="user">
+    <div v-if="user && this.$store.state.id !== ''">
         <div id="layout-profile">
 
             <div class="left-section ">
@@ -96,7 +96,7 @@ export default {
         },
 
         async getMyUserID() {
-            this.$store.dispatch("getMyUserID")
+            await this.$store.dispatch("getMyUserID")
         },
 
         async checkProfile() {

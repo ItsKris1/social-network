@@ -16,9 +16,10 @@ export default {
     created() {
         this.$store.dispatch('fetchPosts')
     },
+
+
     computed: mapGetters(['allPosts']),
     components: { Post },
-    methods: {},
 }
 </script>
 

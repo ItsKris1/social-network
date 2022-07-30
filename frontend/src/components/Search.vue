@@ -35,7 +35,7 @@ export default {
             filteredUsers: [],
             filteredGroups: [],
             showDropdown: false,
-            searchQuery: "i"
+            searchQuery: ""
         }
     },
     created() {
