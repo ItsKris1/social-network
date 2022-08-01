@@ -7,13 +7,11 @@ import (
 )
 
 /* --------------------- actions for websocket messages --------------------- */
-const DisconnectAction = "disconnect" //disconnect from websocket server
 const NotificationAction = "notification"
 const ChatAction = "chat"
 
 type WsMessage struct {
-	Action       string              `json:"action"`  //msg request action
-	Message      string              `json:"message"` //The actual message
+	Action       string              `json:"action"` //msg request action
 	Notification models.Notification `json:"notification"`
 	ChatMessage  models.ChatMessage  `json:"chatMessage"`
 }

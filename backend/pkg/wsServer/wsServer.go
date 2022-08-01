@@ -5,7 +5,7 @@ import "social-network/pkg/models"
 // represent websocket server
 type Server struct {
 	Clients map[*Client]bool
-	repos *models.Repositories
+	Repos   *models.Repositories
 }
 
 func StartServer(repos *models.Repositories) *Server {
@@ -16,7 +16,7 @@ func StartServer(repos *models.Repositories) *Server {
 	return server
 }
 
-// register and unregister clients
+// register client
 func (s *Server) RegisterNewClient(client *Client) {
 	s.Clients[client] = true //update client list
 }

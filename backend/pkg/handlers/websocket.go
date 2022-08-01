@@ -25,10 +25,11 @@ func (handler *Handler) SocketHandler(wsServer *ws.Server, w http.ResponseWriter
 	}
 
 	// crete new client
-	client := ws.NewClient(conn, wsServer, userId)
+	client := ws.NewClient(conn, wsServer.Repos, userId)
+	// register the clinet in wsServer
 	wsServer.RegisterNewClient(client)
 
-	// put in action read and write functions
+	// put in action infinit read and write functions
 	go client.Writer()
-	go client.Reader()
+	go client.Reader(wsServer)
 }
