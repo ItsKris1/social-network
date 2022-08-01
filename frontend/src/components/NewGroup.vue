@@ -51,7 +51,7 @@ export default {
     },
     data() {
         return {
-            checkedFollowers: null,
+            checkedFollowers: {},
             isOpen: false,
             clearInput: false
 
@@ -105,6 +105,7 @@ export default {
             form.reset()
             this.toggleModal();
             this.toggleClearInput();
+            this.$store.dispatch('getAllGroups');
         },
 
 

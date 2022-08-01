@@ -13,7 +13,6 @@
           <label for="username">Email</label>
           <input type="email" id="email" v-model="signInForm.login" required>
         </div>
-
         <div class="form-input">
           <label for="password">Password</label>
           <input type="password" id="password" v-model="signInForm.password" required>

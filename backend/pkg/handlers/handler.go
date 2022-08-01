@@ -11,4 +11,3 @@ type Handler struct {
 func InitHandlers(repos *models.Repositories) *Handler {
 	return &Handler{repos: repos}
 }
-

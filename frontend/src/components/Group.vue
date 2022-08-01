@@ -7,8 +7,7 @@
         <div class="left-section">
             <!-- Members -->
             <GroupMembers />
-            <div>(Events)</div>
-            <Groups></Groups>
+            <GroupEvents />
 
         </div>
 
@@ -87,6 +86,8 @@ import Notifications from './Notifications.vue';
 import NewPost from './NewPost.vue';
 import GroupPosts from './GroupPosts.vue';
 import GroupMembers from './GroupMembers.vue';
+import Modal from './Modal.vue';
+import GroupEvents from './GroupEvents.vue';
 export default {
     name: "Group",
     created() {
@@ -109,13 +110,18 @@ export default {
             })
                 .then((r => r.json()))
                 .then((json => {
+<<<<<<< HEAD
                     console.log(json);
                     console.log("getGroupInfo", json);
+=======
+                    // console.log(json);
+                    // console.log("getGroupInfo",json);
+>>>>>>> origin/vue
                     this.groupData = json.groups[0];
                 }));
         },
     },
-    components: { AllPosts, Groups, Notifications, NewPost, GroupPosts, GroupMembers }
+    components: { AllPosts, Groups, Notifications, NewPost, GroupPosts, GroupMembers, Modal, GroupEvents }
 }
 </script>
 
