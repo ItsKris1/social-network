@@ -57,16 +57,7 @@ export default {
         }
     },
 
-    mounted() {
-        // console.log(this.$store.state.wsConn)
-        // console.log(this.$store.state.wsConn)
-
-        // this.wsConn.addEventListener("message", (e) => {
-        //     console.log(e.data)
-        // })
-
-
-    },
+    mounted() { },
 
     created() {
         this.getUsersIFollow();

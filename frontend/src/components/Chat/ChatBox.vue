@@ -5,9 +5,14 @@
             <i class="uil uil-times close" @click.stop="$emit('closeChat', this.name)"></i>
         </div>
         <div class="content" ref="contentDiv">
-            <div class="message" v-for="message in allMessages" :style="getStyle(message)">
+            <!-- <div class="message" v-for="message in allMessages" :style="getStyle(message)">
                 <p v-if="!message.sequentMessage && allMessages.length > 0 && message.type === 'recieved'">User 1</p>
                 <p :class="getClass(message)">{{ message.msg }}</p>
+            </div> -->
+
+            <div class="message" v-for="message in allMessages" :style="msgPosition(message)">
+                <!-- <p v-if="!message.sequentMessage && allMessages.length > 0 && message.type === 'recieved'">User 1</p> -->
+                <p>{{ message.content }}</p>
             </div>
 
         </div>
@@ -32,39 +37,39 @@ export default {
     data() {
         return {
             allMessages: [],
-            wsConn: this.$store.state.wsConn
+
         }
     },
 
-    mounted() {
-        console.log("Mounted!")
-        console.log("userid", this.userid)
-        this.wsConn.addEventListener("message", (e) => {
-            console.log(e.data)
-            console.log("loooooooool")
-        })
-
-        console.log(this.wsConn)
+    created() {
+        this.getPreviousMessages();
+    },
+    computed: {
+        recievedMessage() {
+            return this.$store.state.recievedMessage
+        }
     },
 
     methods: {
+
+        async getPreviousMessages() {
+            const response = await fetch("http://localhost:8081/messages", {
+                credentials: 'include',
+                method: "POST",
+                body: JSON.stringify({
+                    type: "PERSON",
+                    receiverId: this.userid
+                })
+            })
+
+            const data = await response.json();
+            console.log("Previous messages", data)
+            this.allMessages = data.chatMessage;
+
+
+        },
         async sendMessage() {
-            // if (this.allMessages.length !== 0 && this.allMessages[this.allMessages.length - 1].type === "sent") {
-            //     console.log("Subsequent sent message")
-            // } else {
-            //     console.log("Create div")
-
-            // }
-
-            // const wsConn = this.$store.state.wsConn;
-
-
-            // console.log("userid", this.userid)
-
-
             const sendMessageInput = this.$refs.sendMessageInput;
-            // console.log("Message", sendMessageInput.value)
-            // console.log(this.$refs.contentDiv)
 
             if (sendMessageInput.value === "") {
                 return
@@ -76,21 +81,17 @@ export default {
                 content: sendMessageInput.value
             }
 
-            console.log(msgObj)
-            const response = await fetch("http://localhost:8081/newMessage", {
+            await fetch("http://localhost:8081/newMessage", {
                 body: JSON.stringify(msgObj),
                 method: "POST",
                 credentials: "include"
             });
 
-            const data = await response.json();
+            // const data = await response.json();
 
-            console.log("Data", data)
+            // console.log("Data", data)
 
-
-
-
-            this.allMessages.push({ msg: sendMessageInput.value, type: "sent" })
+            this.allMessages.push({ content: sendMessageInput.value, receiverId: this.userid })
 
             sendMessageInput.value = "";
 
@@ -99,20 +100,8 @@ export default {
                 this.$refs.contentDiv.scrollTop = this.$refs.contentDiv.scrollHeight;
 
             })
-            // console.log("Event", e.currentTarget)
-            // const data = new FormData(e.currentTarget);
-            // console.log(data)
-            // console.log(this.$refs.sendMessageInput.value)
-            // console.log("Message", data.get("sent-message"))
-            // e.currentTarget.reset();
-
-
-
 
         },
-
-        getRecieverID() { },
-
 
         recieveMsg() {
             let isSequentMessage = false; // tracks if user sent more than two messages in a row
@@ -138,11 +127,17 @@ export default {
             }
         },
 
-        getStyle(message) {
-            if (message.type === "recieved") {
-                return { "alignSelf": "flex-start" }
-            } else {
-                return { "alignSelf": "flex-end" }
+        msgPosition(message) {
+            const isSentMsg = message.receiverId === this.userid
+            // if (message.type === "recieved") {
+            //     return { "alignSelf": "flex-start" }
+            // } else {
+            //     return { "alignSelf": "flex-end" }
+            // }
+
+            // console.log("Chatting with user ID", this.userid)
+            return {
+                alignSelf: isSentMsg ? "flex-end" : "flex-start"
             }
         }
 

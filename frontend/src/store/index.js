@@ -19,6 +19,8 @@ export default createStore({
     groups: {
       allGroups: [],
     },
+
+    recievedMessage: "",
   },
   //------------------------------------ getters is a way for check state values.
   getters: {
@@ -236,14 +238,17 @@ export default createStore({
         });
     },
 
-    createWebSocketConn({ commit }) {
+    createWebSocketConn({ commit, state }) {
       const ws = new WebSocket("ws://localhost:8081/ws");
       ws.addEventListener("open", () => {
         console.log("Connection has established")
       })
 
       ws.addEventListener("message", (e) => {
-        console.log("Message recieved", e.data)
+        const data = JSON.parse(e.data);
+        console.log("WS Message", data)
+        state.recievedMessage = data.chatMessage.content;
+
       })
 
       commit("updateWebSocketConn", ws)
