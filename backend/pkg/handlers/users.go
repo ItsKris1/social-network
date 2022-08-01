@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
+	ws "social-network/pkg/wsServer"
 	"strings"
 )
 
@@ -163,7 +164,7 @@ func (handler *Handler) GetFollowing(w http.ResponseWriter, r *http.Request) {
 	utils.RespondWithUsers(w, followers, 200)
 }
 
-func (handler *Handler) Follow(w http.ResponseWriter, r *http.Request) {
+func (handler *Handler) Follow(wsServer *ws.Server, w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)
 	// access user id
 	currentUserId := r.Context().Value(utils.UserKey).(string)
@@ -191,18 +192,23 @@ func (handler *Handler) Follow(w http.ResponseWriter, r *http.Request) {
 		}
 	} else if reqUserStatus == "PRIVATE" {
 		//SAVE IN NOTIFICATIONS as pending folllow request
-		// notification := models.Notification{ID: utils.UniqueId(), TargetID: reqUserId, Type: "FOLLOW", Content: currentUserId}
-		// err := handler.repos.NotifRepo.Save(notification)
-		// if err != nil {
-		// 	utils.RespondWithError(w, "Error on save", 200)
-		// 	return
-		// }
-
-		// Temporary save followers without sending a request
-		err := handler.repos.UserRepo.SaveFollower(reqUserId, currentUserId)
+		notification := models.Notification{
+			ID:       utils.UniqueId(),
+			TargetID: reqUserId,
+			Type:     "FOLLOW",
+			Content:  currentUserId,
+			Sender:   currentUserId,
+		}
+		err := handler.repos.NotifRepo.Save(notification)
 		if err != nil {
-			utils.RespondWithError(w, "Error on saving follower", 200)
+			utils.RespondWithError(w, "Error on save", 200)
 			return
+		}
+		//if user online send notification about follow request
+		for client := range wsServer.Clients {
+			if client.ID == reqUserId {
+				client.SendNotification(notification)
+			}
 		}
 	}
 	utils.RespondWithSuccess(w, "Following successful", 200)
