@@ -1,8 +1,6 @@
 package ws
 
 import (
-	"encoding/json"
-	"fmt"
 	"log"
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
@@ -12,54 +10,41 @@ import (
 
 // represents single websocket client
 type Client struct {
-	ID       string
-	conn     *websocket.Conn
-	wsServer *Server
-	send     chan []byte
+	ID    string
+	conn  *websocket.Conn      //ws connection
+	send  chan []byte          //sedn channel for outgoing messages
+	repos *models.Repositories //connection to db actions
 }
 
-func NewClient(conn *websocket.Conn, wsServer *Server, ID string) *Client {
+func NewClient(conn *websocket.Conn, repos *models.Repositories, ID string) *Client {
 	return &Client{
-		ID:       ID,
-		conn:     conn,
-		wsServer: wsServer,
-		send:     make(chan []byte, 256),
-	}
-}
-
-/* ----------- main enterypoint for dealing with incoming messages ---------- */
-func (client *Client) handleNewMessage(msgJSON []byte) {
-	var msg WsMessage
-	if err := json.Unmarshal(msgJSON, &msg); err != nil {
-		log.Println(err)
-		return
-	}
-	switch msg.Action {
-	case DisconnectAction:
-		client.disconnect()
+		ID:    ID,
+		conn:  conn,
+		send:  make(chan []byte, 256),
+		repos: repos,
 	}
 }
 
 /* -------------------------------------------------------------------------- */
 /*                           client action functions                          */
 /* -------------------------------------------------------------------------- */
-func (client *Client) disconnect() {
-	client.wsServer.UnregisterClient(client)
-}
 
+// Configure the notification with additional data about sender || group
+// Change the content to reusable sentence
+// send notification to client
 func (client *Client) SendNotification(notif models.Notification) {
 	switch notif.Type {
 	case "GROUP_INVITE":
-		notif.Group, _ = client.wsServer.repos.GroupRepo.GetData(notif.Content)
-		notif.User, _ = client.wsServer.repos.UserRepo.GetDataMin(notif.Sender)
+		notif.Group, _ = client.repos.GroupRepo.GetData(notif.Content)
+		notif.User, _ = client.repos.UserRepo.GetDataMin(notif.Sender)
 	case "FOLLOW":
-		notif.User, _ = client.wsServer.repos.UserRepo.GetDataMin(notif.Content)
+		notif.User, _ = client.repos.UserRepo.GetDataMin(notif.Content)
 	case "EVENT":
-		notif.Event, _ = client.wsServer.repos.EventRepo.GetData(notif.Content)
-		notif.User, _ = client.wsServer.repos.UserRepo.GetDataMin(notif.Sender)
+		notif.Event, _ = client.repos.EventRepo.GetData(notif.Content)
+		notif.User, _ = client.repos.UserRepo.GetDataMin(notif.Sender)
 	case "GROUP_REQUEST":
-		notif.User, _ = client.wsServer.repos.UserRepo.GetDataMin(notif.Content)
-		notif.Group, _ = client.wsServer.repos.GroupRepo.GetData(notif.TargetID)
+		notif.User, _ = client.repos.UserRepo.GetDataMin(notif.Content)
+		notif.Group, _ = client.repos.GroupRepo.GetData(notif.TargetID)
 	}
 	/* ---------------------------- add message text ---------------------------- */
 	utils.DefineNotificationMsg(&notif)
@@ -82,26 +67,10 @@ func (client *Client) SendChatMessage(msg models.ChatMessage) {
 }
 
 /* -------------------------------------------------------------------------- */
-/*                 basic reader and writer for websocket conn                 */
+/*                    basic reader and writer for websocket conn              */
 /* -------------------------------------------------------------------------- */
-// define a reader which will listen for
-// new messages being sent to our WebSocket
-// endpoint
-func (client *Client) Reader() {
-	for {
-		// read in a message
-		_, msg, err := client.conn.ReadMessage()
-		if err != nil {
-			log.Println(err)
-			return
-		}
-		client.handleNewMessage(msg)
-	}
-}
-
 // define a writer which will send
-// new messages to our WebSocket
-// endpoint
+// new messages to our WebSocket endpoint
 func (client *Client) Writer() {
 	for {
 		message, ok := <-client.send
@@ -109,9 +78,26 @@ func (client *Client) Writer() {
 			log.Println("err on writing message")
 			return
 		}
-		if err := client.conn.WriteJSON(string(message)); err != nil {
-			fmt.Println(err)
+		w, err := client.conn.NextWriter(websocket.TextMessage)
+		if err != nil {
 			return
 		}
+		w.Write(message)
+	}
+}
+
+// define a reader which will listen for
+// new messages being sent to our WebSocketendpoint
+// Unregister client when client disconnect
+func (client *Client) Reader(wsServer *Server) {
+	defer wsServer.UnregisterClient(client)
+	for {
+		// read in a message
+		_, msg, err := client.conn.ReadMessage()
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		log.Println(msg)
 	}
 }
