@@ -1,8 +1,10 @@
  <template>
     <!-- <button @click="showAllPosts">showFetch</button> -->
-    <div id="all_posts" v-if="allPosts !== undefined">
+    <div id="all_posts" v-if="allPosts.length !== 0">
         <Post v-for="post in allPosts" :key="post.id" v-bind:postData="post" />
     </div>
+
+    <p v-else>No posts</p>
 
 </template>
 

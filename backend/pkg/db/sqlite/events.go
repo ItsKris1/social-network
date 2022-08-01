@@ -11,7 +11,7 @@ type EventRepository struct {
 
 func (repo *EventRepository) GetAll(groupID string) ([]models.Event, error) {
 	var events = []models.Event{}
-	rows, err := repo.DB.Query("SELECT event_id, created_by, content, title, strftime('%d.%m.%Y', date) FROM event WHERE group_id = ? AND date > date() ORDER BY date DESC;", groupID)
+	rows, err := repo.DB.Query("SELECT event_id, created_by, content, title, strftime('%d.%m.%Y', date) FROM event WHERE group_id = ?  ORDER BY date DESC;", groupID)
 	if err != nil {
 		return events, err
 	}
@@ -21,6 +21,15 @@ func (repo *EventRepository) GetAll(groupID string) ([]models.Event, error) {
 		events = append(events, event)
 	}
 	return events, nil
+}
+
+func (repo *EventRepository) GetData(eventId string) (models.Event, error) {
+	row := repo.DB.QueryRow("SELECT title, content, event_id, group_id, strftime('%d.%m.%Y', date), created_by FROM events WHERE event_id = ? ", eventId)
+	var event models.Event
+	if err := row.Scan(&event.Title, &event.Content, &event.ID, &event.GroupID, &event.Date, &event.AuthorID); err != nil {
+		return event, err
+	}
+	return event, nil
 }
 
 func (repo *EventRepository) Save(event models.Event) error {

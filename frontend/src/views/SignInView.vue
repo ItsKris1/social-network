@@ -2,6 +2,7 @@
     <div class="sign-in__container">
         <NavBarOff />
         <SignIn />
+
     </div>
 </template>
 
@@ -24,8 +25,9 @@ export default {
 <style>
 .sign-in__container {
     display: grid;
-    grid-template-rows: minmax(min-content, max-content);
+    grid-template-rows: max-content minmax(min-content, 1fr);
     height: 100vh;
+
 }
 
 .sign-in__container .sign-in__wrapper {

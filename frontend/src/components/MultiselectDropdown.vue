@@ -2,8 +2,8 @@
     <div class="dropdown-wrapper">
         <p class="custom-label">{{ labelName }}</p>
 
-        <ul class="checkedOptionsList" v-if="checkedOptions.length !== 0">
-            <li v-for="checkedOption in checkedOptions"> {{ checkedOption }}</li>
+        <ul class="checkedOptionsList" v-if="dropdownCheckedOptions.length !== 0">
+            <li v-for="checkedOption in dropdownCheckedOptions"> {{ checkedOption }}</li>
         </ul>
 
         <div class="dropdown">
@@ -13,14 +13,16 @@
             </button>
 
             <ul class="item-list" v-show="showDropdown">
-                <li v-for="option in content">
+                <li v-if="content !== null" v-for="option in content">
                     <input type="checkbox"
                            :id="option"
                            :value="option"
-                           v-model="checkedOptions" />
+                           v-model="dropdownCheckedOptions" />
                     <label :for="option">{{ option }}</label>
 
                 </li>
+
+                <p class="additional-info" v-else>No followers</p>
             </ul>
         </div>
 
@@ -31,23 +33,28 @@
 
 <script>
 export default {
-    props: ['labelName', 'placeholder', 'content', 'clearInput'],
+    props: ['labelName', 'placeholder', 'content', 'clearInput', 'checkedOptions'],
+    emits: ['update:checkedOptions', 'inputCleared'],
     data() {
         return {
-            checkedOptions: [],
+            dropdownCheckedOptions: [],
             showDropdown: false,
         }
     },
 
+
     watch: {
         clearInput() {
             if (this.clearInput) {
-                // console.log("Clearing inputs...")
+                this.dropdownCheckedOptions = [];
                 this.showDropdown = false;
-                this.checkedOptions = [];
                 this.$emit("inputCleared");
             }
 
+        },
+
+        dropdownCheckedOptions(checkedOption) {
+            this.$emit('update:checkedOptions', checkedOption)
         }
     }
 }
@@ -55,7 +62,7 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 .dropdown-wrapper {
     display: flex;
     flex-direction: column;
@@ -99,5 +106,9 @@ export default {
     border-radius: 5px;
     padding: 5px;
     font-size: 14px;
+}
+
+.item-list p {
+    font-size: 0.85em;
 }
 </style>

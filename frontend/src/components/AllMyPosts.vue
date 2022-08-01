@@ -4,7 +4,8 @@
     <button @click="showAllMyPosts">show</button> -->
     <!-- <div v-if="this.myposts !== undefined"> -->
     <!-- {{this.posts}} -->
-    <Post v-for="post in this.posts" :key="post.id" v-bind:postData="post" />
+    <Post v-if="posts" v-for="post in this.posts" :key="post.id" v-bind:postData="post" />
+    <p class="additional-info large" v-else>No posts to show</p>
     <!-- </div> -->
 
 </template>

@@ -1,7 +1,10 @@
 <template>
 
   <div class="sign-in__wrapper">
-    <img src="../assets/toa-heftiba-l_ExpFwwOEg-unsplash.jpg" alt="people hanging out">
+    <div>
+      <img src="../assets/toa-heftiba-l_ExpFwwOEg-unsplash.jpg" alt="people hanging out">
+
+    </div>
 
     <div class="sign-in">
       <h1>Sign in</h1>
@@ -10,7 +13,6 @@
           <label for="username">Email</label>
           <input type="email" id="email" v-model="signInForm.login" required>
         </div>
-
         <div class="form-input">
           <label for="password">Password</label>
           <input type="password" id="password" v-model="signInForm.password" required>

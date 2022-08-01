@@ -11,11 +11,11 @@ type NotifRepository struct {
 
 // NOT TESTED
 func (repo *NotifRepository) Save(notification models.Notification) error {
-	stmt, err := repo.DB.Prepare("INSERT INTO notifications (notif_id, user_id,type,content) values (?,?,?,?)")
+	stmt, err := repo.DB.Prepare("INSERT INTO notifications (notif_id, user_id,type,content,sender) values (?,?,?,?,?)")
 	if err != nil {
 		return err
 	}
-	if _, err := stmt.Exec(notification.ID, notification.TargetID, notification.Type, notification.Content); err != nil {
+	if _, err := stmt.Exec(notification.ID, notification.TargetID, notification.Type, notification.Content, notification.Sender); err != nil {
 		return err
 	}
 	return nil
@@ -75,4 +75,18 @@ func (repo *NotifRepository) GetGroupId(notificationId string) (string, error) {
 		return groupId, err
 	}
 	return groupId, nil
+}
+
+func (repo *NotifRepository) GetAll(userId string) ([]models.Notification, error) {
+	var notifications = []models.Notification{}
+	rows, err := repo.DB.Query("SELECT content, notif_id, type, sender FROM notifications WHERE user_id = ?;", userId)
+	if err != nil {
+		return notifications, err
+	}
+	for rows.Next() {
+		var notif models.Notification
+		rows.Scan(&notif.Content, &notif.ID, &notif.Type, &notif.Sender)
+		notifications = append(notifications, notif)
+	}
+	return notifications, nil
 }
