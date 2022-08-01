@@ -18,31 +18,10 @@ type Client struct {
 
 func NewClient(conn *websocket.Conn, repos *models.Repositories, ID string) *Client {
 	return &Client{
-<<<<<<< HEAD
-		ID:       ID,
-		conn:     conn,
-		wsServer: wsServer,
-		send:     make(chan []byte, 256),
-	}
-}
-
-/* ----------- main enterypoint for dealing with incoming messages ---------- */
-func (client *Client) handleNewMessage(msgJSON []byte) {
-	var msg WsMessage
-	if err := json.Unmarshal(msgJSON, &msg); err != nil {
-		log.Println(err)
-		return
-	}
-
-	switch msg.Action {
-	case DisconnectAction:
-		client.disconnect()
-=======
 		ID:    ID,
 		conn:  conn,
 		send:  make(chan []byte, 256),
 		repos: repos,
->>>>>>> origin/vue
 	}
 }
 
