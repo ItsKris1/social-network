@@ -21,7 +21,7 @@ export default {
     },
     data() {
         return {
-            posts: {}
+            posts: null
         }
     },
     created() {
@@ -42,7 +42,7 @@ export default {
             })
                 .then((r) => r.json())
                 .then((r) => {
-                    // console.log("response",r);
+                    // console.log("response", r);
                     this.posts = r.posts
                 });
         },

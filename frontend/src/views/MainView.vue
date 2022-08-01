@@ -27,7 +27,7 @@ export default {
 <style>
 #layout {
     display: grid;
-    grid-template-columns: 1fr minmax(min-content, 500px) 1fr;
+    grid-template-columns: 1fr minmax(400px, 500px) 1fr;
     grid-template-areas:
         "groups startpost ."
         "groups posts .";
@@ -35,7 +35,7 @@ export default {
     align-items: flex-start;
     row-gap: 50px;
     column-gap: 50px;
-    margin-top: 100px;
+    margin-top: 50px;
     margin-bottom: 50px;
 }
 

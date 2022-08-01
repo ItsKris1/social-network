@@ -1,7 +1,7 @@
 <template>
 
     <div class="item-list__wrapper" id="groups">
-        <h3>All groups</h3>
+        <h3>Groups</h3>
         <ul class="item-list">
             <li v-for="group in allGroups">
                 <img class="small" src="../assets/icons/users-alt.svg" alt="">

@@ -1,6 +1,7 @@
 <template>
     <div id="navbar">
-        <a id="nav-title" href="/">Social Network</a>
+        <router-link to="/" id="nav-title">Social Network</router-link>
+
     </div>
 </template>
 
@@ -32,5 +33,20 @@ export default {
     color: var(--color-white);
     text-decoration: none;
     font-weight: 400;
+    position: relative;
+}
+
+#nav-title::after {
+    content: "";
+    height: 2.5px;
+    width: 0;
+    display: block;
+    background-color: rgb(132, 148, 236);
+    position: absolute;
+    transition: width 0.35s ease-out;
+}
+
+#nav-title:hover::after {
+    width: 100%;
 }
 </style>

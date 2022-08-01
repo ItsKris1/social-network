@@ -3,7 +3,8 @@
     <div id="navbar">
 
         <div id="nav-titleSearch">
-            <a id="nav-title" href="/">Social Network</a>
+            <!-- <a id="nav-title" href="/">Social Network</a> -->
+            <router-link to="/" id="nav-title">Social Network</router-link>
             <Search />
         </div>
 
@@ -85,6 +86,10 @@ export default {
     background-color: var(--color-blue);
     color: var(--color-white);
 
+    position: relative;
+
+
+
 
 }
 
@@ -93,17 +98,24 @@ export default {
     color: var(--color-white);
 }
 
+
+
+
+
 #nav-title {
     font-size: 24px;
     font-weight: 400;
+    position: relative;
 }
 
 
-.nav-links>li {
+.nav-links li {
     font-weight: 300;
     display: inline-block;
     margin-left: 20px;
     cursor: pointer;
+
+    position: relative;
 }
 
 
@@ -117,6 +129,26 @@ export default {
 }
 
 
+
+
+
+#navbar li::after,
+#nav-title::after {
+    content: "";
+    height: 2.5px;
+    width: 0;
+    display: block;
+
+    position: absolute;
+
+    transition: width 0.35s ease-out;
+}
+
+#navbar li:hover::after,
+#nav-title:hover::after {
+    width: 100%;
+    background-color: rgb(132, 148, 236);
+}
 
 a:link {
     text-decoration: none;

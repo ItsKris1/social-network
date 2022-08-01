@@ -1,6 +1,6 @@
 <template>
 
-    <div v-if="user">
+    <div v-if="user && this.$store.state.id !== ''">
         <div id="layout-profile">
 
             <div class="left-section ">
@@ -13,12 +13,11 @@
                         <p class="user-dateOfBirth" v-if="user.dateOfBirth">{{ user.dateOfBirth }}</p>
                     </div>
 
-                    <div class="btns-wrapper">
+                    <div class="profile-btns">
                         <!-- Privacy and follow/unfollow button-->
                         <PrivacyBtn v-if="isMyProfile" :status="user.status" />
                         <FollowBtn v-else-if="!user.following" @follow="toggleFollowingThisUser" />
                         <UnfollowBtn v-else @unfollow="toggleFollowingThisUser" />
-
                         <!-- Send message button -->
                         <button v-if="showSendButton"
                                 class="btn">Send message
@@ -46,7 +45,6 @@
             <p v-else class="additional-info large"> This profile is private</p>
 
         </div>
-
     </div>
 
 </template>
@@ -64,7 +62,7 @@ export default {
     components: { AllMyPosts, Followers, Following, FollowBtn, PrivacyBtn, UnfollowBtn },
     data() {
         return {
-            user: {},
+            user: null,
             isMyProfile: false,
         }
     },
@@ -74,9 +72,8 @@ export default {
     },
     computed: {
         showProfileData() {
-            return this.user.following || this.isMyProfile || this.user.status === "PUBLIC"
+            return (this.user.following || this.isMyProfile || this.user.status === "PUBLIC") ? true : false
         },
-
         showSendButton() {
             return !this.isMyProfile && this.user.status === "PUBLIC" && !this.user.following
         }
@@ -104,7 +101,7 @@ export default {
 
         async checkProfile() {
             await this.getMyUserID();
-            let myID = this.$store.getters.getId;
+            const myID = this.$store.state.id;
             const profileID = this.$route.params.id;
             this.isMyProfile = (profileID === myID)
         },
@@ -116,14 +113,12 @@ export default {
         }
     },
     watch: { //watching changes in route
-
-        // showProfileData() {
-        //     this.getUserData();
-        // },
         $route() {
-            // this.getMyUserID()
-            this.getUserData();
-            this.checkProfile();
+            if (this.$route.name === "Profile") {
+                this.getUserData();
+                this.checkProfile();
+            }
+
         }
     }
 }
@@ -134,7 +129,7 @@ export default {
     display: grid;
     grid-template-columns: 1fr minmax(min-content, 550px) 1fr;
     column-gap: 50px;
-    margin-top: 100px;
+    margin-top: 50px;
     justify-items: center;
 
 }
@@ -184,27 +179,7 @@ export default {
     gap: 10px;
 }
 
-
-
-
-
-.about {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: var(--container-padding);
-    gap: 15px;
-
-    background: var(--color-white);
-    box-shadow: var(--container-shadow);
-    border-radius: var(--container-border-radius);
-    width: 550px;
-
-}
-
-.btns-wrapper {
+.profile-btns {
     display: flex;
     flex-direction: column;
     align-items: center;
