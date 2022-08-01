@@ -149,18 +149,11 @@ func (handler *Handler) GroupPosts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	/* -------- check if current user is a member or admin  of the group -------- */
-	var isMember = false
 	isAdmin, err := handler.repos.GroupRepo.IsAdmin(groupId, userId)
+	isMember, err := handler.repos.GroupRepo.IsMember(groupId, userId)
 	if err != nil {
 		utils.RespondWithError(w, "Error on getting data", 200)
 		return
-	}
-	if !isAdmin {
-		isMember, err = handler.repos.GroupRepo.IsMember(groupId, userId)
-		if err != nil {
-			utils.RespondWithError(w, "Error on getting data", 200)
-			return
-		}
 	}
 	if !isMember && !isAdmin {
 		utils.RespondWithError(w, "Not a member", 200)
@@ -295,6 +288,17 @@ func (handler *Handler) NewGroupPost(w http.ResponseWriter, r *http.Request) {
 		Content:  r.PostFormValue("body"),
 		GroupID:  r.PostFormValue("groupId"),
 		AuthorID: userId,
+	}
+	/* -------- check if current user is a member or admin  of the group -------- */
+	isAdmin, err := handler.repos.GroupRepo.IsAdmin(newPost.GroupID, userId)
+	isMember, err := handler.repos.GroupRepo.IsMember(newPost.GroupID, userId)
+	if err != nil {
+		utils.RespondWithError(w, "Error on getting data", 200)
+		return
+	}
+	if !isMember && !isAdmin {
+		utils.RespondWithError(w, "Not a member", 200)
+		return
 	}
 	/* ------------------------ save image in filesystem ------------------------ */
 	newPost.ImagePath = utils.SaveImage(r)
@@ -436,6 +440,18 @@ func (handler *Handler) NewGroupInvite(wsServer *ws.Server, w http.ResponseWrite
 		utils.RespondWithError(w, "Error on form submittion", 200)
 		return
 	}
+	userId := r.Context().Value(utils.UserKey).(string)
+	/* -------- check if current user is a member or admin  of the group -------- */
+	isAdmin, err := handler.repos.GroupRepo.IsAdmin(group.ID, userId)
+	isMember, err := handler.repos.GroupRepo.IsMember(group.ID, userId)
+	if err != nil {
+		utils.RespondWithError(w, "Error on getting data", 200)
+		return
+	}
+	if !isMember && !isAdmin {
+		utils.RespondWithError(w, "Not a member", 200)
+		return
+	}
 	for i := 0; i < len(group.Invitations); i++ {
 		// save each invitation in db
 		newNotif := models.Notification{
@@ -443,7 +459,7 @@ func (handler *Handler) NewGroupInvite(wsServer *ws.Server, w http.ResponseWrite
 			TargetID: group.Invitations[i],
 			Type:     "GROUP_INVITE",
 			Content:  group.ID,
-			Sender:   r.Context().Value(utils.UserKey).(string),
+			Sender:   userId,
 		}
 		err = handler.repos.NotifRepo.Save(newNotif)
 		if err != nil {
