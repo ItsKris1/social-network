@@ -5,6 +5,7 @@ export default createStore({
   //------------------------------------- state is like a variables, which hold a values.
   state: {
     id: "",
+    wsConn: null,
     profileInfo: {},
     myFollowers: null,
     posts: {
@@ -110,6 +111,9 @@ export default createStore({
     updateGroupPosts(state, posts) {
       state.posts.groupPosts = posts;
     },
+    updateWebSocketConn(state, wsConn) {
+      state.wsConn = wsConn
+    }
   },
   //------------------------------------------Actions
   actions: {
@@ -214,6 +218,8 @@ export default createStore({
       context.commit("updateMyFollowers", data.users)
 
     },
+
+
     async getGroupPosts() {
       await fetch(
         "http://localhost:8081/groupPosts?groupId=" +
@@ -229,6 +235,20 @@ export default createStore({
           this.commit("updateGroupPosts", posts);
         });
     },
+
+    createWebSocketConn({ commit }) {
+      const ws = new WebSocket("ws://localhost:8081/ws");
+      ws.addEventListener("open", () => {
+        console.log("Connection has established")
+      })
+
+      ws.addEventListener("message", (e) => {
+        console.log("Message recieved", e.data)
+      })
+
+      commit("updateWebSocketConn", ws)
+    },
+
   },
   modules: {},
 });

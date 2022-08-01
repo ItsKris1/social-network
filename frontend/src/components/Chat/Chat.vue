@@ -1,38 +1,24 @@
 <template>
 
     <div class="messaging-wrapper" ref="messagingWrapper">
-        <ChatBox v-for="chat in chats" :name="chat.name" @closeChat="removeChat" :key="chat.id"></ChatBox>
+        <ChatBox v-for="chat in chats" :name="chat.name" :userid="chat.userid" @closeChat="removeChat"
+                 :key="chat.userid"></ChatBox>
 
-        <div class="messaging" @click="toggleShowContent">
+        <div class=" messaging" @click="toggleShowContent">
 
             <div class="messaging-header">
                 <p>Messaging</p>
                 <i class="uil uil-angle-up" :class="{ rotate: showContent }"></i>
             </div>
 
-            <div class="messaging-content" v-show="showContent">
+            <div class="messaging-content" v-show="showContent" v-if="usersIFollow.length > 0">
                 <ul class="item-list">
-                    <li>
+
+                    <li v-for="user in usersIFollow">
                         <div class="user-picture small"></div>
-                        <div class="item-text" @click.stop="openChat">User 1</div>
-                    </li>
-                    <li>
-                        <div class="user-picture small"></div>
-                        <div class="item-text" @click.stop="openChat">User 2</div>
-                    </li>
-                    <li>
-                        <div class="user-picture small"></div>
-                        <div class="item-text" @click.stop="openChat">User 3</div>
+                        <div class="item-text" @click.stop="openChat($event, user.id)">{{ user.nickname }}</div>
                     </li>
 
-                    <li>
-                        <div class="user-picture small"></div>
-                        <div class="item-text" @click.stop="openChat">User 4</div>
-                    </li>
-                    <li>
-                        <div class="user-picture small"></div>
-                        <div class="item-text" @click.stop="openChat">User 5</div>
-                    </li>
                 </ul>
 
                 <ul class="item-list">
@@ -66,20 +52,50 @@ export default {
         return {
             showContent: false,
             chats: [],
-            chatID: 0,
+            usersIFollow: [],
+
         }
     },
 
+    mounted() {
+        // console.log(this.$store.state.wsConn)
+        // console.log(this.$store.state.wsConn)
+
+        // this.wsConn.addEventListener("message", (e) => {
+        //     console.log(e.data)
+        // })
+
+
+    },
+
+    created() {
+        this.getUsersIFollow();
+    },
+
+
     methods: {
+        async getUsersIFollow() {
+            await this.$store.dispatch("getMyUserID");
+
+            const response = await fetch('http://localhost:8081/following?userId=' + this.$store.state.id, {
+                credentials: 'include'
+            });
+
+            const data = await response.json();
+
+            this.usersIFollow = data.users;
+
+        },
+
+
         toggleShowContent() {
             // console.log("Content toggled!")
             this.showContent = !this.showContent
         },
 
-        openChat(e) {
+        openChat(e, userid) {
             // console.log("Trying to add a chatbox")
             // console.log(e.target.textContent)
-
             const found = this.chats.some(chat => chat.name === e.target.textContent);
             if (found) {
                 return
@@ -89,11 +105,10 @@ export default {
                 this.chats.shift();
             }
             this.chats.push({
-                id: this.chatID,
+                "userid": userid,
                 "name": e.target.textContent,
             });
 
-            this.chatID++;
 
 
             // this.$nextTick(() => {

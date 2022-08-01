@@ -20,16 +20,17 @@ export default {
                     return response.json()
                 }))
                 // .then((json=>console.log(json)))
-                .then((json=>{
-                    if (json.message === "Session active"){
+                .then((json => {
+                    if (json.message === "Session active") {
                         // console.log('yes');
                         this.$router.push("/main")
-                    }else{
+                    } else {
                         // console.log('no');
                         this.$router.push("/sign-in")
                     }
                 }))
-        }
+        },
+
     }
 }
 </script>

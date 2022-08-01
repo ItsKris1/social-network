@@ -12,7 +12,7 @@
 
         </div>
         <div class=" send-message">
-            <form @submit.prevent="sendMessage">
+            <form @submit.prevent="sendMessage" autocomplete="off">
                 <input type="text" name="sent-message" id="sent-message__input" placeholder="Send a message"
                        ref="sendMessageInput">
                 <button type="submit"><i class="uil uil-message"></i></button>
@@ -26,27 +26,41 @@
 
 <script>
 export default {
-    props: ["name"],
+    props: ["name", "userid"],
     emits: ['closeChat'],
 
     data() {
         return {
             allMessages: [],
+            wsConn: this.$store.state.wsConn
         }
     },
 
     mounted() {
         console.log("Mounted!")
+        console.log("userid", this.userid)
+        this.wsConn.addEventListener("message", (e) => {
+            console.log(e.data)
+            console.log("loooooooool")
+        })
+
+        console.log(this.wsConn)
     },
 
     methods: {
-        sendMessage() {
+        async sendMessage() {
             // if (this.allMessages.length !== 0 && this.allMessages[this.allMessages.length - 1].type === "sent") {
             //     console.log("Subsequent sent message")
             // } else {
             //     console.log("Create div")
 
             // }
+
+            // const wsConn = this.$store.state.wsConn;
+
+
+            // console.log("userid", this.userid)
+
 
             const sendMessageInput = this.$refs.sendMessageInput;
             // console.log("Message", sendMessageInput.value)
@@ -55,6 +69,27 @@ export default {
             if (sendMessageInput.value === "") {
                 return
             }
+
+            const msgObj = {
+                type: "PERSON",
+                receiverId: this.userid,
+                content: sendMessageInput.value
+            }
+
+            console.log(msgObj)
+            const response = await fetch("http://localhost:8081/newMessage", {
+                body: JSON.stringify(msgObj),
+                method: "POST",
+                credentials: "include"
+            });
+
+            const data = await response.json();
+
+            console.log("Data", data)
+
+
+
+
             this.allMessages.push({ msg: sendMessageInput.value, type: "sent" })
 
             sendMessageInput.value = "";
@@ -76,6 +111,9 @@ export default {
 
         },
 
+        getRecieverID() { },
+
+
         recieveMsg() {
             let isSequentMessage = false; // tracks if user sent more than two messages in a row
 
@@ -83,6 +121,7 @@ export default {
                 isSequentMessage = true;
             }
 
+            this.ws
             this.allMessages.push({ msg: "Hey! How are you mate?", type: "recieved", sequentMessage: isSequentMessage })
         },
 

@@ -34,6 +34,7 @@ func (client *Client) handleNewMessage(msgJSON []byte) {
 		log.Println(err)
 		return
 	}
+
 	switch msg.Action {
 	case DisconnectAction:
 		client.disconnect()

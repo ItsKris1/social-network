@@ -20,6 +20,13 @@ import MultiselectDropdown from '@/components/MultiselectDropdown.vue'
 export default {
     name: 'MainView',
     components: { NavBarOn, NewPost, AllPosts, Groups, NewGroup, MultiselectDropdown },
+
+
+
+    mounted() {
+        this.$store.dispatch("createWebSocketConn")
+    },
+    methods: {}
 }
 
 </script>

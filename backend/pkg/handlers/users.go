@@ -210,6 +210,7 @@ func (handler *Handler) Follow(wsServer *ws.Server, w http.ResponseWriter, r *ht
 				client.SendNotification(notification)
 			}
 		}
+
 	}
 	utils.RespondWithSuccess(w, "Following successful", 200)
 }

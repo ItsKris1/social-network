@@ -110,18 +110,8 @@ export default {
             })
                 .then((r => r.json()))
                 .then((json => {
-<<<<<<< HEAD
-<<<<<<< HEAD
-                    console.log(json);
-                    console.log("getGroupInfo", json);
-=======
                     // console.log(json);
                     // console.log("getGroupInfo",json);
->>>>>>> origin/vue
-=======
-                    // console.log(json);
-                    // console.log("getGroupInfo",json);
->>>>>>> aed6601ed5e3af77958986154f740b74eeb7cf8f
                     this.groupData = json.groups[0];
                 }));
         },

@@ -6,6 +6,7 @@ import (
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
 	ws "social-network/pkg/wsServer"
+	"fmt"
 )
 
 // get all previous messages for chat
@@ -58,12 +59,15 @@ func (handler *Handler) NewMessage(wsServer *ws.Server, w http.ResponseWriter, r
 		utils.RespondWithError(w, "Error on reading the incomming message", 200)
 		return
 	}
+
+	fmt.Println("Msg", msg.ReceiverId)
 	/* -------------------- attach sender id and generate new id ------------------- */
 	msg.SenderId = r.Context().Value(utils.UserKey).(string)
 	msg.ID = utils.UniqueId()
 	/* ---------------------------- save in database ---------------------------- */
 	err = handler.repos.MsgRepo.Save(msg)
 	if err != nil {
+		fmt.Println(err)
 		utils.RespondWithError(w, "Error on saving message", 200)
 		return
 	}
