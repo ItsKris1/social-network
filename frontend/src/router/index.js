@@ -30,6 +30,11 @@ const routes = [
     name: "Profile",
     component: () => import("../views/ProfileView.vue"),
   },
+  {
+    path: "/group/:id",
+    name: "Group",
+    component: () => import("../views/GroupView.vue"),
+  },
 ];
 
 const router = createRouter({

@@ -7,6 +7,7 @@
 export default {
     name: 'FollowBtn',
     props: ['profileId'],
+    emits: ["follow"],
     data() {
         return {
             userid: "",
@@ -31,11 +32,14 @@ export default {
                 credentials: "include",
             })
                 .then((r) => r.json())
-                .then((json => console.log("server response:", json)))
+                .then((json => {
+                    this.$emit("follow")
+                    console.log("server response:", json)
+                }))
         },
-        unfollow() {
-            console.log('unsubscribe function')
-        },
+        // unfollow() {
+        //     console.log('unsubscribe function')
+        // },
         async getLoggedUserId() {
             await fetch("http://localhost:8081/currentUser", {
                 credentials: "include",

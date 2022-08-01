@@ -1,13 +1,15 @@
 <template>
     <div class="item-list__wrapper" id="following">
         <h3>Following</h3>
-        <ul class="item-list users">
+        <ul class="item-list users" v-if="this.following">
             <li v-for="user in this.following" :key="user.id">
                 <div class="user-picture small"></div>
                 <div class="item-text">{{ user.nickname }}</div>
             </li>
             <!--  -->
         </ul>
+
+        <p class="additional-info" v-else>Not following anyone</p>
     </div>
     <!-- 
     <div>

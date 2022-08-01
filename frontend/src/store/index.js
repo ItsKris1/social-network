@@ -1,28 +1,37 @@
 import { createStore } from "vuex";
+import router from "@/router";
 
 export default createStore({
   //------------------------------------- state is like a variables, which hold a values.
   state: {
+    id: "",
     profileInfo: {},
-    // notifications: {
-    //   isNotificationsOpen: false,
-    // },
+    myFollowers: null,
     posts: {
       allposts: [],
       myposts: [],
+      groupPosts: [],
     },
     users: {
-
       allusers: [],
+    },
+    groups: {
+      allGroups: [],
     },
   },
   //------------------------------------ getters is a way for check state values.
   getters: {
+    getId(state) {
+      return state.id;
+    },
     allPosts(state) {
       return state.posts.allposts;
     },
     myPosts(state) {
       return state.posts.myposts;
+    },
+    groupPosts(state) {
+      return state.posts.groupPosts;
     },
     userInfo(state) {
       return state.profileInfo;
@@ -30,8 +39,13 @@ export default createStore({
     allUsers(state) {
       return state.users.allusers;
     },
+    allGroups(state) {
+      return state.groups.allGroups;
+    },
     filterUsers: (state) => (searchquery) => {
-      if (searchquery === "") { return [] }
+      if (searchquery === "") {
+        return [];
+      }
       let arr = [];
       state.users.allusers.filter((user) => {
         if (user.nickname.includes(searchquery)) {
@@ -40,6 +54,33 @@ export default createStore({
       });
       return arr;
     },
+
+    filterGroups: (state) => (searchquery) => {
+      if (searchquery === "") {
+        return [];
+      }
+      let arr = [];
+      state.groups.allGroups.filter((group) => {
+        if (group.name.includes(searchquery)) {
+          arr.push(group);
+        }
+      });
+      return arr;
+    },
+
+    getMyFollowersNames({ myFollowers }) {
+      if (myFollowers === null) {
+        return null
+      }
+
+      return myFollowers.map((follower) => {
+        if (follower.nickname) {
+          return follower.nickname
+        } else {
+          return follower.firstName + follower.lastName
+        }
+      })
+    }
   },
   //-------------------------------------- mutations is a way for change state.
   mutations: {
@@ -54,6 +95,20 @@ export default createStore({
     },
     updateAllUsers(state, users) {
       state.users.allusers = users;
+    },
+    updateAllGroups(state, groups) {
+      state.groups.allGroups = groups;
+    },
+
+    updateMyFollowers(state, followers) {
+      state.myFollowers = followers;
+    },
+
+    updateMyUserID(state, id) {
+      state.id = id;
+    },
+    updateGroupPosts(state, posts) {
+      state.posts.groupPosts = posts;
     },
   },
   //------------------------------------------Actions
@@ -92,21 +147,27 @@ export default createStore({
           const myposts = r.posts;
           this.commit("updateMyPosts", myposts);
           // console.log(myposts);
-        })
+        });
 
       // .then((json) => console.log("get posts -", json));
     },
-    async getMyProfileInfo() {
-      let id = "";
+
+    async getMyUserID({ commit }) {
       await fetch("http://localhost:8081/currentUser", {
         credentials: "include",
       })
         .then((r) => r.json())
         .then((json) => {
-          id = json.users[0].id;
+          // console.log("JSON response", json)
+          commit("updateMyUserID", json.users[0].id)
         });
+    },
 
-      await fetch("http://localhost:8081/userData?userId=" + id, {
+    async getMyProfileInfo(context) {
+      await context.dispatch("getMyUserID");
+
+      const userID = context.state.id;
+      await fetch("http://localhost:8081/userData?userId=" + userID, {
         credentials: "include",
       })
         .then((r) => r.json())
@@ -126,6 +187,46 @@ export default createStore({
           let users = json.users;
           this.commit("updateAllUsers", users);
           // console.log("allUsers:", json.users);
+        });
+    },
+    async getAllGroups() {
+      await fetch("http://localhost:8081/allGroups", {
+        credentials: "include",
+      })
+        .then((r) => r.json())
+        .then((json) => {
+          let groups = json.groups;
+          this.commit("updateAllGroups", groups);
+          // console.log("Allgroups:", json.groups);
+        });
+    },
+
+    async getMyFollowers(context) {
+      await context.dispatch("getMyProfileInfo");
+      const myID = context.state.profileInfo.id;
+
+      const response = await fetch(`http://localhost:8081/followers?userId=${myID}`, {
+        credentials: 'include'
+      });
+
+      const data = await response.json();
+
+      context.commit("updateMyFollowers", data.users)
+
+    },
+    async getGroupPosts() {
+      await fetch(
+        "http://localhost:8081/groupPosts?groupId=" +
+        router.currentRoute.value.params.id,
+        {
+          credentials: "include",
+        }
+      )
+        .then((r) => r.json())
+        .then((json) => {
+          // console.log(json)
+          let posts = json.posts;
+          this.commit("updateGroupPosts", posts);
         });
     },
   },

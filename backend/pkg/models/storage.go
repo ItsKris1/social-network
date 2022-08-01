@@ -9,4 +9,5 @@ type Repositories struct {
 	CommentRepo CommentRepository
 	NotifRepo   NotifRepository
 	EventRepo   EventRepository
+	MsgRepo     MsgRepository
 }

@@ -1,8 +1,10 @@
  <template>
     <!-- <button @click="showAllPosts">showFetch</button> -->
-    <div id="all_posts" v-if="allPosts !== undefined">
+    <div id="all_posts" v-if="$store.state.posts.allposts.length !== 0">
         <Post v-for="post in allPosts" :key="post.id" v-bind:postData="post" />
     </div>
+
+    <p v-else>No posts</p>
 
 </template>
 
@@ -14,9 +16,10 @@ export default {
     created() {
         this.$store.dispatch('fetchPosts')
     },
+
+
     computed: mapGetters(['allPosts']),
     components: { Post },
-    methods: {},
 }
 </script>
 

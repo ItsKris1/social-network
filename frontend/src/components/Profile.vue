@@ -1,6 +1,6 @@
 <template>
 
-    <div v-if="user">
+    <div v-if="user && this.$store.state.id !== ''">
         <div id="layout-profile">
 
             <div class="left-section ">
@@ -13,23 +13,36 @@
                         <p class="user-dateOfBirth" v-if="user.dateOfBirth">{{ user.dateOfBirth }}</p>
                     </div>
 
-                    <PrivacyBtn v-if="isMyProfile" :status="user.status" />
-                    <FollowBtn v-else />
+                    <div class="profile-btns">
+                        <!-- Privacy and follow/unfollow button-->
+                        <PrivacyBtn v-if="isMyProfile" :status="user.status" />
+                        <FollowBtn v-else-if="!user.following" @follow="toggleFollowingThisUser" />
+                        <UnfollowBtn v-else @unfollow="toggleFollowingThisUser" />
+                        <!-- Send message button -->
+                        <button v-if="showSendButton"
+                                class="btn">Send message
+                            <i class="uil uil-message"></i></button>
+                    </div>
 
                 </div>
-                <div class="multiple-item-list">
+                <div class="multiple-item-list" v-if="showProfileData">
                     <Following />
                     <Followers />
                 </div>
+
             </div>
 
-            <div class="middle-section ">
+            <div class="middle-section" v-if="showProfileData">
+
                 <div class="about" v-if="user.about !== ''">
                     <h2 class="about-title">About me</h2>
                     <p class="about-text">{{ user.about }}</p>
                 </div>
                 <AllMyPosts v-bind:userid="this.user.id" />
+
             </div>
+
+            <p v-else class="additional-info large"> This profile is private</p>
 
         </div>
     </div>
@@ -42,10 +55,11 @@ import Following from './Following.vue'
 import Followers from './Followers.vue'
 import FollowBtn from './FollowBtn.vue'
 import PrivacyBtn from './PrivacyBtn.vue'
+import UnfollowBtn from './UnfollowBtn.vue'
 // import { mapGetters } from 'vuex'
 export default {
     name: 'Profile',
-    components: { AllMyPosts, Followers, Following, FollowBtn, PrivacyBtn },
+    components: { AllMyPosts, Followers, Following, FollowBtn, PrivacyBtn, UnfollowBtn },
     data() {
         return {
             user: null,
@@ -53,74 +67,58 @@ export default {
         }
     },
     created() {
-        // this.getUserInfo()
-        this.getUserId()
+        this.getUserData()
         this.checkProfile()
     },
     computed: {
-        // ...mapGetters(['userInfo']),
-        // ...getUserId()
+        showProfileData() {
+            return (this.user.following || this.isMyProfile || this.user.status === "PUBLIC") ? true : false
+        },
+        showSendButton() {
+            return !this.isMyProfile && this.user.status === "PUBLIC" && !this.user.following
+        }
     },
 
+
+
     methods: {
-        getUserInfo() {
-            this.$store.dispatch('getMyProfileInfo')
-        },
-        async getUserId() {
+        async getUserData() {
             await fetch("http://localhost:8081/userData?userId=" + this.$route.params.id, {
                 credentials: "include",
             })
                 .then((r) => r.json())
                 .then((json) => {
-                    // console.log("profile.vue/getuserid",json);
                     this.user = json.users[0];
-                    // console.log("user", this.user)
+                    // console.log("User", this.user)
 
-                    // if (this.$route.params.id === this.user.id) {
-                    //     console.log("my user")
-                    // }
-                    // console.log(userInfo);
-                    // this.commit("updateProfileInfo", userInfo);
-                    // console.log("user profile info -", json);
                 });
-            // this.isOwnerProfile()
+
         },
-        // isOwnerProfile() {
-        //     console.log("cookie",document.cookie);
-        //     console.log("user id",this.user.id);
-        //     let activeCookie = document.cookie.slice(11)
-        //     if (activeCookie === this.user.id) {
-        //         console.log("It's a owner");
-        //     } else { console.log("It's NOT a owner") }
 
-        // }
-
-        async getLoggedUserId() {
-            const response = await fetch("http://localhost:8081/currentUser", {
-                credentials: "include",
-            })
-
-            const data = await response.json();
-            this.loggedUserID = data.users[0].id;
-
-            return data.users[0].id
-
-            // .then((r) => r.json())
-            // .then((json => {
-            //     this.loggedUserID = json.users[0].id
-            // }))
+        async getMyUserID() {
+            await this.$store.dispatch("getMyUserID")
         },
 
         async checkProfile() {
+            await this.getMyUserID();
+            const myID = this.$store.state.id;
             const profileID = this.$route.params.id;
-            const loggedUserID = await this.getLoggedUserId();
-            this.isMyProfile = (profileID === loggedUserID)
+            this.isMyProfile = (profileID === myID)
+        },
+
+
+        toggleFollowingThisUser() {
+            this.getUserData();
+            this.user.following = !this.user.following
         }
     },
     watch: { //watching changes in route
         $route() {
-            this.getUserId()
-            this.checkProfile();
+            if (this.$route.name === "Profile") {
+                this.getUserData();
+                this.checkProfile();
+            }
+
         }
     }
 }
@@ -131,14 +129,15 @@ export default {
     display: grid;
     grid-template-columns: 1fr minmax(min-content, 550px) 1fr;
     column-gap: 50px;
-    margin-top: 100px;
-    justify-items: flex-end;
+    margin-top: 50px;
+    justify-items: center;
 
 }
 
 .middle-section {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 50px;
 }
 
@@ -148,6 +147,7 @@ export default {
     gap: 50px;
     max-width: max-content;
     min-width: min-content;
+    justify-self: flex-end;
 
 }
 
@@ -179,22 +179,10 @@ export default {
     gap: 10px;
 }
 
-
-
-
-
-.about {
+.profile-btns {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    text-align: center;
-    padding: var(--container-padding);
-    gap: 15px;
-
-    background: var(--color-white);
-    box-shadow: var(--container-shadow);
-    border-radius: var(--container-border-radius);
-
+    gap: 10px;
 }
 </style>

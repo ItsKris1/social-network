@@ -4,7 +4,8 @@
     <button @click="showAllMyPosts">show</button> -->
     <!-- <div v-if="this.myposts !== undefined"> -->
     <!-- {{this.posts}} -->
-    <Post v-for="post in this.posts" :key="post.id" v-bind:postData="post" />
+    <Post v-if="posts" v-for="post in this.posts" :key="post.id" v-bind:postData="post" />
+    <p class="additional-info large" v-else>No posts to show</p>
     <!-- </div> -->
 
 </template>
@@ -20,7 +21,7 @@ export default {
     },
     data() {
         return {
-            posts: {}
+            posts: null
         }
     },
     created() {
@@ -41,7 +42,7 @@ export default {
             })
                 .then((r) => r.json())
                 .then((r) => {
-                    // console.log("response",r);
+                    // console.log("response", r);
                     this.posts = r.posts
                 });
         },

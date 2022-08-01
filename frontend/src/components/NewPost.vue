@@ -1,53 +1,52 @@
 
 
 <template>
-    <button class="start-post" @click="toggle">
+
+    <button class="start-post" @click="toggleModal">
         <span>Start post</span>
         <i class="uil uil-edit"></i>
     </button>
 
-    <Modal v-show="isOpen" @closeModal="toggle">
+    <Modal v-show="isOpen" @closeModal="toggleModal">
         <template #title>Create a post</template>
         <template #body>
-            <form @submit.prevent="submitPost" id="newpost">
-                <div class="form-input">
+            <form @submit.prevent="submitNewPost" id="newpost">
+                <div class="form-input" v-if="!this.isGroupPage">
                     <label for="post_privacy">Post privacy</label>
                     <div class="select-wrapper">
                         <img src="../assets/icons/angle-down.svg" class="dropdown-arrow">
 
-                        <select v-model="newpost.privacy" @change="getFollowers" id="post_privacy"
-                                required>
-                            <option value="" selected disabled hidden>Choose here</option>
-                            <option value="public" selected>Everyone</option>
+                        <select id="post_privacy" v-model="newpost.privacy" required>
+                            <option value="" selected hidden>Choose here</option>
+                            <option value="public">Everyone</option>
                             <option value="private">Followers</option>
                             <option value="almost-private">Choosen followers</option>
                         </select>
 
                     </div>
 
-                    <div v-if="newpost.privacy === 'almost-private'">
-
-                    </div>
+                    <MultiselectDropdown v-if="newpost.privacy === 'almost-private'"
+                                         v-model:checkedOptions="newpost.checkedFollowers"
+                                         placeholder="Select followers"
+                                         :content="getMyFollowersNames" :clearInput="clearInput"
+                                         @inputCleared="toggleClearInput" />
                 </div>
 
                 <div class="form-input">
                     <label for="description">Description</label>
-                    <textarea id="description" name="description" rows="4" cols="50" v-model="newpost.body"
+
+                    <textarea id="description" v-model="newpost.body" rows="4" cols="50"
                               placeholder="What are you thinking?" required></textarea>
-                </div>
-
-                <div class="btns-wrapper">
-
-                    <label for="upload-image">
-                        <img src="../assets/addimg.png" />
-                    </label>
-                    <input id="upload-image" @change="checkPicture" type="file"
-                           accept="image/png, image/gif, image/jpeg" />
-
-                    <button class="btn" type="submit">Post</button>
 
                 </div>
+
+                <FileUpload v-model:file=newpost.image
+                            @inputCleared="toggleClearInput"
+                            :clearInput="clearInput"
+                            labelName="Image" />
+
             </form>
+            <button class="btn submitPost" type="submit" form="newpost">Post</button>
 
         </template>
     </Modal>
@@ -58,106 +57,130 @@
 
 <script>
 import Modal from './Modal.vue'
+import MultiselectDropdown from './MultiselectDropdown.vue';
+import FileUpload from './FileUpload.vue';
 export default {
     components: {
-        Modal
+        Modal,
+        MultiselectDropdown,
+        FileUpload
     },
     name: 'Newpost',
     data() {
         return {
             isOpen: false,
+            isGroupPage: null,
             newpost: {
                 privacy: "",
                 body: "",
+                checkedFollowers: null,
                 image: null,
             },
-            fetchedFollowers: [],
+            clearInput: false,
         }
     },
 
+    created() {
+        this.getMyFollowers();
+        this.isGroupPageCheck()
+    },
+
+    computed: {
+        getMyFollowersNames() {
+            return this.$store.getters.getMyFollowersNames;
+        },
+
+    },
+
     methods: {
-        toggle() {
-            this.newpost.privacy = "";
-            this.newpost.body = "";
-            this.newpost.image = "";
+        toggleModal() {
+            // if modal was open, clear the form
+            if (this.isOpen) { this.clearForm(); }
             this.isOpen = !this.isOpen
         },
 
-        checkPicture(e) {
-            let files = e.target.files
-            if (!files.length) {
-                return;
-            }
-            const file = files[0]
-
-            const [extension] = file.type.split("/")
-            if ((!(extension == "image"))) {
-                console.log('File is not an image.');
-                this.$toast.open({
-                    message: 'File is not an image.',
-                    type: 'error', //One of success, info, warning, error, default
-                })
-                return
-            }
-            if (file.size > 2048000) {
-                console.log('File size is more than 2 MB.');
-                this.$toast.open({
-                    message: 'File size is more than 2 MB.',
-                    type: 'error', //One of success, info, warning, error, default
-                })
-                return
-            }
-            this.newpost.image = file;
-
+        toggleClearInput() {
+            this.clearInput = !this.clearInput
         },
 
-        async getFollowers() {
-            // console.log('fetching followers');
-            await fetch('https://9ec93652-e031-4f3e-a558-86f8ed7d624a.mock.pstmn.io/getfollowers')
-                .then((response => response.json()))
-                .then((json) => {
-                    this.fetchedFollowers = json
-                })
-            // .then((json => console.log(json)))
+
+
+        getMyFollowers() {
+            this.$store.dispatch("getMyFollowers")
+        },
+
+        clearForm() {
+            this.newpost.privacy = "";
+            this.newpost.body = "";
+            this.toggleClearInput();
+        },
+
+        isGroupPageCheck() {
+            if (this.$route.path.includes("group")) {
+                this.isGroupPage = true
+            } else {
+                this.isGroupPage = false
+            }
+
         },
 
         async submitPost() {
-            let formData = new FormData();
-            formData.set('privacy', this.newpost.privacy);
-            formData.set('body', this.newpost.body);
-            formData.set('image', this.newpost.image);
-            // console.log('checkedFollowers: ', this.checkedFollowers);
-            formData.set('checkedfollowers', this.checkedFollowers)
 
-            await fetch('http://localhost:8081/newPost', {
+            let formData = new FormData();
+            formData.set("body", this.newpost.body)
+            formData.set("image", this.newpost.image)
+            formData.set("privacy", this.newpost.privacy)
+            formData.set("checkedfollowers", this.newpost.checkedFollowers)
+
+
+            const response = await fetch('http://localhost:8081/newPost', {
                 method: 'POST',
                 credentials: 'include',
                 body: formData
             })
-            this.$store.dispatch('fetchPosts')
-            console.log('Post submitted');
-
-
-            this.toggle();
+            await this.$store.dispatch('fetchPosts')
+            console.log('Post submitted', await response.json());
+            this.toggleModal();
         },
-    },
+
+        async submitGroupPost() {
+
+            let formData = new FormData();
+            formData.set('groupId', this.$route.params.id)
+            formData.set('body', this.newpost.body);
+            formData.set('image', this.newpost.image);
+
+            await fetch('http://localhost:8081/newGroupPost', {
+                method: 'POST',
+                credentials: 'include',
+                body: formData
+            })
+                .then((r => r.json()))
+            // .then((json => console.log(json)))
+            await this.$store.dispatch('getGroupPosts')
+            this.toggleModal();
+            console.log('Group Post Submitted');
+        },
+
+        submitNewPost() {
+            if (this.isGroupPage) {
+                this.submitGroupPost();
+            } else {
+                this.submitPost();
+            }
+        }
+    }
 }
 </script>
 
-<script setup>
-import { ref } from 'vue'
-const checkedFollowers = ref([])
-</script>
 
-<style>
+<style scoped>
 #newpost {
     display: flex;
     flex-direction: column;
 }
 
-.image-upload>input {
-    display: none;
-}
+
 
 #postBtn {
     width: 600px;
@@ -179,13 +202,33 @@ const checkedFollowers = ref([])
     font-family: inherit;
     font-size: 16px;
     border-radius: var(--container-border-radius);
+    cursor: pointer;
+    transition: box-shadow 0.25s ease-in;
 }
 
 .start-post i {
     font-size: 1.25em;
 }
 
-.select-wrapper {
-    position: relative;
+
+.additional-info {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btns-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.submitPost {
+    margin-left: auto;
+}
+
+.start-post:hover {
+    box-shadow: var(--hover-box-shadow);
 }
 </style>

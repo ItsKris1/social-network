@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
+	ws "social-network/pkg/wsServer"
 	"strings"
 )
 
@@ -127,6 +128,10 @@ func (handler *Handler) GroupEvents(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		utils.RespondWithError(w, "Error on getting event data", 200)
 		return
+	}
+	/* ----------------------- attach author to each event ---------------------- */
+	for i := 0; i < len(events); i++ {
+		events[i].Author, _ = handler.repos.UserRepo.GetDataMin(events[i].AuthorID)
 	}
 	utils.RespondWithEvents(w, events, 200)
 }
@@ -303,7 +308,7 @@ func (handler *Handler) NewGroupPost(w http.ResponseWriter, r *http.Request) {
 }
 
 //handle when new user wants to join the group
-func (handler *Handler) NewGroupRequest(w http.ResponseWriter, r *http.Request) {
+func (handler *Handler) NewGroupRequest(wsServer *ws.Server, w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)
 	// access current user id
 	userId := r.Context().Value(utils.UserKey).(string)
@@ -330,6 +335,7 @@ func (handler *Handler) NewGroupRequest(w http.ResponseWriter, r *http.Request) 
 		TargetID: groupId,
 		Type:     "GROUP_REQUEST",
 		Content:  userId,
+		Sender:   userId,
 	}
 	/* --------------------- check if request already exists -------------------- */
 	exists, err := handler.repos.NotifRepo.CheckIfExists(notification)
@@ -346,8 +352,19 @@ func (handler *Handler) NewGroupRequest(w http.ResponseWriter, r *http.Request) 
 	if err != nil {
 		utils.RespondWithError(w, "Error on saving request", 200)
 	}
+
+	//SEND MESSAGE TO TO GROUP ADMIN IF IS ONLINE
+	admin, err := handler.repos.GroupRepo.GetAdmin(groupId)
+	if err != nil {
+		utils.RespondWithError(w, "Error on finding group admin", 200)
+		return
+	}
+	for client := range wsServer.Clients {
+		if client.ID == admin {
+			client.SendNotification(notification)
+		}
+	}
 	utils.RespondWithSuccess(w, "Request saved successfuly", 200)
-	//SEND MESSAGE TO WEBSOCKET THAT NEW NOTIF IN DB
 }
 
 //NOT TESTED
@@ -405,7 +422,7 @@ func (handler *Handler) ResponseGroupRequest(w http.ResponseWriter, r *http.Requ
 
 // NOT TESTED
 // waits for POST request with groupId and Invitation list included
-func (handler *Handler) NewGroupInvite(w http.ResponseWriter, r *http.Request) {
+func (handler *Handler) NewGroupInvite(wsServer *ws.Server, w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)
 	if r.Method != "POST" {
 		utils.RespondWithError(w, "Error on form submittion", 200)
@@ -426,14 +443,21 @@ func (handler *Handler) NewGroupInvite(w http.ResponseWriter, r *http.Request) {
 			TargetID: group.Invitations[i],
 			Type:     "GROUP_INVITE",
 			Content:  group.ID,
+			Sender:   r.Context().Value(utils.UserKey).(string),
 		}
 		err = handler.repos.NotifRepo.Save(newNotif)
 		if err != nil {
 			utils.RespondWithError(w, "Internal server error", 200)
 			return
 		}
+
+		// search if user has open ws connection and send notification
+		for client := range wsServer.Clients {
+			if client.ID == group.Invitations[i] {
+				client.SendNotification(newNotif)
+			}
+		}
 	}
-	//NOTIFY WEBSOCKET ABOUT NEW NOTIFICATIONs
 	utils.RespondWithSuccess(w, "Invitations saved", 200)
 }
 
