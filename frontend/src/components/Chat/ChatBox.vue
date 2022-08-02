@@ -10,7 +10,7 @@
                 <p :class="getClass(message)">{{ message.msg }}</p>
             </div> -->
 
-            <div class="message" v-for="message in allMessages" :style="msgPosition(message)">
+            <div class="message" v-for="message in ahYes" :style="msgPosition(message)">
                 <!-- <p v-if="!message.sequentMessage && allMessages.length > 0 && message.type === 'recieved'">User 1</p> -->
                 <p>{{ message.content }}</p>
             </div>
@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import { handleError } from 'vue';
 
 export default {
     props: ["name", "userid"],
@@ -43,23 +42,38 @@ export default {
     data() {
         return {
             allMessages: [],
-            // recentMessages: this.$store.state.chatMessages,
         }
     },
 
     created() {
         this.getPreviousMessages();
     },
+
     computed: {
-        recentMessages() {
-            return this.$store.state.chatMessages
+        ahYes() {
+            // this.$nextTick(() => {
+            //     this.$refs.contentDiv.scrollTop = this.$refs.contentDiv.scrollHeight;
+
+            // })
+
+            return [...this.allMessages, ...this.$store.state.chatMessages]
+
         }
     },
 
     watch: {
-        '$store.state.chatMessages'() {
-            console.log("New")
+        ahYes() {
+            this.$nextTick(() => {
+                this.$refs.contentDiv.scrollTop = this.$refs.contentDiv.scrollHeight;
+
+            })
+            // this.$refs.contentDiv.scrollTop = this.$refs.contentDiv.scrollHeight;
+
         }
+        // '$store.state.chatMessages'(newVal) {
+        //     console.log("New")
+        //     this.allMessages = [...this.allMessages, ...newVal]
+        // }
     },
 
     methods: {
@@ -103,15 +117,16 @@ export default {
 
             console.log("Data", data)
 
-            this.allMessages.push({ content: sendMessageInput.value, receiverId: this.userid })
+            // this.allMessages.push({ content: sendMessageInput.value, receiverId: this.userid })
 
+            this.$store.commit("addChatMessage", { content: sendMessageInput.value, receiverId: this.userid })
             sendMessageInput.value = "";
 
             // waits for DOM update
-            this.$nextTick(() => {
-                this.$refs.contentDiv.scrollTop = this.$refs.contentDiv.scrollHeight;
+            // this.$nextTick(() => {
+            //     this.$refs.contentDiv.scrollTop = this.$refs.contentDiv.scrollHeight;
 
-            })
+            // })
 
         },
 

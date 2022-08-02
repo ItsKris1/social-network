@@ -120,6 +120,10 @@ export default createStore({
 
     updateChatMessages(state, msgs) {
       state.chatMessages = msgs
+    },
+
+    addChatMessage(state, msg) {
+      state.chatMessages.push(msg);
     }
   },
   //------------------------------------------Actions
@@ -257,10 +261,13 @@ export default createStore({
           console.log("Message received -> ", data.chatMessage.content)
           // state.chatMessages.push(data.chatMessage.content);
 
+
           commit("updateChatMessages", [...state.chatMessages, data.chatMessage])
         }
 
       })
+
+
 
       commit("updateWebSocketConn", ws)
     },
