@@ -3,20 +3,17 @@
     <div id="navbar">
 
         <div id="nav-titleSearch">
-            <!-- <a id="nav-title" href="/">Social Network</a> -->
-            <router-link to="/main" id="nav-title">Social Network</router-link>
+            <router-link to="/" id="nav-title">Social Network</router-link>
             <Search />
         </div>
-        <!-- v-if="typeof user.id !== 'undefined'" :to="{ name: 'Profile', params: { id: user.id } }" -->
         <ul class="nav-links">
 
             <li>
                 <Notifications />
             </li>
             <li>
-                <router-link to="/profile">
-                    My profile
-                </router-link>
+                <router-link v-if="typeof user.id !== 'undefined'"
+                             :to="{ name: 'Profile', params: { id: user.id } }">My profile</router-link>
             </li>
             <li @click="logout">Log out</li>
         </ul>

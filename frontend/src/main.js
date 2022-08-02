@@ -9,3 +9,4 @@ import './assets/css/main.css'
 
 
 createApp(App).use(store).use(router).use(VueToast).mount('#app')
+

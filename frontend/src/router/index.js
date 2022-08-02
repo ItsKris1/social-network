@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Auth from "../components/Auth.vue";
+import store from "@/store";
 // import SignIn from '../views/SignInView.vue'
 // import RegisterView from '../views/RegisterView.vue'
 
@@ -53,9 +54,15 @@ const router = createRouter({
 });
 
 
-router.beforeEach((to, from) => {
-  console.log("Navigation")
-  return true
-})
+// router.beforeEach((to, from) => {
+
+//   console.log("To", to)
+//   console.log("From", from)
+
+//   if (store.state.wsConn === null) {
+//     store.dispatch("createWebSocketConn")
+//   }
+//   return true
+// })
 
 export default router;
