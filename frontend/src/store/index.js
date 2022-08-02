@@ -6,6 +6,7 @@ export default createStore({
   state: {
     id: "",
     wsConn: null,
+    chatMessages: [],
     profileInfo: {},
     myFollowers: null,
     posts: {
@@ -115,6 +116,10 @@ export default createStore({
     },
     updateWebSocketConn(state, wsConn) {
       state.wsConn = wsConn
+    },
+
+    updateChatMessages(state, msgs) {
+      state.chatMessages = msgs
     }
   },
   //------------------------------------------Actions
@@ -247,7 +252,13 @@ export default createStore({
       ws.addEventListener("message", (e) => {
         const data = JSON.parse(e.data);
         console.log("WS Message", data)
-        state.recievedMessage = data.chatMessage.content;
+        // state.recievedMessage = data.chatMessage.content;
+        if (data.action == "chat") {
+          console.log("Message received -> ", data.chatMessage.content)
+          // state.chatMessages.push(data.chatMessage.content);
+
+          commit("updateChatMessages", [...state.chatMessages, data.chatMessage])
+        }
 
       })
 

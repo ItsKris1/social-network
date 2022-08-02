@@ -60,7 +60,6 @@ func (handler *Handler) NewMessage(wsServer *ws.Server, w http.ResponseWriter, r
 		return
 	}
 
-	fmt.Println("Msg", msg.ReceiverId)
 	/* -------------------- attach sender id and generate new id ------------------- */
 	msg.SenderId = r.Context().Value(utils.UserKey).(string)
 	msg.ID = utils.UniqueId()

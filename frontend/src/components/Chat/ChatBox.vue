@@ -15,6 +15,10 @@
                 <p>{{ message.content }}</p>
             </div>
 
+            <!-- <div class="message" v-for="message in recentMessages" :style="msgPosition(message)">
+                <p>{{ message.content }}</p>
+            </div> -->
+
         </div>
         <div class=" send-message">
             <form @submit.prevent="sendMessage" autocomplete="off">
@@ -30,6 +34,8 @@
 </template>
 
 <script>
+import { handleError } from 'vue';
+
 export default {
     props: ["name", "userid"],
     emits: ['closeChat'],
@@ -37,7 +43,7 @@ export default {
     data() {
         return {
             allMessages: [],
-
+            // recentMessages: this.$store.state.chatMessages,
         }
     },
 
@@ -45,8 +51,14 @@ export default {
         this.getPreviousMessages();
     },
     computed: {
-        recievedMessage() {
-            return this.$store.state.recievedMessage
+        recentMessages() {
+            return this.$store.state.chatMessages
+        }
+    },
+
+    watch: {
+        '$store.state.chatMessages'() {
+            console.log("New")
         }
     },
 
@@ -81,15 +93,15 @@ export default {
                 content: sendMessageInput.value
             }
 
-            await fetch("http://localhost:8081/newMessage", {
+            const response = await fetch("http://localhost:8081/newMessage", {
                 body: JSON.stringify(msgObj),
                 method: "POST",
                 credentials: "include"
             });
 
-            // const data = await response.json();
+            const data = await response.json();
 
-            // console.log("Data", data)
+            console.log("Data", data)
 
             this.allMessages.push({ content: sendMessageInput.value, receiverId: this.userid })
 
