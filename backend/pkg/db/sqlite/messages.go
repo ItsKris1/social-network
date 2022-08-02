@@ -11,7 +11,6 @@ type MsgRepository struct {
 }
 
 func (repo *MsgRepository) Save(msg models.ChatMessage) error {
-	fmt.Println(msg)
 	stmt, err := repo.DB.Prepare("INSERT INTO messages (message_id, sender_id, receiver_id, type, content) values (?,?,?,?,?)")
 	if err != nil {
 		return err
