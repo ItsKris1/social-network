@@ -3,7 +3,6 @@ package db
 import (
 	"database/sql"
 	"social-network/pkg/models"
-	"fmt"
 )
 
 type MsgRepository struct {

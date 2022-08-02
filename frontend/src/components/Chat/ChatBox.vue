@@ -36,7 +36,7 @@
 <script>
 
 export default {
-    props: ["name", "userid"],
+    props: ["name", "userid"], // userid is ID of the user we have chat open with
     emits: ['closeChat'],
 
     data() {
@@ -51,7 +51,7 @@ export default {
 
     computed: {
         allMessages() {
-            return [...this.previousMessages, ...this.$store.state.newChatMessages]
+            return [...this.previousMessages, ...this.$store.getters.getMessages(this.userid)]
 
         }
     },
@@ -67,7 +67,6 @@ export default {
     },
 
     methods: {
-
         async getPreviousMessages() {
             const response = await fetch("http://localhost:8081/messages", {
                 credentials: 'include',
@@ -80,7 +79,8 @@ export default {
 
             const data = await response.json();
             console.log("/messages data", data)
-            this.previousMessages = data.chatMessage;
+
+            this.previousMessages = data.chatMessage ? data.chatMessage : [];
 
 
         },
@@ -93,13 +93,15 @@ export default {
             }
 
             const msgObj = {
-                type: "PERSON",
                 receiverId: this.userid,
                 content: sendMessageInput.value
             }
 
             const response = await fetch("http://localhost:8081/newMessage", {
-                body: JSON.stringify(msgObj),
+                body: JSON.stringify({
+                    type: "PERSON",
+                    ...msgObj
+                }),
                 method: "POST",
                 credentials: "include"
             });
@@ -109,7 +111,7 @@ export default {
             console.log("/newMessage data", data)
 
 
-            this.$store.commit("addNewChatMessage", { content: sendMessageInput.value, receiverId: this.userid })
+            this.$store.commit("addNewChatMessage", { ...msgObj, senderId: this.$store.state.id })
             sendMessageInput.value = "";
 
         },

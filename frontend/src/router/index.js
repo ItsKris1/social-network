@@ -3,6 +3,7 @@ import Auth from "../components/Auth.vue";
 // import SignIn from '../views/SignInView.vue'
 // import RegisterView from '../views/RegisterView.vue'
 
+
 const routes = [
   {
     path: "/",
@@ -23,17 +24,26 @@ const routes = [
   {
     path: "/main",
     name: "mainpage",
-    component: () => import("../views/MainView.vue"),
+    components: {
+      default: () => import("../views/MainView.vue"),
+      Chat: () => import("@/components/Chat/Chat.vue")
+    }
   },
   {
     path: "/profile/:id",
     name: "Profile",
-    component: () => import("../views/ProfileView.vue"),
+    components: {
+      default: () => import("../views/ProfileView.vue"),
+      Chat: () => import("@/components/Chat/Chat.vue")
+    }
   },
   {
     path: "/group/:id",
     name: "Group",
-    component: () => import("../views/GroupView.vue"),
+    components: {
+      default: () => import("../views/GroupView.vue"),
+      Chat: () => import("@/components/Chat/Chat.vue")
+    }
   },
 ];
 
@@ -41,5 +51,11 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
+
+
+router.beforeEach((to, from) => {
+  console.log("Navigation")
+  return true
+})
 
 export default router;

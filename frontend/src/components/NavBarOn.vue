@@ -4,17 +4,17 @@
 
         <div id="nav-titleSearch">
             <!-- <a id="nav-title" href="/">Social Network</a> -->
-            <router-link to="/" id="nav-title">Social Network</router-link>
+            <router-link to="/main" id="nav-title">Social Network</router-link>
             <Search />
         </div>
-
+        <!-- v-if="typeof user.id !== 'undefined'" :to="{ name: 'Profile', params: { id: user.id } }" -->
         <ul class="nav-links">
 
             <li>
                 <Notifications />
             </li>
             <li>
-                <router-link v-if="typeof user.id !== 'undefined'" :to="{ name: 'Profile', params: { id: user.id } }">
+                <router-link to="/profile">
                     My profile
                 </router-link>
             </li>
@@ -60,7 +60,8 @@ export default {
             })
                 .then((response => response.json()))
                 .then((json => { console.log(json) }))
-            console.log("logout")
+            // console.log("logout")
+            this.$store.state.wsConn.close(1000, "user logged out");
             this.$router.push("/");
         }
     },

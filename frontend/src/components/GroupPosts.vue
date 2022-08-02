@@ -13,8 +13,8 @@ export default {
         this.$store.dispatch('getGroupPosts')
     },
     computed: mapGetters(['groupPosts']),
-    watch:{
-        $route(){
+    watch: {
+        $route() {
             this.$store.dispatch('getGroupPosts')
         }
     },

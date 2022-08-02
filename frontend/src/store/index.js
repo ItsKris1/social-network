@@ -4,7 +4,7 @@ import router from "@/router";
 export default createStore({
   //------------------------------------- state is like a variables, which hold a values.
   state: {
-    id: "",
+    id: "", // id is currently logged in user ID
     wsConn: null,
     newChatMessages: [],
     profileInfo: {},
@@ -84,7 +84,15 @@ export default createStore({
           return follower.firstName + follower.lastName
         }
       })
-    }
+    },
+
+
+    getMessages: ({ newChatMessages, id }) => (receiverId) => {
+      return newChatMessages.filter((e) => {
+        return (e.receiverId === receiverId && e.senderId === id) || (e.receiverId === id && e.senderId === receiverId)
+      })
+
+    },
   },
   //-------------------------------------- mutations is a way for change state.
   mutations: {
@@ -163,11 +171,13 @@ export default createStore({
           this.commit("updateMyPosts", myposts);
           // console.log(myposts);
         });
+      console.log("here")
 
       // .then((json) => console.log("get posts -", json));
     },
 
     async getMyUserID({ commit }) {
+
       await fetch("http://localhost:8081/currentUser", {
         credentials: "include",
       })
@@ -180,7 +190,6 @@ export default createStore({
 
     async getMyProfileInfo(context) {
       await context.dispatch("getMyUserID");
-
       const userID = context.state.id;
       await fetch("http://localhost:8081/userData?userId=" + userID, {
         credentials: "include",
@@ -265,6 +274,10 @@ export default createStore({
           commit("updateNewChatMessages", [...state.newChatMessages, data.chatMessage])
         }
 
+      })
+
+      ws.addEventListener("close", (e) => {
+        console.log("Connection closed");
       })
 
 
