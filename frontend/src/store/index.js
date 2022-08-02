@@ -6,7 +6,7 @@ export default createStore({
   state: {
     id: "",
     wsConn: null,
-    chatMessages: [],
+    newChatMessages: [],
     profileInfo: {},
     myFollowers: null,
     posts: {
@@ -118,12 +118,12 @@ export default createStore({
       state.wsConn = wsConn
     },
 
-    updateChatMessages(state, msgs) {
-      state.chatMessages = msgs
+    updateNewChatMessages(state, msgs) {
+      state.newChatMessages = msgs
     },
 
-    addChatMessage(state, msg) {
-      state.chatMessages.push(msg);
+    addNewChatMessage(state, msg) {
+      state.newChatMessages.push(msg);
     }
   },
   //------------------------------------------Actions
@@ -262,7 +262,7 @@ export default createStore({
           // state.chatMessages.push(data.chatMessage.content);
 
 
-          commit("updateChatMessages", [...state.chatMessages, data.chatMessage])
+          commit("updateNewChatMessages", [...state.newChatMessages, data.chatMessage])
         }
 
       })

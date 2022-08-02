@@ -10,7 +10,7 @@
                 <p :class="getClass(message)">{{ message.msg }}</p>
             </div> -->
 
-            <div class="message" v-for="message in ahYes" :style="msgPosition(message)">
+            <div class="message" v-for="message in allMessages" :style="msgPosition(message)">
                 <!-- <p v-if="!message.sequentMessage && allMessages.length > 0 && message.type === 'recieved'">User 1</p> -->
                 <p>{{ message.content }}</p>
             </div>
@@ -41,7 +41,7 @@ export default {
 
     data() {
         return {
-            allMessages: [],
+            previousMessages: [],
         }
     },
 
@@ -50,30 +50,20 @@ export default {
     },
 
     computed: {
-        ahYes() {
-            // this.$nextTick(() => {
-            //     this.$refs.contentDiv.scrollTop = this.$refs.contentDiv.scrollHeight;
-
-            // })
-
-            return [...this.allMessages, ...this.$store.state.chatMessages]
+        allMessages() {
+            return [...this.previousMessages, ...this.$store.state.newChatMessages]
 
         }
     },
 
     watch: {
-        ahYes() {
+        allMessages() {
             this.$nextTick(() => {
                 this.$refs.contentDiv.scrollTop = this.$refs.contentDiv.scrollHeight;
 
             })
-            // this.$refs.contentDiv.scrollTop = this.$refs.contentDiv.scrollHeight;
 
         }
-        // '$store.state.chatMessages'(newVal) {
-        //     console.log("New")
-        //     this.allMessages = [...this.allMessages, ...newVal]
-        // }
     },
 
     methods: {
@@ -89,11 +79,12 @@ export default {
             })
 
             const data = await response.json();
-            console.log("Previous messages", data)
-            this.allMessages = data.chatMessage;
+            console.log("/messages data", data)
+            this.previousMessages = data.chatMessage;
 
 
         },
+
         async sendMessage() {
             const sendMessageInput = this.$refs.sendMessageInput;
 
@@ -115,18 +106,11 @@ export default {
 
             const data = await response.json();
 
-            console.log("Data", data)
+            console.log("/newMessage data", data)
 
-            // this.allMessages.push({ content: sendMessageInput.value, receiverId: this.userid })
 
-            this.$store.commit("addChatMessage", { content: sendMessageInput.value, receiverId: this.userid })
+            this.$store.commit("addNewChatMessage", { content: sendMessageInput.value, receiverId: this.userid })
             sendMessageInput.value = "";
-
-            // waits for DOM update
-            // this.$nextTick(() => {
-            //     this.$refs.contentDiv.scrollTop = this.$refs.contentDiv.scrollHeight;
-
-            // })
 
         },
 
@@ -137,7 +121,6 @@ export default {
                 isSequentMessage = true;
             }
 
-            this.ws
             this.allMessages.push({ msg: "Hey! How are you mate?", type: "recieved", sequentMessage: isSequentMessage })
         },
 
@@ -156,13 +139,6 @@ export default {
 
         msgPosition(message) {
             const isSentMsg = message.receiverId === this.userid
-            // if (message.type === "recieved") {
-            //     return { "alignSelf": "flex-start" }
-            // } else {
-            //     return { "alignSelf": "flex-end" }
-            // }
-
-            // console.log("Chatting with user ID", this.userid)
             return {
                 alignSelf: isSentMsg ? "flex-end" : "flex-start"
             }
