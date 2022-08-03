@@ -33,6 +33,26 @@ func (repo *GroupRepository) GetAllAndRelations(userID string) ([]models.Group, 
 	return groups, nil
 }
 
+func (repo *GroupRepository) GetUserGroups(userID string) ([]models.Group, error) {
+	var groups []models.Group
+	rows, err := repo.DB.Query("SELECT group_id, name, administrator = '" + userID + "' as admin FROM groups WHERE (SELECT COUNT(*) FROM group_users WHERE group_users.group_id = groups.group_id AND group_users.user_id = '" + userID + "') = 1 OR administrator = '" + userID + "';")
+	if err != nil {
+		return groups, err
+	}
+	for rows.Next() {
+		var group models.Group
+		var admin int
+		rows.Scan(&group.ID, &group.Name, &admin)
+		if admin != 0 {
+			group.Administrator = true
+		} else {
+			group.Member = true
+		}
+		groups = append(groups, group)
+	}
+	return groups, nil
+}
+
 func (repo *GroupRepository) New(group models.Group) error {
 	stmt, err := repo.DB.Prepare("INSERT INTO groups (group_id, name,description,administrator) values (?,?,?,?)")
 	if err != nil {
