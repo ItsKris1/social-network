@@ -256,6 +256,7 @@ func (handler *Handler) NewGroup(w http.ResponseWriter, r *http.Request) {
 			TargetID: newGroup.Invitations[i],
 			Type:     "GROUP_INVITE",
 			Content:  newGroup.ID,
+			Sender: newGroup.AdminID,
 		}
 		err = handler.repos.NotifRepo.Save(newNotif)
 		if err != nil {

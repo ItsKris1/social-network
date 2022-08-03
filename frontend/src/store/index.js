@@ -86,6 +86,12 @@ export default createStore({
       })
     },
 
+    getMyFollowerIDs({ myFollowers }) {
+      if (Array.isArray(myFollowers) && myFollowers.length > 0) {
+        return myFollowers.map((follower) => follower.id)
+      }
+    },
+
 
     getMessages: ({ newChatMessages, id }) => (receiverId) => {
       return newChatMessages.filter((e) => {
