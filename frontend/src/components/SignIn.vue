@@ -80,7 +80,6 @@ export default {
                 type: "success", //One of success, info, warning, error, default
               });
 
-              console.log("This", this.signInForm)
 
               this.$store.dispatch("createWebSocketConn")
               this.$router.push("/main");

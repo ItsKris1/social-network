@@ -264,10 +264,10 @@ export default createStore({
 
       ws.addEventListener("message", (e) => {
         const data = JSON.parse(e.data);
-        console.log("WS Message", data)
+        // console.log("WS Message", data)
         // state.recievedMessage = data.chatMessage.content;
         if (data.action == "chat") {
-          console.log("Message received -> ", data.chatMessage.content)
+          // console.log("Message received -> ", data.chatMessage.content)
           // state.chatMessages.push(data.chatMessage.content);
 
 

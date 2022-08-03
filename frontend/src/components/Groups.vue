@@ -3,22 +3,12 @@
     <div class="item-list__wrapper" id="groups">
         <h3>Groups</h3>
         <ul class="item-list">
-            <li v-for="group in allGroups">
+            <li v-for="group in allGroups" v-if="allGroups !== null && allGroups.length > 0">
                 <img class="small" src="../assets/icons/users-alt.svg" alt="">
                 <div class="item-text">{{ group.name }}</div>
             </li>
-            <!-- <li>
-                <img class="small" src="../assets/icons/users-alt.svg" alt="">
-                <div class="item-text">Group 2</div>
-            </li>
-            <li>
-                <img class="small" src="../assets/icons/users-alt.svg" alt="">
-                <div class="item-text">Group 3</div>
-            </li>
-            <li>
-                <img class="small" src="../assets/icons/users-alt.svg" alt="">
-                <div class="item-text">Group 4</div>
-            </li> -->
+
+            <p class="additional-info" v-else>You are not part of any group</p>
 
         </ul>
         <NewGroup />
