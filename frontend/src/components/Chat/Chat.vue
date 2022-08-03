@@ -10,8 +10,8 @@
                 <i class="uil uil-angle-up" :class="{ rotate: showContent }"></i>
             </div>
 
-            <div class="messaging-content" v-show="showContent" v-if="usersIFollow.length > 0">
-                <ul class="item-list">
+            <div class="messaging-content" v-show="showContent">
+                <ul class="item-list" v-if="usersIFollow.length > 0">
 
                     <li v-for="user in usersIFollow">
                         <div class="user-picture small"></div>
@@ -61,8 +61,14 @@ export default {
 
     created() {
         this.getUsersIFollow();
+        this.$store.dispatch("getUserGroups");
     },
 
+    computed: {
+        contentLoaded() {
+
+        }
+    },
 
     methods: {
         async getUsersIFollow() {

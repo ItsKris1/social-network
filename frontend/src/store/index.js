@@ -21,6 +21,7 @@ export default createStore({
     },
     groups: {
       allGroups: [],
+      userGroups: [],
     },
 
     recievedMessage: "",
@@ -142,6 +143,10 @@ export default createStore({
       state.newGroupChatMessages = msgs
     },
 
+    updateUserGroups(state, userGroups) {
+      state.groups.userGroups = userGroups
+    }
+
 
   },
   //------------------------------------------Actions
@@ -154,7 +159,7 @@ export default createStore({
         // .then((r=>console.log(r)))
         .then((res) => res.json())
         .then((json) => {
-          // console.log(json);
+          console.log(json);
           const posts = json.posts;
           this.commit("updatePosts", posts);
         });
@@ -233,6 +238,16 @@ export default createStore({
           this.commit("updateAllGroups", groups);
           // console.log("Allgroups:", json.groups);
         });
+    },
+
+    async getUserGroups() {
+      const response = await fetch(`http://localhost:8081/userGroups?userId=${myID}`, {
+        credentials: 'include'
+      });
+
+      const data = await response.json();
+      console.log("/getUserGroups data", data)
+      context.commit("updateUserGroups", data.groups)
     },
 
     async getMyFollowers(context) {

@@ -19,15 +19,15 @@ func (repo *GroupRepository) GetAllAndRelations(userID string) ([]models.Group, 
 	for rows.Next() {
 		var group models.Group
 		var member int
-		var admin string
+		var admin int
 		rows.Scan(&group.ID, &group.Name, &member, &admin)
 		fmt.Println("admin", admin)
 		if member != 0 {
 			group.Member = true
 		}
-		// if admin != 0 {
-		// 	group.Administrator = true
-		// }
+		if admin != 0 {
+			group.Administrator = true
+		}
 		groups = append(groups, group)
 	}
 	return groups, nil

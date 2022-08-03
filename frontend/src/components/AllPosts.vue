@@ -1,10 +1,9 @@
  <template>
-    <!-- <button @click="showAllPosts">showFetch</button> -->
-    <div id="all_posts" v-if="$store.state.posts.allposts.length !== 0">
+    <div id="all_posts" v-if="Array.isArray(allPosts) && allPosts.length > 0">
         <Post v-for="post in allPosts" :key="post.id" v-bind:postData="post" />
     </div>
 
-    <p v-else>No posts</p>
+    <p v-if="!allPosts">No posts</p>
 
 </template>
 
