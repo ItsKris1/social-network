@@ -15,6 +15,7 @@ type Group struct {
 
 type GroupRepository interface {
 	GetAllAndRelations(userId string) ([]Group, error)
+	GetUserGroups(userId string) ([]Group, error)
 	New(Group) error                               //create new group
 	GetData(groupId string) (Group, error)         //get info- name and desc
 	GetMembers(groupId string) ([]User, error)     // get all group members and admin

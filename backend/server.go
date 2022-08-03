@@ -64,6 +64,7 @@ func setRoutes(handler *handlers.Handler) http.Handler {
 
 	/* --------------------------------- groups --------------------------------- */
 	mux.HandleFunc("/allGroups", handler.Auth(handler.AllGroups)) // group list
+	mux.HandleFunc("/userGroups", handler.Auth(handler.UserGroups)) // group list of user groups
 
 	mux.HandleFunc("/groupInfo", handler.Auth(handler.GroupInfo))         // get group info
 	mux.HandleFunc("/groupMembers", handler.Auth(handler.GroupMembers))   // get group members
