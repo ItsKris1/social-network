@@ -1,8 +1,7 @@
 <template>
 
     <div class="messaging-wrapper" ref="messagingWrapper">
-        <ChatBox v-for="chat in chats" :name="chat.name" :userid="chat.userid" @closeChat="removeChat"
-                 :key="chat.userid"></ChatBox>
+        <ChatBox v-for="chat in chats" v-bind="chat" @closeChat="removeChat" :key="chat.receiverId"></ChatBox>
 
         <div class=" messaging" @click="toggleShowContent">
 
@@ -16,7 +15,8 @@
 
                     <li v-for="user in usersIFollow">
                         <div class="user-picture small"></div>
-                        <div class="item-text" @click.stop="openChat($event, user.id)">{{ user.nickname }}</div>
+                        <div class="item-text" @click.stop="openChat($event, { receiverId: user.id, type: 'PERSON' })">
+                            {{ user.nickname }}</div>
                     </li>
 
                 </ul>
@@ -84,7 +84,7 @@ export default {
             this.showContent = !this.showContent
         },
 
-        openChat(e, userid) {
+        openChat(e, obj) {
             // console.log("Trying to add a chatbox")
             // console.log(e.target.textContent)
             const found = this.chats.some(chat => chat.name === e.target.textContent);
@@ -96,21 +96,9 @@ export default {
                 this.chats.shift();
             }
             this.chats.push({
-                "userid": userid,
                 "name": e.target.textContent,
+                ...obj
             });
-
-
-
-            // this.$nextTick(() => {
-            //     console.log("Viewport width", window.innerWidth)
-            //     console.log("Messaging area width", this.$refs.messagingWrapper.clientWidth)
-
-            // })
-
-
-
-
         },
 
 
@@ -121,10 +109,6 @@ export default {
                 return chat.name !== name
 
             })
-
-
-
-
         }
     }
 }

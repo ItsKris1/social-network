@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"social-network/pkg/models"
+	"fmt"
 )
 
 type GroupRepository struct {
@@ -18,14 +19,15 @@ func (repo *GroupRepository) GetAllAndRelations(userID string) ([]models.Group, 
 	for rows.Next() {
 		var group models.Group
 		var member int
-		var admin int
+		var admin string
 		rows.Scan(&group.ID, &group.Name, &member, &admin)
+		fmt.Println("admin", admin)
 		if member != 0 {
 			group.Member = true
 		}
-		if admin != 0 {
-			group.Administrator = true
-		}
+		// if admin != 0 {
+		// 	group.Administrator = true
+		// }
 		groups = append(groups, group)
 	}
 	return groups, nil

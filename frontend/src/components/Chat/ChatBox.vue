@@ -36,7 +36,7 @@
 <script>
 
 export default {
-    props: ["name", "userid"], // userid is ID of the user we have chat open with
+    props: ["name", "receiverId", "type"], // userid is ID of the user we have chat open with
     emits: ['closeChat'],
 
     data() {
@@ -51,7 +51,7 @@ export default {
 
     computed: {
         allMessages() {
-            return [...this.previousMessages, ...this.$store.getters.getMessages(this.userid)]
+            return [...this.previousMessages, ...this.$store.getters.getMessages(this.receiverId)]
 
         }
     },
@@ -72,14 +72,15 @@ export default {
                 credentials: 'include',
                 method: "POST",
                 body: JSON.stringify({
-                    type: "PERSON",
-                    receiverId: this.userid
+                    type: this.type,
+                    receiverId: this.receiverId
                 })
             })
 
             const data = await response.json();
             console.log("/messages data", data)
 
+            // if response is NULL assign an empty array
             this.previousMessages = data.chatMessage ? data.chatMessage : [];
 
 
@@ -93,15 +94,13 @@ export default {
             }
 
             const msgObj = {
-                receiverId: this.userid,
-                content: sendMessageInput.value
+                receiverId: this.receiverId,
+                content: sendMessageInput.value,
+                type: this.type
             }
 
             const response = await fetch("http://localhost:8081/newMessage", {
-                body: JSON.stringify({
-                    type: "PERSON",
-                    ...msgObj
-                }),
+                body: JSON.stringify(msgObj),
                 method: "POST",
                 credentials: "include"
             });
@@ -110,8 +109,7 @@ export default {
 
             console.log("/newMessage data", data)
 
-
-            this.$store.commit("addNewChatMessage", { ...msgObj, senderId: this.$store.state.id })
+            this.$store.dispatch("addNewChatMessage", { ...msgObj, senderId: this.$store.state.id })
             sendMessageInput.value = "";
 
         },
@@ -140,7 +138,7 @@ export default {
         },
 
         msgPosition(message) {
-            const isSentMsg = message.receiverId === this.userid
+            const isSentMsg = message.receiverId === this.receiverId
             return {
                 alignSelf: isSentMsg ? "flex-end" : "flex-start"
             }

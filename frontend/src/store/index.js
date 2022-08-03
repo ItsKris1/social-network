@@ -6,7 +6,9 @@ export default createStore({
   state: {
     id: "", // id is currently logged in user ID
     wsConn: null,
+
     newChatMessages: [],
+    newGroupChatMessages: [],
     profileInfo: {},
     myFollowers: null,
     posts: {
@@ -136,9 +138,11 @@ export default createStore({
       state.newChatMessages = msgs
     },
 
-    addNewChatMessage(state, msg) {
-      state.newChatMessages.push(msg);
-    }
+    updateNewGroupChatMessages(state, msgs) {
+      state.newGroupChatMessages = msgs
+    },
+
+
   },
   //------------------------------------------Actions
   actions: {
@@ -262,7 +266,7 @@ export default createStore({
         });
     },
 
-    createWebSocketConn({ commit, state }) {
+    createWebSocketConn({ commit, dispatch }) {
       const ws = new WebSocket("ws://localhost:8081/ws");
       ws.addEventListener("open", () => {
         console.log("Connection has established")
@@ -270,14 +274,8 @@ export default createStore({
 
       ws.addEventListener("message", (e) => {
         const data = JSON.parse(e.data);
-        // console.log("WS Message", data)
-        // state.recievedMessage = data.chatMessage.content;
         if (data.action == "chat") {
-          // console.log("Message received -> ", data.chatMessage.content)
-          // state.chatMessages.push(data.chatMessage.content);
-
-
-          commit("updateNewChatMessages", [...state.newChatMessages, data.chatMessage])
+          dispatch("addNewChatMessage", data.chatMessage)
         }
 
       })
@@ -290,6 +288,18 @@ export default createStore({
 
       commit("updateWebSocketConn", ws)
     },
+
+    addNewChatMessage({ commit, state }, payload) {
+      let newMessages;
+
+      if (payload["type"] === "PERSON") {
+        newMessages = [...state.newChatMessages, payload]
+        commit("updateNewChatMessages", newMessages)
+      } else {
+        newMessages = [...state.newGroupChatMessages, payload]
+        commit("updateNewGroupChatMessages", newMessages)
+      }
+    }
 
   },
   modules: {},
