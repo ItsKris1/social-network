@@ -9,6 +9,7 @@ export default createStore({
 
     newChatMessages: [],
     newGroupChatMessages: [],
+    openChats: [],
     profileInfo: {},
     myFollowers: null,
     posts: {
@@ -105,10 +106,11 @@ export default createStore({
         })
       } else {
         messages = newGroupChatMessages.filter((msg) => {
+          // console.log(msg.receiverId === receiverId)
           return (msg.receiverId === receiverId)
         })
 
-        console.log("Group messages returned", messages)
+        // console.log("Group messages returned", messages)
       }
 
       return messages
@@ -165,6 +167,10 @@ export default createStore({
 
     updateUserGroups(state, userGroups) {
       state.groups.userGroups = userGroups
+    },
+
+    updateOpenChats(state, openChats) {
+      state.openChats = openChats
     }
 
 
@@ -301,7 +307,7 @@ export default createStore({
         });
     },
 
-    createWebSocketConn({ commit, dispatch }) {
+    createWebSocketConn({ commit, dispatch, state }) {
       const ws = new WebSocket("ws://localhost:8081/ws");
       ws.addEventListener("open", () => {
         console.log("Connection has established")
@@ -311,7 +317,11 @@ export default createStore({
         console.log("New message")
         const data = JSON.parse(e.data);
         if (data.action == "chat") {
-          dispatch("addNewChatMessage", data.chatMessage)
+          const isRecieverChatOpen = state.openChats.some((chat) => chat.receiverId === data.chatMessage.receiverId)
+
+          if (isRecieverChatOpen) {
+            dispatch("addNewChatMessage", data.chatMessage)
+          }
         }
 
       })
@@ -335,8 +345,7 @@ export default createStore({
         newMessages = [...state.newGroupChatMessages, payload]
         commit("updateNewGroupChatMessages", newMessages)
       }
-    }
-
+    },
   },
   modules: {},
 });

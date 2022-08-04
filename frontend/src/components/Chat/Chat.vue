@@ -101,6 +101,8 @@ export default {
                 "name": e.target.textContent,
                 ...obj
             });
+
+            this.$store.commit("updateOpenChats", this.chats)
         },
 
 
@@ -111,6 +113,9 @@ export default {
                 return chat.name !== name
 
             })
+
+            this.$store.commit("updateOpenChats", this.chats)
+
         }
     }
 }

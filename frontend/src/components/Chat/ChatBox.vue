@@ -10,15 +10,14 @@
                 <p :class="getClass(message)">{{ message.msg }}</p>
             </div> -->
 
-            <div class="message" v-for="message in previousMessages" :style="msgPosition(message)">
+            <div class="message" v-for="message in allMessages" :style="msgPosition(message)">
                 <!-- <p v-if="!message.sequentMessage && allMessages.length > 0 && message.type === 'recieved'">User 1</p> -->
                 <p>{{ message.content }}</p>
             </div>
 
-            <div class="message" v-for="message in newMessages" :style="msgPosition(message)" v-if="contentLoaded">
-                <!-- <p v-if="!message.sequentMessage && allMessages.length > 0 && message.type === 'recieved'">User 1</p> -->
+            <!-- <div class="message" v-for="message in newMessages" :style="msgPosition(message)">
                 <p>{{ message.content }}</p>
-            </div>
+            </div> -->
             <!-- <div class="message" v-for="message in recentMessages" :style="msgPosition(message)">
                 <p>{{ message.content }}</p>
             </div> -->
@@ -52,32 +51,29 @@ export default {
 
     created() {
         this.getPreviousMessages();
+
+
+
     },
 
     computed: {
-        // allMessages() {
-        //     // console.log("Previous messages", this.previousMessages)
-
-        //     return [...this.previousMessages, ...this.$store.getters.getMessages(this.receiverId, this.type)]
-
-
-
-        // },
-
-        newMessages() {
+        allMessages() {
             // console.log("Previous messages", this.previousMessages)
 
-            return this.$store.getters.getMessages(this.receiverId, this.type)
+            return [...this.previousMessages, ...this.$store.getters.getMessages(this.receiverId, this.type)]
+        },
+
+        // newMessages() {
+        //     console.log("Getting messages")
+        //     return this.$store.getters.getMessages(this.receiverId, this.type)
 
 
 
-        }
+        // }
     },
 
     watch: {
-        allMessages(newVal, oldVal) {
-            console.log("od", oldVal)
-            console.log("new", newVal)
+        allMessages() {
             this.$nextTick(() => {
                 this.$refs.contentDiv.scrollTop = this.$refs.contentDiv.scrollHeight;
 
@@ -102,7 +98,16 @@ export default {
 
             // if response is NULL assign an empty array
             this.previousMessages = data.chatMessage ? data.chatMessage : [];
-            this.contentLoaded = true;
+
+            if (this.previousMessages.length > 0) {
+                this.$nextTick(() => {
+                    this.$refs.contentDiv.scrollTop = this.$refs.contentDiv.scrollHeight;
+
+                })
+            }
+
+            // this.contentLoaded = true;
+
 
 
         },
