@@ -323,8 +323,9 @@ export default createStore({
         const data = JSON.parse(e.data);
         if (data.action == "chat") {
           const isRecieverChatOpen = state.openChats.some((chat) => chat.receiverId === data.chatMessage.receiverId || chat.receiverId === data.chatMessage.senderId)
-          console.log("isRecieverChatOpen", isRecieverChatOpen)
+          // console.log("isRecieverChatOpen", isRecieverChatOpen)
           if (isRecieverChatOpen) {
+            console.log("Dispatching a message..")
             dispatch("addNewChatMessage", data.chatMessage)
           }
         }

@@ -85,11 +85,11 @@ export default {
             })
 
             const data = await response.json();
-            console.log("/messages data", data)
+            console.log("/previous messages data", data)
 
             // if response is NULL assign an empty array
             this.previousMessages = data.chatMessage ? data.chatMessage : [];
-
+            // console.log("Previous messages", this.previousMessages)
             if (this.previousMessages.length > 0) {
                 this.$nextTick(() => {
                     this.$refs.contentDiv.scrollTop = this.$refs.contentDiv.scrollHeight;
@@ -124,7 +124,7 @@ export default {
 
             const data = await response.json();
 
-            console.log("/newMessage data", data)
+            // console.log("/newMessage data", data)
 
             this.$store.dispatch("addNewChatMessage", { ...msgObj, senderId: this.$store.state.id })
             sendMessageInput.value = "";
@@ -144,7 +144,7 @@ export default {
 
         isSequentMessage(message, index) {
             let isRecievedMsg = message.receiverId !== this.receiverId;
-            console.log(isRecievedMsg)
+            // console.log(isRecievedMsg)
             // if (isRecievedMsg) {
             //     console.log("Display name")
             // }
