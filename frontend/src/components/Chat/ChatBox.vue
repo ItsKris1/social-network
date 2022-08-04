@@ -5,22 +5,13 @@
             <i class="uil uil-times close" @click.stop="$emit('closeChat', this.name)"></i>
         </div>
         <div class="content" ref="contentDiv">
-            <!-- <div class="message" v-for="message in allMessages" :style="getStyle(message)">
-                <p v-if="!message.sequentMessage && allMessages.length > 0 && message.type === 'recieved'">User 1</p>
-                <p :class="getClass(message)">{{ message.msg }}</p>
-            </div> -->
 
-            <div class="message" v-for="message in allMessages" :style="msgPosition(message)">
+            <div class="message" v-for="(message, index) in allMessages" :style="msgPosition(message)">
                 <!-- <p v-if="!message.sequentMessage && allMessages.length > 0 && message.type === 'recieved'">User 1</p> -->
+                {{ isSequentMessage(message, index) }}
+
                 <p>{{ message.content }}</p>
             </div>
-
-            <!-- <div class="message" v-for="message in newMessages" :style="msgPosition(message)">
-                <p>{{ message.content }}</p>
-            </div> -->
-            <!-- <div class="message" v-for="message in recentMessages" :style="msgPosition(message)">
-                <p>{{ message.content }}</p>
-            </div> -->
 
         </div>
         <div class=" send-message">
@@ -150,6 +141,33 @@ export default {
             this.allMessages.push({ msg: "Hey! How are you mate?", type: "recieved", sequentMessage: isSequentMessage })
         },
 
+
+        isSequentMessage(message, index) {
+            let isRecievedMsg = message.receiverId !== this.receiverId;
+            console.log(isRecievedMsg)
+            // if (isRecievedMsg) {
+            //     console.log("Display name")
+            // }
+
+
+
+            if (index < 1) {
+                return
+            }
+
+            // if sender id === reciever id -> reciever sent
+
+            // const currentReceiverId = message.receiverId;
+
+            // const receiver = message.receiverId;
+            // if (this.allMessages.length > 1 && this.allMessages[index - 1].senderId === currentReceiverId) {
+            //     console.log("Sequential message RECIEVED")
+            // } else {
+            //     console.log("First msg -> display name")
+            // }
+        },
+
+
         // determines whether to display sender name in chatbox
         displayAuthor(message) {
             return this.allMessages.length > 0 && message.type === 'recieved' && message.sequentMessage === false;
@@ -164,7 +182,8 @@ export default {
         },
 
         msgPosition(message) {
-            const isSentMsg = message.receiverId === this.receiverId
+            let isSentMsg = message.senderId === this.$store.state.id;
+
             return {
                 alignSelf: isSentMsg ? "flex-end" : "flex-start"
             }

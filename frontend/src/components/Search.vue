@@ -46,8 +46,15 @@ export default {
 
     watch: {
         searchQuery() {
-            this.filteredUsers = this.filterUsers(this.searchQuery)
-            this.filteredGroups = this.filterGroups(this.searchQuery)
+            if (this.allUsers !== null) {
+                this.filteredUsers = this.filterUsers(this.searchQuery)
+
+            }
+
+            if (this.allGroups !== null) {
+                this.filteredGroups = this.filterGroups(this.searchQuery)
+
+            }
             this.toggleDropdown();
         }
     },

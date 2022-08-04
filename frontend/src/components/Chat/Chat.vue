@@ -11,9 +11,9 @@
             </div>
 
             <div class="messaging-content" v-show="showContent">
-                <ul class="item-list" v-if="usersIFollow !== null">
+                <ul class="item-list" v-if="usersIFollow.type && usersIFollow.users !== null">
 
-                    <li v-for="user in usersIFollow">
+                    <li v-for="user in usersIFollow.users">
                         <div class="user-picture small"></div>
                         <div class="item-text" @click.stop="openChat($event, { receiverId: user.id, type: 'PERSON' })">
                             {{ user.nickname }}</div>
@@ -21,8 +21,8 @@
 
                 </ul>
 
-                <ul class="item-list" v-if="userGroups !== null">
-                    <li v-for="group in userGroups">
+                <ul class="item-list" v-if="userGroups.type && userGroups.groups !== null">
+                    <li v-for="group in userGroups.groups">
                         <img src="../../assets/icons/users-alt.svg" alt="" class="small">
 
                         <div class="item-text" @click.stop="openChat($event, { receiverId: group.id, type: 'GROUP' })">
@@ -31,7 +31,7 @@
 
                 </ul>
 
-                <p class="additional-info" v-if="usersIFollow === null && userGroups === null">
+                <p class="additional-info" v-if="usersIFollow.users === null && userGroups.groups === null">
                     No one to message with :(</p>
             </div>
 
@@ -80,7 +80,7 @@ export default {
             const data = await response.json();
 
 
-            this.usersIFollow = data.users;
+            this.usersIFollow = data;
 
         },
 
