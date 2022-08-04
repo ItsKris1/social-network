@@ -21,19 +21,14 @@
 
                 </ul>
 
-                <ul class="item-list">
-                    <li>
+                <ul class="item-list" v-if="userGroups !== null && userGroups.length > 0">
+                    <li v-for="group in userGroups">
                         <img src="../../assets/icons/users-alt.svg" alt="" class="small">
-                        <div class="item-text">Group 1</div>
+
+                        <div class="item-text" @click.stop="openChat($event, { receiverId: group.id, type: 'GROUP' })">
+                            {{ group.name }}</div>
                     </li>
-                    <li>
-                        <img src="../../assets/icons/users-alt.svg" alt="" class="small">
-                        <div class="item-text">Group 2</div>
-                    </li>
-                    <li>
-                        <img src="../../assets/icons/users-alt.svg" alt="" class="small">
-                        <div class="item-text">Group 3</div>
-                    </li>
+
                 </ul>
             </div>
 
@@ -44,6 +39,7 @@
 
 
 <script>
+import { mapState } from 'vuex';
 import ChatBox from './ChatBox.vue'
 export default {
     name: '',
@@ -64,15 +60,15 @@ export default {
         this.$store.dispatch("getUserGroups");
     },
 
-    computed: {
-        contentLoaded() {
-
-        }
-    },
+    computed: mapState({
+        userGroups: state => state.groups.userGroups
+    }),
 
     methods: {
         async getUsersIFollow() {
-            await this.$store.dispatch("getMyUserID");
+            if (this.$store.state.id === "") {
+                await this.$store.dispatch("getMyUserID");
+            }
 
             const response = await fetch('http://localhost:8081/following?userId=' + this.$store.state.id, {
                 credentials: 'include'

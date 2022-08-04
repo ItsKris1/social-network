@@ -96,12 +96,32 @@ export default createStore({
     },
 
 
-    getMessages: ({ newChatMessages, id }) => (receiverId) => {
-      return newChatMessages.filter((e) => {
-        return (e.receiverId === receiverId && e.senderId === id) || (e.receiverId === id && e.senderId === receiverId)
-      })
+    getMessages: ({ newChatMessages, newGroupChatMessages, id }) => (receiverId, type) => {
+      let messages = [];
 
+      if (type === "PERSON") {
+        messages = newChatMessages.filter((e) => {
+          return (e.receiverId === receiverId && e.senderId === id) || (e.receiverId === id && e.senderId === receiverId)
+        })
+      } else {
+        messages = newGroupChatMessages.filter((msg) => {
+          return (msg.receiverId === receiverId)
+        })
+
+        console.log("Group messages returned", messages)
+      }
+
+      return messages
+      // return newChatMessages.filter((e) => {
+      //   return (e.receiverId === receiverId && e.senderId === id) || (e.receiverId === id && e.senderId === receiverId)
+      // })
     },
+
+    getGroupMessages: ({ newGroupChatMessages }) => (receiverId) => {
+      return newGroupChatMessages.filter((msg) => {
+        return (msg.receiverId === receiverId)
+      })
+    }
   },
   //-------------------------------------- mutations is a way for change state.
   mutations: {
@@ -159,7 +179,7 @@ export default createStore({
         // .then((r=>console.log(r)))
         .then((res) => res.json())
         .then((json) => {
-          console.log(json);
+          // console.log(json);
           const posts = json.posts;
           this.commit("updatePosts", posts);
         });
@@ -240,13 +260,13 @@ export default createStore({
         });
     },
 
-    async getUserGroups() {
-      const response = await fetch(`http://localhost:8081/userGroups?userId=${myID}`, {
+    async getUserGroups(context) {
+      const response = await fetch(`http://localhost:8081/userGroups`, {
         credentials: 'include'
       });
 
       const data = await response.json();
-      console.log("/getUserGroups data", data)
+      // console.log("/getUserGroups data", data)
       context.commit("updateUserGroups", data.groups)
     },
 
@@ -288,6 +308,7 @@ export default createStore({
       })
 
       ws.addEventListener("message", (e) => {
+        console.log("New message")
         const data = JSON.parse(e.data);
         if (data.action == "chat") {
           dispatch("addNewChatMessage", data.chatMessage)
