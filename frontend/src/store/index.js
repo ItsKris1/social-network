@@ -26,6 +26,10 @@ export default createStore({
     },
 
     recievedMessage: "",
+
+    loadedData: {
+      userGroups: false,
+    }
   },
   //------------------------------------ getters is a way for check state values.
   getters: {
@@ -273,7 +277,8 @@ export default createStore({
 
       const data = await response.json();
       // console.log("/getUserGroups data", data)
-      context.commit("updateUserGroups", data.groups)
+      // context.state.groups.userGroups.loaded = true;
+      context.commit("updateUserGroups", data)
     },
 
     async getMyFollowers(context) {
@@ -317,8 +322,8 @@ export default createStore({
         console.log("New message")
         const data = JSON.parse(e.data);
         if (data.action == "chat") {
-          const isRecieverChatOpen = state.openChats.some((chat) => chat.receiverId === data.chatMessage.receiverId)
-
+          const isRecieverChatOpen = state.openChats.some((chat) => chat.receiverId === data.chatMessage.receiverId || chat.receiverId === data.chatMessage.senderId)
+          console.log("isRecieverChatOpen", isRecieverChatOpen)
           if (isRecieverChatOpen) {
             dispatch("addNewChatMessage", data.chatMessage)
           }

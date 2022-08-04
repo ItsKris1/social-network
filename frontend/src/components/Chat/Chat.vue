@@ -11,7 +11,7 @@
             </div>
 
             <div class="messaging-content" v-show="showContent">
-                <ul class="item-list" v-if="usersIFollow.length > 0">
+                <ul class="item-list" v-if="usersIFollow !== null">
 
                     <li v-for="user in usersIFollow">
                         <div class="user-picture small"></div>
@@ -21,7 +21,7 @@
 
                 </ul>
 
-                <ul class="item-list" v-if="userGroups !== null && userGroups.length > 0">
+                <ul class="item-list" v-if="userGroups !== null">
                     <li v-for="group in userGroups">
                         <img src="../../assets/icons/users-alt.svg" alt="" class="small">
 
@@ -30,6 +30,9 @@
                     </li>
 
                 </ul>
+
+                <p class="additional-info" v-if="usersIFollow === null && userGroups === null">
+                    No one to message with :(</p>
             </div>
 
         </div>
@@ -76,6 +79,7 @@ export default {
 
             const data = await response.json();
 
+
             this.usersIFollow = data.users;
 
         },
@@ -83,6 +87,7 @@ export default {
 
         toggleShowContent() {
             // console.log("Content toggled!")
+
             this.showContent = !this.showContent
         },
 
@@ -101,6 +106,7 @@ export default {
                 "name": e.target.textContent,
                 ...obj
             });
+
 
             this.$store.commit("updateOpenChats", this.chats)
         },
