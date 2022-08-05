@@ -59,6 +59,7 @@ func (client *Client) SendNotification(notif models.Notification) {
 
 func (client *Client) SendChatMessage(msg models.ChatMessage) {
 	message := WsMessage{
+		UserID: client.ID,
 		Action:      ChatAction,
 		ChatMessage: msg,
 	}
@@ -73,6 +74,7 @@ func (client *Client) SendChatMessage(msg models.ChatMessage) {
 // new messages to our WebSocket endpoint
 func (client *Client) Writer() {
 	for {
+
 		message, ok := <-client.send
 		if !ok {
 			log.Println("err on writing message")

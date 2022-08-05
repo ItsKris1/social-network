@@ -6,7 +6,7 @@ type ChatMessage struct {
 	ReceiverId string `json:"receiverId"`
 	Type       string `json:"type"` //GROUP|PERSON
 	Content    string `json:"content"`
-
+	GroupUserReceiverId string `json:"groupuserreceiverId"`
 	Sender User `json:"sender"`
 }
 

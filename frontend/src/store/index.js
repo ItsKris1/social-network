@@ -7,29 +7,31 @@ export default createStore({
     id: "", // id is currently logged in user ID
     wsConn: null,
 
+    // CHAT
     newChatMessages: [],
     newGroupChatMessages: [],
+    unreadMessages: [],
+
     openChats: [],
+
     profileInfo: {},
     myFollowers: null,
+
     posts: {
       allposts: [],
       myposts: [],
       groupPosts: [],
     },
+
     users: {
       allusers: [],
     },
+
     groups: {
       allGroups: [],
       userGroups: [],
     },
 
-    recievedMessage: "",
-
-    loadedData: {
-      userGroups: false,
-    }
   },
   //------------------------------------ getters is a way for check state values.
   getters: {
@@ -123,11 +125,19 @@ export default createStore({
       // })
     },
 
-    getGroupMessages: ({ newGroupChatMessages }) => (receiverId) => {
-      return newGroupChatMessages.filter((msg) => {
-        return (msg.receiverId === receiverId)
+
+    getUnreadMessagesCount: ({ state }) => (userId) => {
+      const userUnreadMsgs = state.unreadMessages.filter((msg) => {
+        msg.receiverId === userId
       })
+
+      return userUnreadMsgs.length
     }
+    // getGroupMessages: ({ newGroupChatMessages }) => (receiverId) => {
+    //   return newGroupChatMessages.filter((msg) => {
+    //     return (msg.receiverId === receiverId)
+    //   })
+    // }
   },
   //-------------------------------------- mutations is a way for change state.
   mutations: {
@@ -175,6 +185,10 @@ export default createStore({
 
     updateOpenChats(state, openChats) {
       state.openChats = openChats
+    },
+
+    updateUnreadChatMessages(state, unreadMsgs) {
+      state.unreadMessages = unreadMsgs
     }
 
 
@@ -343,6 +357,15 @@ export default createStore({
           if (isParticipantsChatOpen) {
             // console.log("Dispatching a message..")
             dispatch("addNewChatMessage", data.chatMessage)
+          } else {
+
+            // THIS IS THE RECEIVER WS
+            // i get from msg
+            // sID, gID
+            // add unread msgs
+            console.log("Unread msg..")
+            console.log(data.chatMessage.groupuserreceiverId)
+            dispatch("addUnreadChatMessage", data.chatMessage)
           }
         }
 
@@ -368,6 +391,12 @@ export default createStore({
         commit("updateNewGroupChatMessages", newMessages)
       }
     },
+
+    addUnreadChatMessage({ commit, state }, payload) {
+      const unreadChatMsgs = state.unreadMessages
+      unreadChatMsgs.push(payload)
+      commit("updateUnreadChatMessages", unreadChatMsgs)
+    }
   },
   modules: {},
 });

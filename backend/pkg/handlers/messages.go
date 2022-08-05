@@ -96,6 +96,7 @@ func (handler *Handler) NewMessage(wsServer *ws.Server, w http.ResponseWriter, r
 					continue
 				}
 				if client.ID == allMembers[i].ID {
+					msg.GroupUserReceiverId = allMembers[i].ID
 					client.SendChatMessage(msg)
 				}
 			}

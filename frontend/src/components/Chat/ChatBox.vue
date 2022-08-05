@@ -41,6 +41,11 @@ export default {
         this.getPreviousMessages();
     },
 
+    computed: {
+        ...mapState(['unreadMessages'])
+    },
+
+
     unmounted() {
 
         // CLEAR NEW MESSAGES

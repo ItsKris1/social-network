@@ -64,7 +64,8 @@ export default {
     },
 
     computed: mapState({
-        userGroups: state => state.groups.userGroups
+        userGroups: state => state.groups.userGroups,
+        unreadMessages: state => state.unreadMessages,
     }),
 
     methods: {
@@ -84,6 +85,9 @@ export default {
 
         },
 
+        getUnreadMessagesCount(userId) {
+            this.$store.getters.getUnreadMessagesCount(userId)
+        },
 
         toggleShowContent() {
             // console.log("Content toggled!")
