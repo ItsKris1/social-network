@@ -189,7 +189,7 @@ export default createStore({
         // .then((r=>console.log(r)))
         .then((res) => res.json())
         .then((json) => {
-          console.log(json);
+          // console.log(json);
           const posts = json.posts;
           this.commit("updatePosts", posts);
         });
@@ -315,11 +315,11 @@ export default createStore({
     createWebSocketConn({ commit, dispatch, state }) {
       const ws = new WebSocket("ws://localhost:8081/ws");
       ws.addEventListener("open", () => {
-        console.log("Connection has established")
+        console.log("WS: Connection has established")
       })
 
       ws.addEventListener("message", (e) => {
-        console.log("New message")
+        // console.log("New message")
         const data = JSON.parse(e.data);
         if (data.action == "chat") {
 
@@ -340,9 +340,8 @@ export default createStore({
 
 
           })
-          // console.log("isRecieverChatOpen", isRecieverChatOpen)
           if (isParticipantsChatOpen) {
-            console.log("Dispatching a message..")
+            // console.log("Dispatching a message..")
             dispatch("addNewChatMessage", data.chatMessage)
           }
         }

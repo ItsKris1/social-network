@@ -99,14 +99,7 @@ textarea {
 
 }
 
-input:is(:hover, :focus),
-select:is(:hover, :focus),
-textarea:is(:hover, :focus) {
-    /* border: none; */
-    outline: none;
-    box-shadow: var(--hover-box-shadow);
 
-}
 
 
 
@@ -371,12 +364,6 @@ select {
 
 }
 
-
-
-
-
-
-
 .add-image input {
     position: absolute;
     opacity: 0;
@@ -395,7 +382,14 @@ select {
 }
 
 /* Element states */
+input:is(:hover, :focus),
+select:is(:hover, :focus),
+textarea:is(:hover, :focus) {
+    /* border: none; */
+    outline: none;
+    box-shadow: var(--hover-box-shadow);
 
+}
 
 
 

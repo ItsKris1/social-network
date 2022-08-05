@@ -7,27 +7,25 @@
         <div class="content" ref="contentDiv">
 
             <div class="message" v-for="(message, index) in allMessages" :style="msgPosition(message)">
-                <!-- <p v-if="!message.sequentMessage && allMessages.length > 0 && message.type === 'recieved'">User 1</p> -->
-                {{ isSequentMessage(message, index) }}
-
-                <p>{{ message.content }}</p>
+                <p class="message-author" v-if="displayName(message, index)">{{ message.sender.nickname }}</p>
+                <p :class="getClass(message)">{{ message.content }}</p>
             </div>
 
         </div>
-        <div class=" send-message">
-            <form @submit.prevent="sendMessage" autocomplete="off">
-                <input type="text" name="sent-message" id="sent-message__input" placeholder="Send a message"
-                       ref="sendMessageInput">
-                <button type="submit"><i class="uil uil-message"></i></button>
-            </form>
 
-            <!-- <button type="button" @click="recieveMsg">Recieve msg</button> -->
-        </div>
+        <form @submit.prevent="sendMessage" autocomplete="off" class="send-message">
+            <input type="text" name="sent-message" id="sent-message__input" placeholder="Send a message"
+                   ref="sendMessageInput">
+            <button type="submit"><i class="uil uil-message"></i></button>
+        </form>
+
     </div>
 
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 
 export default {
     props: ["name", "receiverId", "type"], // userid is ID of the user we have chat open with
@@ -49,16 +47,20 @@ export default {
         // because chat is closed and next time we open the chat we fetch all the messages
 
         if (this.type === "GROUP") {
-            // filter messages by clearing messages, which were sent or received in this chatBox
             let msgs = this.$store.state.newGroupChatMessages;
+
+            // filter new messages by removing all messages that were sent to that receiverId
+            // receiverId is equal to group ID
             msgs = msgs.filter((msg) => {
-                msg.receiverId !== this.receiverId;
+                if (msg.receiverId === this.receiverId) {
+                    return false
+                }
             })
             this.$store.commit("updateNewGroupChatMessages", msgs)
         } else {
             let msgs = this.$store.state.newChatMessages;
 
-            // filter messages by clearing messages, which were sent or received in this chatBox
+            // filter new messages by removing all messages that were sent or received in that chat
             msgs = msgs.filter((msg) => {
                 if (msg.receiverId === this.receiverId || msg.senderId === this.receiverId) {
                     return false
@@ -74,6 +76,10 @@ export default {
         allMessages() {
             return [...this.previousMessages, ...this.$store.getters.getMessages(this.receiverId, this.type)]
         },
+
+        ...mapState({
+            myID: state => state.id
+        })
 
     },
 
@@ -99,21 +105,10 @@ export default {
             })
 
             const data = await response.json();
-            console.log("/previous messages data", data)
+            // console.log("/previous messages data", data)
 
             // if response is NULL assign an empty array
             this.previousMessages = data.chatMessage ? data.chatMessage : [];
-            // console.log("Previous messages", this.previousMessages)
-            if (this.previousMessages.length > 0) {
-                this.$nextTick(() => {
-                    this.$refs.contentDiv.scrollTop = this.$refs.contentDiv.scrollHeight;
-
-                })
-            }
-
-            // this.contentLoaded = true;
-
-
 
         },
 
@@ -130,74 +125,51 @@ export default {
                 type: this.type
             }
 
-            const response = await fetch("http://localhost:8081/newMessage", {
+            await fetch("http://localhost:8081/newMessage", {
                 body: JSON.stringify(msgObj),
                 method: "POST",
                 credentials: "include"
             });
 
-            const data = await response.json();
-
+            // const data = await response.json();
             // console.log("/newMessage data", data)
 
-            this.$store.dispatch("addNewChatMessage", { ...msgObj, senderId: this.$store.state.id })
+            this.$store.dispatch("addNewChatMessage", { ...msgObj, senderId: this.myID })
             sendMessageInput.value = "";
 
         },
 
-        recieveMsg() {
-            let isSequentMessage = false; // tracks if user sent more than two messages in a row
-
-            if (this.allMessages.length !== 0 && this.allMessages[this.allMessages.length - 1].type === "recieved") {
-                isSequentMessage = true;
-            }
-
-            this.allMessages.push({ msg: "Hey! How are you mate?", type: "recieved", sequentMessage: isSequentMessage })
-        },
 
 
 
-        isSequentMessage(message, index) {
-            let isRecievedMsg = message.receiverId !== this.receiverId;
-            // console.log(isRecievedMsg)
-            // if (isRecievedMsg) {
-            //     console.log("Display name")
-            // }
-
-
-
-            if (index < 1) {
-                return
-            }
-
-            // if sender id === reciever id -> reciever sent
-
-            // const currentReceiverId = message.receiverId;
-
-            // const receiver = message.receiverId;
-            // if (this.allMessages.length > 1 && this.allMessages[index - 1].senderId === currentReceiverId) {
-            //     console.log("Sequential message RECIEVED")
-            // } else {
-            //     console.log("First msg -> display name")
-            // }
-        },
 
 
         // determines whether to display sender name in chatbox
-        displayAuthor(message) {
-            return this.allMessages.length > 0 && message.type === 'recieved' && message.sequentMessage === false;
+        displayName(message, index) {
+            let isSentMsg = message.senderId === this.myID;
+            if (isSentMsg) {
+                return false
+            }
+
+            if (index < 1) {
+                return true
+            }
+
+            let isSequentMsg = message.senderId === this.allMessages[index - 1].senderId
+            if (isSequentMsg) {
+                return false
+            }
+
+            return true
         },
 
         getClass(message) {
-            if (message.type === "recieved") {
-                return { "recieved-message": true }
-            } else {
-                return { "sent-message": true }
-            }
+            let isSentMsg = message.senderId === this.myID;
+            return isSentMsg ? { "sent-message": true } : { "recieved-message": true }
         },
 
         msgPosition(message) {
-            let isSentMsg = message.senderId === this.$store.state.id;
+            let isSentMsg = message.senderId === this.myID;
 
             return {
                 alignSelf: isSentMsg ? "flex-end" : "flex-start"
@@ -220,8 +192,8 @@ export default {
     border-radius: 5px 5px 0 0;
     overflow: hidden;
     --padding: 15px;
-    --msg-border-rad: 13px;
-    --msg-padding: 7.5px 10px;
+    --msg-border-rad: 10px;
+    --msg-padding: 8px;
     --msg-margin-b: 5px;
 }
 
@@ -246,22 +218,13 @@ export default {
     gap: 10px;
 }
 
-/* .recieved-messages,
-.sent-messages {
-    display: flex;
-    flex-direction: column;
-} */
-
-/* .sent-messages>*:not(:last-child),
-.recieved-messages>*:not(:last-child) {
-    margin-bottom: var(--msg-margin-b);
-} */
 
 .sent-message,
 .recieved-message {
     padding: var(--msg-padding);
     border-radius: var(--msg-border-rad);
     word-break: break-word;
+    display: inline-block;
 }
 
 .message {
@@ -274,46 +237,48 @@ export default {
 
 
 .recieved-message {
-    background-color: rgb(185, 185, 185);
-    /* align-self: flex-start; */
+    background-color: rgb(212, 212, 212);
 }
 
 
-.recieved-message .message-author {
+.message-author {
     padding-bottom: 3.5px;
 }
 
 
 .sent-message {
-    background-color: rgb(212, 212, 212);
+    background-color: rgb(201, 201, 201);
     /* align-self: flex-end; */
 
 }
 
 
 /* SEND MESSAGE FORM */
+
 .send-message {
+
     background-color: var(--color-white);
     padding: 10px;
-}
-
-.send-message form {
     display: flex;
+    gap: 5px;
+
+}
+
+.send-message input {
+    padding: 12px 20px;
     border-radius: 30px;
-    padding: 10px 20px;
-    overflow: hidden;
-    box-shadow: var(--container-shadow);
+
 }
 
-.send-message form input {
-    padding: 0;
-    box-shadow: none;
-    background-color: inherit;
-}
 
-.send-message form button {
+
+.send-message button {
     border: none;
     background-color: inherit;
     font-size: 1.25em;
+}
+
+input {
+    /* box-shadow: 0 0 2px 0 black; */
 }
 </style>
