@@ -107,7 +107,6 @@ export default {
                 ...obj
             });
 
-
             this.$store.commit("updateOpenChats", this.chats)
         },
 
@@ -121,6 +120,7 @@ export default {
             })
 
             this.$store.commit("updateOpenChats", this.chats)
+
 
         }
     }

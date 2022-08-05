@@ -36,21 +36,27 @@ export default {
     data() {
         return {
             previousMessages: [],
-            contentLoaded: false,
         }
     },
 
     created() {
         this.getPreviousMessages();
+    },
 
+    unmounted() {
+        let msgs = this.$store.state.newChatMessages;
+        // console.log("Before Msgs", msgs)
 
+        msgs = msgs.filter((msg) => {
+            msg.receiverId === this.receiverId || msg.senderId === this.receiverId
+        })
+        // console.log("After msgs", msgs)
 
+        this.$store.commit("updateNewChatMessages", msgs)
     },
 
     computed: {
         allMessages() {
-            // console.log("Previous messages", this.previousMessages)
-
             return [...this.previousMessages, ...this.$store.getters.getMessages(this.receiverId, this.type)]
         },
 
@@ -140,6 +146,7 @@ export default {
 
             this.allMessages.push({ msg: "Hey! How are you mate?", type: "recieved", sequentMessage: isSequentMessage })
         },
+
 
 
         isSequentMessage(message, index) {
