@@ -20,6 +20,17 @@ func (repo *MsgRepository) Save(msg models.ChatMessage) error {
 	return nil
 }
 
+func (repo *MsgRepository) SaveGroupMsg(msg models.ChatMessage) error {
+	stmt, err := repo.DB.Prepare("INSERT INTO group_messages (message_id, receiver_id) values (?,?)")
+	if err != nil {
+		return err
+	}
+	if _, err := stmt.Exec(msg.ID, msg.ReceiverId); err != nil {
+		return err
+	}
+	return nil
+}
+
 // needs RECEIVER and SENDER as input
 func (repo *MsgRepository) GetAll(msgIn models.ChatMessage) ([]models.ChatMessage, error) {
 	var messages []models.ChatMessage

@@ -16,4 +16,6 @@ type MsgRepository interface {
 	// needs  RECEIVER and SENDER as input
 	GetAll(ChatMessage) ([]ChatMessage, error)
 	GetAllGroup(userId, groupId string) ([]ChatMessage, error)
+
+	SaveGroupMsg(ChatMessage)error
 }

@@ -2,11 +2,11 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
 	ws "social-network/pkg/wsServer"
-	"fmt"
 )
 
 // get all previous messages for chat
@@ -47,7 +47,7 @@ func (handler *Handler) Messages(w http.ResponseWriter, r *http.Request) {
 }
 
 //new chat message wits for POST requet with SENDER, RECEIVER AND TYPE
-// function saves new message and responds 
+// function saves new message and responds
 // to sender with regular http response
 // to recievers through websocket connection
 func (handler *Handler) NewMessage(wsServer *ws.Server, w http.ResponseWriter, r *http.Request) {
@@ -75,8 +75,8 @@ func (handler *Handler) NewMessage(wsServer *ws.Server, w http.ResponseWriter, r
 	// send message respond with new message to sender
 	utils.RespondWithMessages(w, []models.ChatMessage{msg}, 200)
 
-	 /* ------------------ respond through websocket to receiver ----------------- */
-	if msg.Type == "PERSON" { 
+	/* ------------------ respond through websocket to receiver ----------------- */
+	if msg.Type == "PERSON" {
 		for client := range wsServer.Clients {
 			if client.ID == msg.ReceiverId {
 				client.SendChatMessage(msg)
@@ -90,7 +90,10 @@ func (handler *Handler) NewMessage(wsServer *ws.Server, w http.ResponseWriter, r
 			return
 		}
 		for i := 0; i < len(allMembers); i++ {
-
+			if allMembers[i].ID != msg.SenderId {
+				/* -------- save also in group_messages table -------- */
+				err = handler.repos.MsgRepo.SaveGroupMsg(models.ChatMessage{ID: msg.ID, ReceiverId: allMembers[i].ID})
+			}
 			for client := range wsServer.Clients {
 				if client.ID == msg.SenderId {
 					continue
