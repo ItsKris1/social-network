@@ -31,11 +31,27 @@ func (handler *Handler) Messages(w http.ResponseWriter, r *http.Request) {
 			utils.RespondWithError(w, "Error on getting the messages", 200)
 			return
 		}
+		// mark as read
+		for i:=0; i<len(messages); i++{
+			err = handler.repos.MsgRepo.MarkAsRead(messages[i])
+			if err != nil {
+			utils.RespondWithError(w, "Error on marking message as read", 200)
+			return
+		}
+		}
 	} else if msgIn.Type == "GROUP" {
 		messages, err = handler.repos.MsgRepo.GetAllGroup(msgIn.SenderId, msgIn.ReceiverId)
 		if err != nil {
 			utils.RespondWithError(w, "Error on getting the messages", 200)
 			return
+		}
+		// mark as read
+		for i:=0; i<len(messages); i++{
+				err = handler.repos.MsgRepo.MarkAsReadGroup(models.ChatMessage{ID: messages[i].ID, ReceiverId: msgIn.SenderId})
+			if err != nil {
+				utils.RespondWithError(w, "Error on marking message as read", 200)
+				return
+			}
 		}
 	}
 	/* --------------------------- attach sender data --------------------------- */

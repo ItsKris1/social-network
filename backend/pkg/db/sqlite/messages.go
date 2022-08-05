@@ -59,3 +59,19 @@ func (repo *MsgRepository) GetAllGroup(userId, groupId string) ([]models.ChatMes
 	}
 	return messages, nil
 }
+
+func (repo *MsgRepository) MarkAsRead(msg models.ChatMessage) error {
+	_, err := repo.DB.Exec("UPDATE messages SET is_read = ? WHERE message_id=? AND receiver_id =?", 1, msg.ID, msg.ReceiverId)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (repo *MsgRepository) MarkAsReadGroup(msg models.ChatMessage) error {
+	_, err := repo.DB.Exec("UPDATE group_messages SET is_read = ? WHERE message_id = ? AND  receiver_id = ?", 1, msg.ID, msg.ReceiverId)
+	if err != nil {
+		return err
+	}
+	return nil
+}
