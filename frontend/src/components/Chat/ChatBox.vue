@@ -44,15 +44,30 @@ export default {
     },
 
     unmounted() {
-        let msgs = this.$store.state.newChatMessages;
-        // console.log("Before Msgs", msgs)
 
-        msgs = msgs.filter((msg) => {
-            msg.receiverId === this.receiverId || msg.senderId === this.receiverId
-        })
-        // console.log("After msgs", msgs)
+        // CLEAR NEW MESSAGES
+        // because chat is closed and next time we open the chat we fetch all the messages
 
-        this.$store.commit("updateNewChatMessages", msgs)
+        if (this.type === "GROUP") {
+            // filter messages by clearing messages, which were sent or received in this chatBox
+            let msgs = this.$store.state.newGroupChatMessages;
+            msgs = msgs.filter((msg) => {
+                msg.receiverId !== this.receiverId;
+            })
+            this.$store.commit("updateNewGroupChatMessages", msgs)
+        } else {
+            let msgs = this.$store.state.newChatMessages;
+
+            // filter messages by clearing messages, which were sent or received in this chatBox
+            msgs = msgs.filter((msg) => {
+                if (msg.receiverId === this.receiverId || msg.senderId === this.receiverId) {
+                    return false
+                }
+
+            })
+            this.$store.commit("updateNewChatMessages", msgs)
+        }
+
     },
 
     computed: {
@@ -60,13 +75,6 @@ export default {
             return [...this.previousMessages, ...this.$store.getters.getMessages(this.receiverId, this.type)]
         },
 
-        // newMessages() {
-        //     console.log("Getting messages")
-        //     return this.$store.getters.getMessages(this.receiverId, this.type)
-
-
-
-        // }
     },
 
     watch: {

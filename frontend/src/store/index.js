@@ -322,9 +322,26 @@ export default createStore({
         console.log("New message")
         const data = JSON.parse(e.data);
         if (data.action == "chat") {
-          const isRecieverChatOpen = state.openChats.some((chat) => chat.receiverId === data.chatMessage.receiverId || chat.receiverId === data.chatMessage.senderId)
+
+          // only broadcast messages when participants(sender and reciever) chat is open
+          const isParticipantsChatOpen = state.openChats.some((chat) => {
+
+            // chat is open with receiver
+            if (chat.receiverId === data.chatMessage.receiverId) {
+              return true
+            }
+
+            // chat is open with sender
+            // check type cuz we may have a scenario where we have the chat open with sender
+            // but not the group and that will cause to broadcast the message to GROUP chat;
+            if (data.chatMessage.type === "PERSON" && chat.receiverId === data.chatMessage.senderId) {
+              return true
+            }
+
+
+          })
           // console.log("isRecieverChatOpen", isRecieverChatOpen)
-          if (isRecieverChatOpen) {
+          if (isParticipantsChatOpen) {
             console.log("Dispatching a message..")
             dispatch("addNewChatMessage", data.chatMessage)
           }
