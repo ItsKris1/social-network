@@ -32,12 +32,12 @@ func (handler *Handler) Messages(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		// mark as read
-		for i:=0; i<len(messages); i++{
+		for i := 0; i < len(messages); i++ {
 			err = handler.repos.MsgRepo.MarkAsRead(messages[i])
 			if err != nil {
-			utils.RespondWithError(w, "Error on marking message as read", 200)
-			return
-		}
+				utils.RespondWithError(w, "Error on marking message as read", 200)
+				return
+			}
 		}
 	} else if msgIn.Type == "GROUP" {
 		messages, err = handler.repos.MsgRepo.GetAllGroup(msgIn.SenderId, msgIn.ReceiverId)
@@ -46,8 +46,8 @@ func (handler *Handler) Messages(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		// mark as read
-		for i:=0; i<len(messages); i++{
-				err = handler.repos.MsgRepo.MarkAsReadGroup(models.ChatMessage{ID: messages[i].ID, ReceiverId: msgIn.SenderId})
+		for i := 0; i < len(messages); i++ {
+			err = handler.repos.MsgRepo.MarkAsReadGroup(models.ChatMessage{ID: messages[i].ID, ReceiverId: msgIn.SenderId})
 			if err != nil {
 				utils.RespondWithError(w, "Error on marking message as read", 200)
 				return
@@ -82,7 +82,6 @@ func (handler *Handler) NewMessage(wsServer *ws.Server, w http.ResponseWriter, r
 	/* ---------------------------- save in database ---------------------------- */
 	err = handler.repos.MsgRepo.Save(msg)
 	if err != nil {
-		fmt.Println(err)
 		utils.RespondWithError(w, "Error on saving message", 200)
 		return
 	}
@@ -122,4 +121,25 @@ func (handler *Handler) NewMessage(wsServer *ws.Server, w http.ResponseWriter, r
 
 		}
 	}
+}
+
+//respond with list of messages, that user has missed
+// in response include message_id, senderId (group id or user id) type -> group or person
+func (handler *Handler) UnreadMessages(w http.ResponseWriter, r *http.Request) {
+	w = utils.ConfigHeader(w)
+
+	userId := r.Context().Value(utils.UserKey).(string)
+
+	messages, err := handler.repos.MsgRepo.GetUnread(userId)
+	if err != nil {
+		utils.RespondWithError(w, "Error on getting the unread messages", 200)
+		return
+	}
+	groupMessages, err := handler.repos.MsgRepo.GetUnreadGroup(userId)
+	if err != nil {
+		utils.RespondWithError(w, "Error on getting the unread messages", 200)
+		return
+	}
+	allUnreadMessages := append(messages, groupMessages...)
+	fmt.Println("Messages found: ", allUnreadMessages)
 }

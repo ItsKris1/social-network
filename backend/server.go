@@ -99,6 +99,7 @@ func setRoutes(handler *handlers.Handler, wsServer *ws.Server) http.Handler {
 
 	/* ------------------------------ chat messages ----------------------------- */
 	mux.HandleFunc("/messages", handler.Auth(handler.Messages)) //get all chat messages for specific chat
+	mux.HandleFunc("/unreadMessages", handler.Auth(handler.UnreadMessages)) //get list of messages that isn't read
 	mux.HandleFunc("/newMessage", handler.Auth(func(w http.ResponseWriter, r *http.Request) {
 		handler.NewMessage(wsServer, w, r)
 	})) // new chat message
