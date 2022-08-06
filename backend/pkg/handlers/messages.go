@@ -146,3 +146,35 @@ func (handler *Handler) UnreadMessages(w http.ResponseWriter, r *http.Request) {
 	/* ---------------------------- respond to client --------------------------- */
 	utils.RespondWithChatStats(w, allUnreadMessages, 200)
 }
+
+// handler needs data about msg ->  id and type
+// and it marks it as read in database
+func (handler *Handler) MessageRead(w http.ResponseWriter, r *http.Request) {
+	w = utils.ConfigHeader(w)
+	/* --------------------------- read incoming data --------------------------- */
+	var msg models.ChatMessage
+	err := json.NewDecoder(r.Body).Decode(&msg)
+	if err != nil {
+		utils.RespondWithError(w, "Error on reading the incomming message", 200)
+		return
+	}
+	// attach current user id
+	msg.ReceiverId = r.Context().Value(utils.UserKey).(string)
+	if msg.Type == "GROUP" {
+		err = handler.repos.MsgRepo.MarkAsReadGroup(msg)
+		if err != nil {
+			utils.RespondWithError(w, "Error on marking message as read", 200)
+			return
+		}
+	} else if msg.Type == "PERSON" {
+		err = handler.repos.MsgRepo.MarkAsRead(msg)
+		if err != nil {
+			utils.RespondWithError(w, "Error on marking message as read", 200)
+			return
+		}
+	} else {
+		utils.RespondWithError(w, "Error. Message type not provided or not recognized", 200)
+		return
+	}
+	utils.RespondWithSuccess(w, "Message marked as read successfuly", 200)
+}
