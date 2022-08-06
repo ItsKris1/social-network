@@ -22,8 +22,8 @@ type MsgRepository interface {
 	// needs  RECEIVER and SENDER as input
 	GetAll(ChatMessage) ([]ChatMessage, error)
 	GetAllGroup(userId, groupId string) ([]ChatMessage, error)
-	GetUnread(userId string) ([]ChatMessage, error)
-	GetUnreadGroup(userId string) ([]ChatMessage, error)
+	GetUnread(userId string) ([]ChatStats, error)
+	GetUnreadGroup(userId string) ([]ChatStats, error)
 	// mark as read
 	MarkAsRead(ChatMessage) error
 	MarkAsReadGroup(ChatMessage) error

@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
@@ -129,7 +128,7 @@ func (handler *Handler) UnreadMessages(w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)
 
 	userId := r.Context().Value(utils.UserKey).(string)
-
+	/* ---------- collect chat stats from db for prvate and group chats --------- */
 	messages, err := handler.repos.MsgRepo.GetUnread(userId)
 	if err != nil {
 		utils.RespondWithError(w, "Error on getting the unread messages", 200)
@@ -140,6 +139,10 @@ func (handler *Handler) UnreadMessages(w http.ResponseWriter, r *http.Request) {
 		utils.RespondWithError(w, "Error on getting the unread messages", 200)
 		return
 	}
+
+	/* ------------------------- combine all chat stats ------------------------- */
 	allUnreadMessages := append(messages, groupMessages...)
-	fmt.Println("Messages found: ", allUnreadMessages)
+
+	/* ---------------------------- respond to client --------------------------- */
+	utils.RespondWithChatStats(w, allUnreadMessages, 200)
 }

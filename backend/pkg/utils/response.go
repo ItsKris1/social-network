@@ -6,14 +6,6 @@ import (
 	"social-network/pkg/models"
 )
 
-// type CustomMessage struct {
-// 	Type    string         `json:"type"`    // msg type ex. errorr, success
-// 	Message string         `json:"message"` // message itself
-// 	Groups  []models.Group `json:"groups"`
-// 	Posts   []models.Post  `json:"posts"`
-// 	Users   []models.User  `json:"users"`
-// 	// additional properties/ data types can be added
-// }
 type ResponseMessage struct {
 	Type    string `json:"type"`
 	Message string `json:"message"` // message itself
@@ -46,6 +38,11 @@ type NotifMessage struct {
 type ChatMsgMessage struct {
 	Type     string               `json:"type"`
 	Messages []models.ChatMessage `json:"chatMessage"`
+}
+
+type ChatStatMessage struct {
+	Type      string             `json:"type"`
+	ChatStats []models.ChatStats `json:"chatStats"`
 }
 
 // Error takes writer, message, status code and additional error property
@@ -109,6 +106,14 @@ func RespondWithNotifications(w http.ResponseWriter, notifs []models.Notificatio
 func RespondWithMessages(w http.ResponseWriter, msgs []models.ChatMessage, code int) {
 	w.WriteHeader(code)
 	err := ChatMsgMessage{Messages: msgs, Type: "Success"}
+	jsonResp, _ := json.Marshal(err)
+	w.Write(jsonResp)
+}
+
+// responds with success chat stats
+func RespondWithChatStats(w http.ResponseWriter, msgs []models.ChatStats, code int) {
+	w.WriteHeader(code)
+	err := ChatStatMessage{ChatStats: msgs, Type: "Success"}
 	jsonResp, _ := json.Marshal(err)
 	w.Write(jsonResp)
 }
