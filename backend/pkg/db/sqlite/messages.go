@@ -20,6 +20,17 @@ func (repo *MsgRepository) Save(msg models.ChatMessage) error {
 	return nil
 }
 
+func (repo *MsgRepository) SaveGroupMsg(msg models.ChatMessage) error {
+	stmt, err := repo.DB.Prepare("INSERT INTO group_messages (message_id, receiver_id) values (?,?)")
+	if err != nil {
+		return err
+	}
+	if _, err := stmt.Exec(msg.ID, msg.ReceiverId); err != nil {
+		return err
+	}
+	return nil
+}
+
 // needs RECEIVER and SENDER as input
 func (repo *MsgRepository) GetAll(msgIn models.ChatMessage) ([]models.ChatMessage, error) {
 	var messages []models.ChatMessage
@@ -44,6 +55,50 @@ func (repo *MsgRepository) GetAllGroup(userId, groupId string) ([]models.ChatMes
 	for rows.Next() {
 		var msg models.ChatMessage
 		rows.Scan(&msg.ID, &msg.SenderId, &msg.ReceiverId, &msg.Type, &msg.Content)
+		messages = append(messages, msg)
+	}
+	return messages, nil
+}
+
+func (repo *MsgRepository) MarkAsRead(msg models.ChatMessage) error {
+	_, err := repo.DB.Exec("UPDATE messages SET is_read = ? WHERE message_id=? AND receiver_id =?", 1, msg.ID, msg.ReceiverId)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (repo *MsgRepository) MarkAsReadGroup(msg models.ChatMessage) error {
+	_, err := repo.DB.Exec("UPDATE group_messages SET is_read = ? WHERE message_id = ? AND  receiver_id = ?", 1, msg.ID, msg.ReceiverId)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (repo *MsgRepository) GetUnread(userId string) ([]models.ChatStats, error) {
+	var messages []models.ChatStats
+	rows, err := repo.DB.Query("SELECT sender_id, type, COUNT(*) FROM messages WHERE receiver_id = ? AND  is_read = 0 GROUP BY sender_id;", userId)
+	if err != nil {
+		return messages, err
+	}
+	for rows.Next() {
+		var msg models.ChatStats
+		rows.Scan(&msg.ID, &msg.Type, &msg.UnreadMsgCount)
+		messages = append(messages, msg)
+	}
+	return messages, nil
+}
+
+func (repo *MsgRepository) GetUnreadGroup(userId string) ([]models.ChatStats, error) {
+	var messages []models.ChatStats
+	rows, err := repo.DB.Query("SELECT receiver_id, type, COUNT(*) FROM messages WHERE type = 'GROUP'AND ((SELECT administrator FROM groups WHERE group_id = messages.receiver_id) = ? OR (SELECT COUNT(*) FROM group_users WHERE group_id = messages.receiver_id AND user_id = ?) = 1) AND (SELECT is_read FROM group_messages WHERE message_id = messages.message_id AND receiver_id = ?) = 0 GROUP BY receiver_id;", userId, userId, userId)
+	if err != nil {
+		return messages, err
+	}
+	for rows.Next() {
+		var msg models.ChatStats
+		rows.Scan(&msg.ID, &msg.Type, &msg.UnreadMsgCount)
 		messages = append(messages, msg)
 	}
 	return messages, nil
