@@ -59,7 +59,6 @@ func (client *Client) SendNotification(notif models.Notification) {
 
 func (client *Client) SendChatMessage(msg models.ChatMessage) {
 	message := WsMessage{
-		UserID: client.ID,
 		Action:      ChatAction,
 		ChatMessage: msg,
 	}

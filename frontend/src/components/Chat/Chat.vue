@@ -65,7 +65,7 @@ export default {
 
     computed: mapState({
         userGroups: state => state.groups.userGroups,
-        unreadMessages: state => state.unreadMessages,
+        unreadMessages: state => state.chat.unreadMessages,
     }),
 
     methods: {

@@ -41,41 +41,10 @@ export default {
         this.getPreviousMessages();
     },
 
-    computed: {
-        ...mapState(['unreadMessages'])
-    },
-
-
     unmounted() {
-
-        // CLEAR NEW MESSAGES
-        // because chat is closed and next time we open the chat we fetch all the messages
-
-        if (this.type === "GROUP") {
-            let msgs = this.$store.state.newGroupChatMessages;
-
-            // filter new messages by removing all messages that were sent to that receiverId
-            // receiverId is equal to group ID
-            msgs = msgs.filter((msg) => {
-                if (msg.receiverId === this.receiverId) {
-                    return false
-                }
-            })
-            this.$store.commit("updateNewGroupChatMessages", msgs)
-        } else {
-            let msgs = this.$store.state.newChatMessages;
-
-            // filter new messages by removing all messages that were sent or received in that chat
-            msgs = msgs.filter((msg) => {
-                if (msg.receiverId === this.receiverId || msg.senderId === this.receiverId) {
-                    return false
-                }
-
-            })
-            this.$store.commit("updateNewChatMessages", msgs)
-        }
-
+        this.clearChatNewMessages();
     },
+
 
     computed: {
         allMessages() {
@@ -144,10 +113,35 @@ export default {
 
         },
 
+        clearChatNewMessages() {
+            // CLEAR NEW MESSAGES
+            // because chat is closed and next time we open the chat we fetch all the messages
 
+            if (this.type === "GROUP") {
+                let msgs = this.$store.state.chat.newGroupChatMessages;
 
+                // filter new messages by removing all messages that were sent to that receiverId
+                // receiverId is equal to group ID
+                msgs = msgs.filter((msg) => {
+                    if (msg.receiverId === this.receiverId) {
+                        return false
+                    }
+                })
+                this.$store.commit("updateNewGroupChatMessages", msgs)
+            } else {
+                let msgs = this.$store.state.chat.newChatMessages;
 
+                // filter new messages by removing all messages that were sent or received in that chat
+                msgs = msgs.filter((msg) => {
+                    if (msg.receiverId === this.receiverId || msg.senderId === this.receiverId) {
+                        return false
+                    }
 
+                })
+                this.$store.commit("updateNewChatMessages", msgs)
+            }
+
+        },
 
         // determines whether to display sender name in chatbox
         displayName(message, index) {
@@ -182,11 +176,11 @@ export default {
         }
 
     },
-
-
-
 }
+
 </script>
+
+
 <style scoped>
 .chatbox-wrapper {
     height: 400px;
@@ -281,9 +275,5 @@ export default {
     border: none;
     background-color: inherit;
     font-size: 1.25em;
-}
-
-input {
-    /* box-shadow: 0 0 2px 0 black; */
 }
 </style>

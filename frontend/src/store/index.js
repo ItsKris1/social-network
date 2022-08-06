@@ -1,18 +1,15 @@
 import { createStore } from "vuex";
-import router from "@/router";
+import chat from "@/store/modules/chat.js"
+import actions from "@/store/actions.js"
 
 export default createStore({
+  modules: {
+    chat
+  },
   //------------------------------------- state is like a variables, which hold a values.
   state: {
     id: "", // id is currently logged in user ID
     wsConn: null,
-
-    // CHAT
-    newChatMessages: [],
-    newGroupChatMessages: [],
-    unreadMessages: [],
-
-    openChats: [],
 
     profileInfo: {},
     myFollowers: null,
@@ -102,42 +99,6 @@ export default createStore({
       }
     },
 
-
-    getMessages: ({ newChatMessages, newGroupChatMessages, id }) => (receiverId, type) => {
-      let messages = [];
-
-      if (type === "PERSON") {
-        messages = newChatMessages.filter((e) => {
-          return (e.receiverId === receiverId && e.senderId === id) || (e.receiverId === id && e.senderId === receiverId)
-        })
-      } else {
-        messages = newGroupChatMessages.filter((msg) => {
-          // console.log(msg.receiverId === receiverId)
-          return (msg.receiverId === receiverId)
-        })
-
-        // console.log("Group messages returned", messages)
-      }
-
-      return messages
-      // return newChatMessages.filter((e) => {
-      //   return (e.receiverId === receiverId && e.senderId === id) || (e.receiverId === id && e.senderId === receiverId)
-      // })
-    },
-
-
-    getUnreadMessagesCount: ({ state }) => (userId) => {
-      const userUnreadMsgs = state.unreadMessages.filter((msg) => {
-        msg.receiverId === userId
-      })
-
-      return userUnreadMsgs.length
-    }
-    // getGroupMessages: ({ newGroupChatMessages }) => (receiverId) => {
-    //   return newGroupChatMessages.filter((msg) => {
-    //     return (msg.receiverId === receiverId)
-    //   })
-    // }
   },
   //-------------------------------------- mutations is a way for change state.
   mutations: {
@@ -171,232 +132,12 @@ export default createStore({
       state.wsConn = wsConn
     },
 
-    updateNewChatMessages(state, msgs) {
-      state.newChatMessages = msgs
-    },
-
-    updateNewGroupChatMessages(state, msgs) {
-      state.newGroupChatMessages = msgs
-    },
-
     updateUserGroups(state, userGroups) {
       state.groups.userGroups = userGroups
     },
 
-    updateOpenChats(state, openChats) {
-      state.openChats = openChats
-    },
-
-    updateUnreadChatMessages(state, unreadMsgs) {
-      state.unreadMessages = unreadMsgs
-    }
-
 
   },
   //------------------------------------------Actions
-  actions: {
-    //fetch all posts of all users.
-    async fetchPosts() {
-      await fetch("http://localhost:8081/allPosts", {
-        credentials: "include",
-      })
-        // .then((r=>console.log(r)))
-        .then((res) => res.json())
-        .then((json) => {
-          // console.log(json);
-          const posts = json.posts;
-          this.commit("updatePosts", posts);
-        });
-    },
-    //fetch current logged in user posts.
-    async fetchMyPosts() {
-      let id = "";
-      await fetch("http://localhost:8081/currentUser", {
-        //first get my ID
-        credentials: "include",
-      })
-        .then((r) => r.json())
-        .then((json) => {
-          // console.log("get id - ", json);
-          id = json.users[0].id;
-        });
-      await fetch("http://localhost:8081/userPosts?id=" + id, {
-        //then fetch all posts with this ID
-        credentials: "include",
-      })
-        .then((r) => r.json())
-        .then((r) => {
-          const myposts = r.posts;
-          this.commit("updateMyPosts", myposts);
-          // console.log(myposts);
-        });
-      console.log("here")
-
-      // .then((json) => console.log("get posts -", json));
-    },
-
-    async getMyUserID({ commit }) {
-
-      await fetch("http://localhost:8081/currentUser", {
-        credentials: "include",
-      })
-        .then((r) => r.json())
-        .then((json) => {
-          // console.log("JSON response", json)
-          commit("updateMyUserID", json.users[0].id)
-        });
-    },
-
-    async getMyProfileInfo(context) {
-      await context.dispatch("getMyUserID");
-      const userID = context.state.id;
-      await fetch("http://localhost:8081/userData?userId=" + userID, {
-        credentials: "include",
-      })
-        .then((r) => r.json())
-        .then((json) => {
-          let userInfo = json.users[0];
-          // console.log(userInfo);
-          this.commit("updateProfileInfo", userInfo);
-          // console.log("userinfo -", json);
-        });
-    },
-    async getAllUsers() {
-      await fetch("http://localhost:8081/allUsers", {
-        credentials: "include",
-      })
-        .then((r) => r.json())
-        .then((json) => {
-          let users = json.users;
-          this.commit("updateAllUsers", users);
-          // console.log("allUsers:", json.users);
-        });
-    },
-    async getAllGroups() {
-      await fetch("http://localhost:8081/allGroups", {
-        credentials: "include",
-      })
-        .then((r) => r.json())
-        .then((json) => {
-          let groups = json.groups;
-          this.commit("updateAllGroups", groups);
-          // console.log("Allgroups:", json.groups);
-        });
-    },
-
-    async getUserGroups(context) {
-      const response = await fetch(`http://localhost:8081/userGroups`, {
-        credentials: 'include'
-      });
-
-      const data = await response.json();
-      // console.log("/getUserGroups data", data)
-      // context.state.groups.userGroups.loaded = true;
-      context.commit("updateUserGroups", data)
-    },
-
-    async getMyFollowers(context) {
-      await context.dispatch("getMyProfileInfo");
-      const myID = context.state.profileInfo.id;
-
-      const response = await fetch(`http://localhost:8081/followers?userId=${myID}`, {
-        credentials: 'include'
-      });
-
-      const data = await response.json();
-
-      context.commit("updateMyFollowers", data.users)
-
-    },
-
-
-    async getGroupPosts() {
-      await fetch(
-        "http://localhost:8081/groupPosts?groupId=" +
-        router.currentRoute.value.params.id,
-        {
-          credentials: "include",
-        }
-      )
-        .then((r) => r.json())
-        .then((json) => {
-          // console.log(json)
-          let posts = json.posts;
-          this.commit("updateGroupPosts", posts);
-        });
-    },
-
-    createWebSocketConn({ commit, dispatch, state }) {
-      const ws = new WebSocket("ws://localhost:8081/ws");
-      ws.addEventListener("open", () => {
-        console.log("WS: Connection has established")
-      })
-
-      ws.addEventListener("message", (e) => {
-        // console.log("New message")
-        const data = JSON.parse(e.data);
-        if (data.action == "chat") {
-
-          // only broadcast messages when participants(sender and reciever) chat is open
-          const isParticipantsChatOpen = state.openChats.some((chat) => {
-
-            // chat is open with receiver
-            if (chat.receiverId === data.chatMessage.receiverId) {
-              return true
-            }
-
-            // chat is open with sender
-            // check type cuz we may have a scenario where we have the chat open with sender
-            // but not the group and that will cause to broadcast the message to GROUP chat;
-            if (data.chatMessage.type === "PERSON" && chat.receiverId === data.chatMessage.senderId) {
-              return true
-            }
-
-
-          })
-          if (isParticipantsChatOpen) {
-            // console.log("Dispatching a message..")
-            dispatch("addNewChatMessage", data.chatMessage)
-          } else {
-
-            // THIS IS THE RECEIVER WS
-            // i get from msg
-            // sID, gID
-            // add unread msgs
-            console.log("Unread msg..")
-            console.log(data.chatMessage.groupuserreceiverId)
-            dispatch("addUnreadChatMessage", data.chatMessage)
-          }
-        }
-
-      })
-
-      ws.addEventListener("close", (e) => {
-        console.log("Connection closed");
-      })
-
-
-
-      commit("updateWebSocketConn", ws)
-    },
-
-    addNewChatMessage({ commit, state }, payload) {
-      let newMessages;
-
-      if (payload["type"] === "PERSON") {
-        newMessages = [...state.newChatMessages, payload]
-        commit("updateNewChatMessages", newMessages)
-      } else {
-        newMessages = [...state.newGroupChatMessages, payload]
-        commit("updateNewGroupChatMessages", newMessages)
-      }
-    },
-
-    addUnreadChatMessage({ commit, state }, payload) {
-      const unreadChatMsgs = state.unreadMessages
-      unreadChatMsgs.push(payload)
-      commit("updateUnreadChatMessages", unreadChatMsgs)
-    }
-  },
-  modules: {},
+  actions: actions
 });
