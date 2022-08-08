@@ -32,6 +32,10 @@ func (handler *Handler) Messages(w http.ResponseWriter, r *http.Request) {
 		}
 		// mark as read
 		for i := 0; i < len(messages); i++ {
+			// if current user is also sender of message, then skip
+			if messages[i].SenderId == msgIn.SenderId {
+				continue
+			}
 			err = handler.repos.MsgRepo.MarkAsRead(messages[i])
 			if err != nil {
 				utils.RespondWithError(w, "Error on marking message as read", 200)
@@ -46,6 +50,10 @@ func (handler *Handler) Messages(w http.ResponseWriter, r *http.Request) {
 		}
 		// mark as read
 		for i := 0; i < len(messages); i++ {
+			// if current user is also sender of message, then skip
+			if messages[i].SenderId == msgIn.SenderId {
+				continue
+			}
 			err = handler.repos.MsgRepo.MarkAsReadGroup(models.ChatMessage{ID: messages[i].ID, ReceiverId: msgIn.SenderId})
 			if err != nil {
 				utils.RespondWithError(w, "Error on marking message as read", 200)
