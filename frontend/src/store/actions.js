@@ -131,18 +131,26 @@ export default {
 
     createWebSocketConn({ commit, dispatch, state }) {
         const ws = new WebSocket("ws://localhost:8081/ws");
-        ws.addEventListener("open", () => {
+        ws.addEventListener("open", async () => {
             console.log("WS: Connection has established")
+
+
+            // get unread messages?
+            const response = await fetch('http://localhost:8081/unreadMessages', {
+                credentials: 'include'
+            });
+            const data = await response.json();
+            // console.log("/unReadmessages data", data)
+
         })
 
         ws.addEventListener("message", (e) => {
             // console.log("New message")
             const data = JSON.parse(e.data);
             if (data.action == "chat") {
-
                 // only broadcast messages when participants(sender and reciever) chat is open
-                const isParticipantsChatOpen = state.openChats.some((chat) => {
 
+                const isParticipantsChatOpen = state.chat.openChats.some((chat) => {
                     // chat is open with receiver
                     if (chat.receiverId === data.chatMessage.receiverId) {
                         return true
@@ -154,21 +162,16 @@ export default {
                     if (data.chatMessage.type === "PERSON" && chat.receiverId === data.chatMessage.senderId) {
                         return true
                     }
-
-
                 })
                 if (isParticipantsChatOpen) {
                     // console.log("Dispatching a message..")
                     dispatch("addNewChatMessage", data.chatMessage)
                 } else {
-
-                    // THIS IS THE RECEIVER WS
-                    // i get from msg
-                    // sID, gID
-                    // add unread msgs
-                    console.log("Unread msg..")
-                    // dispatch("addUnreadChatMessage", data.chatMessage)
+                    // console.log("Unread msg..")
+                    dispatch("addUnreadChatMessage", data.chatMessage)
                 }
+
+
             }
 
         })

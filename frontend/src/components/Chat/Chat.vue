@@ -14,19 +14,33 @@
                 <ul class="item-list" v-if="usersIFollow.type && usersIFollow.users !== null">
 
                     <li v-for="user in usersIFollow.users">
-                        <div class="user-picture small"></div>
-                        <div class="item-text" @click.stop="openChat($event, { receiverId: user.id, type: 'PERSON' })">
-                            {{ user.nickname }}</div>
+                        <div class="user">
+                            <div class="user-picture small"></div>
+                            <div class="item-text"
+                                 @click.stop="openChat($event, { receiverId: user.id, type: 'PERSON' })">
+                                {{ user.nickname }}</div>
+                        </div>
+
+                        <!-- <p class="unreadMessagesCount" v-if="getUnreadMessagesCount">{{ getUnreadMessagesCount }}</p> -->
+
                     </li>
 
                 </ul>
 
                 <ul class="item-list" v-if="userGroups.type && userGroups.groups !== null">
                     <li v-for="group in userGroups.groups">
-                        <img src="../../assets/icons/users-alt.svg" alt="" class="small">
 
-                        <div class="item-text" @click.stop="openChat($event, { receiverId: group.id, type: 'GROUP' })">
-                            {{ group.name }}</div>
+                        <div class="group">
+                            <img src="../../assets/icons/users-alt.svg" alt="" class="small">
+
+                            <div class="item-text"
+                                 @click.stop="openChat($event, { receiverId: group.id, type: 'GROUP' })">
+                                {{ group.name }}</div>
+                        </div>
+
+                        <p class="unreadMessagesCount" v-if="getUnreadGroupMessagesCount(group.id)">
+                            {{ getUnreadGroupMessagesCount(group.id) }}</p>
+
                     </li>
 
                 </ul>
@@ -42,7 +56,8 @@
 
 
 <script>
-import { mapState } from 'vuex';
+import { handleError } from 'vue';
+import { mapGetters, mapState } from 'vuex';
 import ChatBox from './ChatBox.vue'
 export default {
     name: '',
@@ -61,12 +76,28 @@ export default {
     created() {
         this.getUsersIFollow();
         this.$store.dispatch("getUserGroups");
+        // this.getUnreadMessagesCount()
     },
 
-    computed: mapState({
-        userGroups: state => state.groups.userGroups,
-        unreadMessages: state => state.chat.unreadMessages,
-    }),
+    computed: {
+        ...mapState({
+            userGroups: state => state.groups.userGroups,
+            unreadMessages: state => state.chat.unreadMessages,
+        }),
+
+        ...mapGetters(['getUnreadMessagesCount', 'getUnreadGroupMessagesCount']),
+    },
+
+    watch: {
+        // unreadMessages: {
+        //     handler: (newVal) => console.log("Val", newVal),
+        //     deep: true
+        // },
+
+        getUnreadMessagesCount(newVal) {
+            console.log("Messages count", newVal)
+        }
+    },
 
     methods: {
         async getUsersIFollow() {
@@ -85,13 +116,8 @@ export default {
 
         },
 
-        getUnreadMessagesCount(userId) {
-            this.$store.getters.getUnreadMessagesCount(userId)
-        },
-
         toggleShowContent() {
             // console.log("Content toggled!")
-
             this.showContent = !this.showContent
         },
 
@@ -111,6 +137,7 @@ export default {
                 ...obj
             });
 
+            this.$store.dispatch("removeUnreadMessages", { receiverId: obj.receiverId })
             this.$store.commit("updateOpenChats", this.chats)
         },
 
@@ -126,7 +153,10 @@ export default {
             this.$store.commit("updateOpenChats", this.chats)
 
 
-        }
+        },
+
+
+
     }
 }
 </script>
@@ -175,5 +205,21 @@ export default {
 
 .rotate {
     transform: rotate(180deg);
+}
+
+.user {
+    display: flex;
+    justify-content: space-between;
+}
+
+.item-list li {
+    justify-content: space-between;
+}
+
+.user,
+.group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 </style>

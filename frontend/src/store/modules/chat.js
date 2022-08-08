@@ -32,9 +32,17 @@ export default {
         },
 
 
-        getUnreadMessagesCount: ({ state }) => (userId) => {
-            const userUnreadMsgs = state.unreadMessages.filter((msg) => {
-                msg.receiverId === userId
+        getUnreadMessagesCount({ unreadMessages }, getters, rootState) {
+            const userUnreadMsgs = unreadMessages.filter((msg) => {
+                return msg.receiverId === rootState.id
+            })
+
+            return userUnreadMsgs.length
+        },
+
+        getUnreadGroupMessagesCount: ({ unreadMessages }, getters) => (groupId) => {
+            const userUnreadMsgs = unreadMessages.filter((msg) => {
+                return msg.type === "GROUP" && msg.receiverId === groupId
             })
 
             return userUnreadMsgs.length
@@ -54,7 +62,7 @@ export default {
             state.openChats = openChats
         },
 
-        updateUnreadChatMessages(state, unreadMsgs) {
+        updateUnreadMessages(state, unreadMsgs) {
             state.unreadMessages = unreadMsgs
         }
 
@@ -76,7 +84,16 @@ export default {
         addUnreadChatMessage({ commit, state }, payload) {
             const unreadChatMsgs = state.unreadMessages
             unreadChatMsgs.push(payload)
-            commit("updateUnreadChatMessages", unreadChatMsgs)
+            commit("updateUnreadMessages", unreadChatMsgs)
+        },
+
+
+        removeUnreadMessages({ state, commit }, payload) {
+            const unReadMsgs = state.unreadMessages.filter((msg) => {
+                return msg.receiverId !== payload.receiverId
+            })
+
+            commit('updateUnreadMessages', unReadMsgs);
         }
     },
 }
