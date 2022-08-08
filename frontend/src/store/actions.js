@@ -131,17 +131,8 @@ export default {
 
     createWebSocketConn({ commit, dispatch, state }) {
         const ws = new WebSocket("ws://localhost:8081/ws");
-        ws.addEventListener("open", async () => {
+        ws.addEventListener("open", () => {
             console.log("WS: Connection has established")
-
-
-            // get unread messages?
-            const response = await fetch('http://localhost:8081/unreadMessages', {
-                credentials: 'include'
-            });
-            const data = await response.json();
-            // console.log("/unReadmessages data", data)
-
         })
 
         ws.addEventListener("message", (e) => {
@@ -166,6 +157,7 @@ export default {
                 if (isParticipantsChatOpen) {
                     // console.log("Dispatching a message..")
                     dispatch("addNewChatMessage", data.chatMessage)
+                    dispatch("markMessageRead", data.chatMessage)
                 } else {
                     // console.log("Unread msg..")
                     dispatch("addUnreadChatMessage", data.chatMessage)

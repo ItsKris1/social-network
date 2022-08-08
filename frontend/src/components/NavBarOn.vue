@@ -3,7 +3,7 @@
     <div id="navbar">
 
         <div id="nav-titleSearch">
-            <router-link to="/" id="nav-title">Social Network</router-link>
+            <router-link to="/main" id="nav-title">Social Network</router-link>
             <Search />
         </div>
         <ul class="nav-links">

@@ -11,7 +11,8 @@
             </div>
 
             <div class="messaging-content" v-show="showContent">
-                <ul class="item-list" v-if="usersIFollow.type && usersIFollow.users !== null">
+                <ul class="item-list"
+                    v-if="usersIFollow.type && usersIFollow.users !== null">
 
                     <li v-for="user in usersIFollow.users">
                         <div class="user">
@@ -21,9 +22,9 @@
                                 {{ user.nickname }}</div>
                         </div>
 
-                        <p class="unreadMessagesCount" v-if="getUnreadMessagesCount(user.id)">{{
-                                getUnreadMessagesCount(user.id)
-                        }}</p>
+                        <p class="unreadMessagesCount"
+                           v-if="totalUnreadMessagesCount(user.id, 'PERSON') !== 0">
+                            {{ totalUnreadMessagesCount(user.id, 'PERSON') }}</p>
 
                     </li>
 
@@ -40,8 +41,9 @@
                                 {{ group.name }}</div>
                         </div>
 
-                        <p class="unreadMessagesCount" v-if="getUnreadGroupMessagesCount(group.id)">
-                            {{ getUnreadGroupMessagesCount(group.id) }}</p>
+                        <p class="unreadMessagesCount"
+                           v-if="totalUnreadMessagesCount(group.id, 'GROUP') !== 0">
+                            {{ totalUnreadMessagesCount(group.id, 'GROUP') }}</p>
 
                     </li>
 
@@ -58,7 +60,6 @@
 
 
 <script>
-import { handleError } from 'vue';
 import { mapGetters, mapState } from 'vuex';
 import ChatBox from './ChatBox.vue'
 export default {
@@ -69,43 +70,35 @@ export default {
             showContent: false,
             chats: [],
             usersIFollow: [],
+            unreadMsgsFromDB: [],
 
         }
     },
 
     mounted() { },
 
+    unmounted() {
+        this.$store.commit("updateUnreadMessages", [])
+    },
+
     created() {
         this.getUsersIFollow();
         this.$store.dispatch("getUserGroups");
-        // this.getUnreadMessagesCount()
+        this.fetchUnreadMessages();
     },
 
     computed: {
         ...mapState({
-            userGroups: state => state.groups.userGroups,
-            unreadMessages: state => state.chat.unreadMessages,
+            userGroups: state => state.groups.userGroups
         }),
 
-        ...mapGetters(['getUnreadMessagesCount', 'getUnreadGroupMessagesCount']),
+        ...mapGetters(['getUnreadMessagesCount', 'getUnreadGroupMessagesCount'])
     },
 
-    watch: {
-        // unreadMessages: {
-        //     handler: (newVal) => console.log("Val", newVal),
-        //     deep: true
-        // },
-
-        // getUnreadMessagesCount(newVal) {
-        //     console.log("Messages count", newVal)
-        // }
-    },
 
     methods: {
         async getUsersIFollow() {
-            if (this.$store.state.id === "") {
-                await this.$store.dispatch("getMyUserID");
-            }
+            await this.$store.dispatch("getMyUserID");
 
             const response = await fetch('http://localhost:8081/following?userId=' + this.$store.state.id, {
                 credentials: 'include'
@@ -113,15 +106,20 @@ export default {
 
             const data = await response.json();
 
-
             this.usersIFollow = data;
 
         },
 
-        toggleShowContent() {
-            // console.log("Content toggled!")
-            this.showContent = !this.showContent
+        async fetchUnreadMessages() {
+            const response = await fetch('http://localhost:8081/unreadMessages', {
+                credentials: 'include'
+            });
+            const data = await response.json();
+            console.log("/unReadmessages data", data)
+            this.unreadMsgsFromDB = data.chatStats;
+
         },
+
 
         openChat(e, obj) {
             // console.log("Trying to add a chatbox")
@@ -138,9 +136,14 @@ export default {
                 "name": e.target.textContent,
                 ...obj
             });
+            this.$store.commit("updateOpenChats", this.chats)
 
             this.$store.dispatch("removeUnreadMessages", { receiverId: obj.receiverId, type: obj.type })
-            this.$store.commit("updateOpenChats", this.chats)
+
+            if (Array.isArray(this.unreadMsgsFromDB)) {
+                this.unreadMsgsFromDB = this.unreadMsgsFromDB.filter((msg) => msg.id !== obj.receiverId)
+
+            }
         },
 
 
@@ -149,14 +152,40 @@ export default {
             // console.log("Removing chat")
             this.chats = this.chats.filter((chat) => {
                 return chat.name !== name
-
             })
 
             this.$store.commit("updateOpenChats", this.chats)
-
-
         },
 
+
+        unreadMsgsFromDBCount(userId) {
+
+            if (this.unreadMsgsFromDB === null) {
+                return 0
+            }
+            const userMsgObj = this.unreadMsgsFromDB.find((msg) => msg.id === userId)
+            if (userMsgObj === undefined) {
+                return 0
+            }
+
+            return userMsgObj.unreadMsgCount
+        },
+
+
+        // adds to the previous unread messages
+        // unread messages from database and current session
+        totalUnreadMessagesCount(receiverId, type) {
+            if (type === "PERSON") {
+                return this.getUnreadMessagesCount(receiverId) + this.unreadMsgsFromDBCount(receiverId)
+            } else {
+                return this.getUnreadGroupMessagesCount(receiverId) + this.unreadMsgsFromDBCount(receiverId)
+            }
+        },
+
+        toggleShowContent() {
+            // console.log("Content toggled!")
+            this.showContent = !this.showContent
+        },
 
 
     }
@@ -182,15 +211,19 @@ export default {
 .messaging-header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 12px 20px;
     background-color: var(--color-blue);
     border-top-left-radius: 5px;
     color: var(--color-white);
+    cursor: pointer;
 }
 
 .messaging-header i {
-    font-size: 18px;
+    font-size: 20px;
+    transition: transform 0.35s linear
 }
+
 
 .messaging-header p {
     font-weight: 300;
@@ -223,5 +256,10 @@ export default {
     display: flex;
     align-items: center;
     gap: 5px;
+}
+
+
+.messaging-header:hover {
+    background-color: var(--hover-background-color);
 }
 </style>

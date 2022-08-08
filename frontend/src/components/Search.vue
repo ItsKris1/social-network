@@ -118,7 +118,7 @@ export default {
     background-color: var(--input-bg);
     cursor: pointer;
 
-    transition: box-shadow 0.25s ease-in;
+    transition: var(--hover-box-shadow-transition);
 
 }
 
@@ -175,6 +175,6 @@ export default {
 #searchDiv input[type="text"]:focus {
     /* position: relative; */
     /* z-index: 2; */
-    box-shadow: 0 0 4px 2px var(--hover-color);
+    box-shadow: var(--hover-box-shadow);
 }
 </style>

@@ -73,6 +73,27 @@ export default {
     },
 
     actions: {
+        async markMessageRead(context, chatMessage) {
+            const response = await fetch('http://localhost:8081/messageRead', {
+                credentials: 'include',
+                method: 'POST',
+                body: JSON.stringify({
+                    id: chatMessage.id,
+                    type: chatMessage.type
+                })
+            })
+
+            console.log(chatMessage)
+            console.log("msgObj", {
+                id: chatMessage.id,
+                type: chatMessage.type
+            })
+            const data = await response.json();
+
+            console.log("/messageRead data", data)
+        },
+
+
         addNewChatMessage({ commit, state }, payload) {
             let newMessages;
 
@@ -115,8 +136,9 @@ export default {
             }
 
             commit('updateUnreadMessages', unreadMsgs);
-        }
+        },
     },
+
 }
 
 
