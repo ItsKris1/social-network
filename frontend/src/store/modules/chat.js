@@ -32,17 +32,21 @@ export default {
         },
 
 
-        getUnreadMessagesCount({ unreadMessages }, getters, rootState) {
+        getUnreadMessagesCount: ({ unreadMessages }, getters, { id }) => (userId) => {
+            // console.log("uid", userId)
             const userUnreadMsgs = unreadMessages.filter((msg) => {
-                return msg.receiverId === rootState.id
+                // console.log(msg.receiverId)
+                return msg.senderId === userId && msg.receiverId === id
             })
 
+
+            // console.log(userUnreadMsgs.length)
             return userUnreadMsgs.length
         },
 
         getUnreadGroupMessagesCount: ({ unreadMessages }, getters) => (groupId) => {
             const userUnreadMsgs = unreadMessages.filter((msg) => {
-                return msg.type === "GROUP" && msg.receiverId === groupId
+                return msg.receiverId === groupId
             })
 
             return userUnreadMsgs.length
@@ -89,11 +93,28 @@ export default {
 
 
         removeUnreadMessages({ state, commit }, payload) {
-            const unReadMsgs = state.unreadMessages.filter((msg) => {
-                return msg.receiverId !== payload.receiverId
-            })
+            let unreadMsgs;
+            // console.log(payload)
+            if (payload.type === "GROUP") {
+                unreadMsgs = state.unreadMessages.filter((msg) => {
+                    if (msg.receiverId === payload.receiverId) {
+                        return false
+                    } else {
+                        return true
+                    }
 
-            commit('updateUnreadMessages', unReadMsgs);
+                })
+            } else {
+                unreadMsgs = state.unreadMessages.filter((msg) => {
+                    if (msg.type === "PERSON" && msg.senderId === payload.receiverId) {
+                        return false
+                    } else {
+                        return true
+                    }
+                })
+            }
+
+            commit('updateUnreadMessages', unreadMsgs);
         }
     },
 }

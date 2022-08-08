@@ -21,7 +21,9 @@
                                 {{ user.nickname }}</div>
                         </div>
 
-                        <!-- <p class="unreadMessagesCount" v-if="getUnreadMessagesCount">{{ getUnreadMessagesCount }}</p> -->
+                        <p class="unreadMessagesCount" v-if="getUnreadMessagesCount(user.id)">{{
+                                getUnreadMessagesCount(user.id)
+                        }}</p>
 
                     </li>
 
@@ -94,9 +96,9 @@ export default {
         //     deep: true
         // },
 
-        getUnreadMessagesCount(newVal) {
-            console.log("Messages count", newVal)
-        }
+        // getUnreadMessagesCount(newVal) {
+        //     console.log("Messages count", newVal)
+        // }
     },
 
     methods: {
@@ -137,7 +139,7 @@ export default {
                 ...obj
             });
 
-            this.$store.dispatch("removeUnreadMessages", { receiverId: obj.receiverId })
+            this.$store.dispatch("removeUnreadMessages", { receiverId: obj.receiverId, type: obj.type })
             this.$store.commit("updateOpenChats", this.chats)
         },
 
