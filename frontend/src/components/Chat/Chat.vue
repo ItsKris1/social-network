@@ -6,7 +6,9 @@
         <div class=" messaging" @click="toggleShowContent">
 
             <div class="messaging-header">
-                <p>Messaging</p>
+                <p>Messaging
+                <div class="notification-ring" v-show="hasUnreadMessages"></div>
+                </p>
                 <i class="uil uil-angle-up" :class="{ rotate: showContent }"></i>
             </div>
 
@@ -92,7 +94,19 @@ export default {
             userGroups: state => state.groups.userGroups
         }),
 
-        ...mapGetters(['getUnreadMessagesCount', 'getUnreadGroupMessagesCount'])
+        ...mapGetters(['getUnreadMessagesCount', 'getUnreadGroupMessagesCount']),
+
+        hasUnreadMessages() {
+            if (this.$store.state.chat.unreadMessages.length > 0) {
+                return true
+            }
+
+            if (this.unreadMsgsFromDB !== null && this.unreadMsgsFromDB.length > 0) {
+                return true
+            }
+
+            return false
+        },
     },
 
 
@@ -172,6 +186,7 @@ export default {
         },
 
 
+
         // adds to the previous unread messages
         // unread messages from database and current session
         totalUnreadMessagesCount(receiverId, type) {
@@ -228,6 +243,18 @@ export default {
 .messaging-header p {
     font-weight: 300;
     letter-spacing: 0.35px;
+    position: relative;
+}
+
+
+.notification-ring {
+    position: absolute;
+    height: 10px;
+    width: 10px;
+    background-color: rgb(207, 59, 59);
+    border-radius: 50%;
+    right: -15px;
+    top: 0;
 }
 
 .messaging-content {
@@ -242,24 +269,30 @@ export default {
     transform: rotate(180deg);
 }
 
-.user {
-    display: flex;
-    justify-content: space-between;
-}
-
-.item-list li {
-    justify-content: space-between;
-}
-
 .user,
 .group {
     display: flex;
+    justify-content: space-between;
     align-items: center;
     gap: 5px;
 }
 
 
+.item-list li {
+    justify-content: space-between;
+}
+
+
 .messaging-header:hover {
     background-color: var(--hover-background-color);
+}
+
+
+.unreadMessagesCount {
+    padding: 2.5px 5px;
+    color: var(--color-white);
+    background-color: brown;
+    font-size: 12px;
+    border-radius: 5px;
 }
 </style>
