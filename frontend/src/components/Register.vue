@@ -9,16 +9,16 @@
                 <div class="form-group">
                     <div class="form-input">
                         <label for="firstname">First name</label>
-                        <input v-model="form.firstname" type="text" name="firstname" id="firstname">
+                        <input v-model="form.firstname" type="text" name="firstname" id="firstname" required>
                     </div>
                     <div class="form-input">
                         <label for="email">Email</label>
-                        <input v-model="form.email" type="email" name="email" id="email">
+                        <input v-model="form.email" type="email" name="email" id="email" required>
                     </div>
 
                     <div class="form-input">
                         <label for="date">Date of Birth</label>
-                        <input v-model="form.dateofbirth" type="date" name="date" id="date">
+                        <input v-model="form.dateofbirth" type="date" name="date" id="date" required>
                     </div>
 
                     <div class="form-input">
@@ -30,12 +30,12 @@
                 <div class="form-group">
                     <div class="form-input">
                         <label for="lastname">Last name</label>
-                        <input v-model="form.lastname" type="text" name="lastname" id="lastname">
+                        <input v-model="form.lastname" type="text" name="lastname" id="lastname" required>
                     </div>
 
                     <div class="form-input">
                         <label for="password">Password</label>
-                        <input v-model="form.password" type="password" name="password" id="password">
+                        <input v-model="form.password" type="password" name="password" id="password" required>
                     </div>
 
                     <div class="form-input">
