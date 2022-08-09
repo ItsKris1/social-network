@@ -1,14 +1,10 @@
 <template>
 
-    <!-- READ ME -->
-    <!-- I am using other components just for designing the layout. Later we can replace those with the right components -->
     <div class="content" v-if="groupData">
 
         <div class="left-section">
-            <!-- Members -->
             <GroupMembers />
             <GroupEvents />
-
         </div>
 
         <div class="middle-section">
@@ -18,12 +14,9 @@
                 <p class="about-text">{{ this.groupData.description }}</p>
             </div>
 
-            <!-- Start post -->
             <NewPost></NewPost>
-
-            <!-- Group posts -->
             <GroupPosts></GroupPosts>
-
+            
         </div>
 
         <div v-if="this.groupData.admin" class="right-section">
@@ -110,7 +103,7 @@ export default {
             })
                 .then((r => r.json()))
                 .then((json => {
-                    // console.log(json);
+                    console.log(json);
                     // console.log("getGroupInfo",json);
                     this.groupData = json.groups[0];
                 }));
@@ -121,7 +114,7 @@ export default {
 </script>
 
 
-<style scoped>
+<style>
 .content {
     margin-top: 100px;
 

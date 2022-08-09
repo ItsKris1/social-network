@@ -1,11 +1,11 @@
 <template>
-
     <div class="item-list__wrapper" id="groups" v-if="dataLoaded">
 
         <h3>Groups</h3>
+        <!-- <div @click="show">HHHH</div> -->
         <ul class="item-list">
-            <li v-for="group in userGroups"
-                v-if="userGroups.length > 0">
+            
+            <li v-for="group in userGroups" v-if="this.userGroups !== null">
                 <img class="small" src="../assets/icons/users-alt.svg" alt="">
                 <div class="item-text">{{ group.name }}</div>
             </li>
@@ -26,13 +26,19 @@ import { mapState } from 'vuex';
 export default {
     name: 'Groups',
     components: { NewGroup },
+    // created() {
+    //     this.$store.dispatch('getUserGroups')
+    // },
     computed: mapState({
         userGroups: state => state.groups.userGroups,
         dataLoaded: state => state.dataLoaded.userGroups
     }),
-
-    created() {
-
+    methods:{
+        // show(){
+        //     console.log(this.userGroups);
+        // }
     }
+
+    
 }
 </script>
