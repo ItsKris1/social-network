@@ -1,7 +1,7 @@
 <template>
 
     <div class="relative-wrapper" @click="toggleShowNotifications">
-        Notifications
+        <span class="link-header">Notifications</span>
         <div class="item-list__wrapper" id="notifications" v-show="showNotifications">
             <ul class="item-list">
                 <li>
@@ -137,5 +137,22 @@ export default {
 
 .who {
     font-weight: 500;
+}
+
+
+.link-header::after {
+    content: "";
+    height: 2.5px;
+    width: 0;
+    display: block;
+
+    position: absolute;
+
+    transition: all 0.35s ease-in-out;
+}
+
+.link-header:hover::after {
+    width: 100%;
+    background-color: rgb(132, 148, 236);
 }
 </style>
