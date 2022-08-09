@@ -1,59 +1,67 @@
 <template>
-    <button class="btn" @click="follow">Follow<i class="uil uil-user-plus"></i></button>
+    <button class="btn" @click="handleFollow">{{ buttonText }}<i class="uil uil-user-plus"></i></button>
 </template>
 
 
 <script>
 export default {
+    /* 
+    1. Check if user has sent a request to follow that user
+    2. Change button text based on not following or request sent
+
+    */
+
+
     name: 'FollowBtn',
-    props: ['profileId'],
+    props: ['user'],
     emits: ["follow"],
     data() {
         return {
             userid: "",
-            isMyProfile: false,
+
+            // tracks button functionality
+            // functionalities -> follow, send request, decline request
+            buttonText: "Follow",
+
         }
     },
 
     created() {
-        this.checkProfile();
+        console.log("user", this.user)
     },
 
-
-    watch: { //watching changes in route
-        $route() {
-            this.checkProfile()
-        }
-    },
     methods: {
-        async follow() {
+        handleFollow() {
+            if (this.buttonText === "Request sent") {
+                // cancel the request
+                this.buttonText = "Follow"
+                return
+            }
+
+            this.followUser();
+
+        },
+
+        async followUser() {
             // console.log('subscribe function:')
             await fetch("http://localhost:8081/follow?userId=" + this.$route.params.id, {
                 credentials: "include",
             })
                 .then((r) => r.json())
                 .then((json => {
-                    this.$emit("follow")
+
                     console.log("server response:", json)
-                }))
-        },
-        // unfollow() {
-        //     console.log('unsubscribe function')
-        // },
-        async getLoggedUserId() {
-            await fetch("http://localhost:8081/currentUser", {
-                credentials: "include",
-            })
-                .then((r) => r.json())
-                .then((json => {
-                    this.userid = json.users[0].id
+
+                    if (this.user.status === "PRIVATE") {
+                        this.buttonText = "Request sent"
+                        this.$emit("follow", "requestSent")
+                    } else {
+                        this.$emit("follow", "followedUser")
+                    }
+
                 }))
         },
 
-        async checkProfile() {
-            await this.getLoggedUserId();
-            this.isMyProfile = this.userid === this.profileId
-        },
     }
 }
 </script>

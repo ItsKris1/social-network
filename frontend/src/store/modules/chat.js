@@ -32,9 +32,21 @@ export default {
         },
 
 
-        getUnreadMessagesCount: ({ state }) => (userId) => {
-            const userUnreadMsgs = state.unreadMessages.filter((msg) => {
-                msg.receiverId === userId
+        getUnreadMessagesCount: ({ unreadMessages }, getters, { id }) => (userId) => {
+            // console.log("uid", userId)
+            const userUnreadMsgs = unreadMessages.filter((msg) => {
+                // console.log(msg.receiverId)
+                return msg.senderId === userId && msg.receiverId === id
+            })
+
+
+            // console.log(userUnreadMsgs.length)
+            return userUnreadMsgs.length
+        },
+
+        getUnreadGroupMessagesCount: ({ unreadMessages }, getters) => (groupId) => {
+            const userUnreadMsgs = unreadMessages.filter((msg) => {
+                return msg.receiverId === groupId
             })
 
             return userUnreadMsgs.length
@@ -54,13 +66,34 @@ export default {
             state.openChats = openChats
         },
 
-        updateUnreadChatMessages(state, unreadMsgs) {
+        updateUnreadMessages(state, unreadMsgs) {
             state.unreadMessages = unreadMsgs
         }
 
     },
 
     actions: {
+        async markMessageRead(context, chatMessage) {
+            const response = await fetch('http://localhost:8081/messageRead', {
+                credentials: 'include',
+                method: 'POST',
+                body: JSON.stringify({
+                    id: chatMessage.id,
+                    type: chatMessage.type
+                })
+            })
+
+            console.log(chatMessage)
+            console.log("msgObj", {
+                id: chatMessage.id,
+                type: chatMessage.type
+            })
+            const data = await response.json();
+
+            console.log("/messageRead data", data)
+        },
+
+
         addNewChatMessage({ commit, state }, payload) {
             let newMessages;
 
@@ -76,9 +109,36 @@ export default {
         addUnreadChatMessage({ commit, state }, payload) {
             const unreadChatMsgs = state.unreadMessages
             unreadChatMsgs.push(payload)
-            commit("updateUnreadChatMessages", unreadChatMsgs)
-        }
+            commit("updateUnreadMessages", unreadChatMsgs)
+        },
+
+
+        removeUnreadMessages({ state, commit }, payload) {
+            let unreadMsgs;
+            // console.log(payload)
+            if (payload.type === "GROUP") {
+                unreadMsgs = state.unreadMessages.filter((msg) => {
+                    if (msg.receiverId === payload.receiverId) {
+                        return false
+                    } else {
+                        return true
+                    }
+
+                })
+            } else {
+                unreadMsgs = state.unreadMessages.filter((msg) => {
+                    if (msg.type === "PERSON" && msg.senderId === payload.receiverId) {
+                        return false
+                    } else {
+                        return true
+                    }
+                })
+            }
+
+            commit('updateUnreadMessages', unreadMsgs);
+        },
     },
+
 }
 
 

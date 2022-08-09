@@ -93,6 +93,15 @@ func (repo *MsgRepository) GetUnread(userId string) ([]models.ChatStats, error) 
 func (repo *MsgRepository) GetUnreadGroup(userId string) ([]models.ChatStats, error) {
 	var messages []models.ChatStats
 	rows, err := repo.DB.Query("SELECT receiver_id, type, COUNT(*) FROM messages WHERE type = 'GROUP'AND ((SELECT administrator FROM groups WHERE group_id = messages.receiver_id) = ? OR (SELECT COUNT(*) FROM group_users WHERE group_id = messages.receiver_id AND user_id = ?) = 1) AND (SELECT is_read FROM group_messages WHERE message_id = messages.message_id AND receiver_id = ?) = 0 GROUP BY receiver_id;", userId, userId, userId)
+	
+	/*
+	SELECT receiver_id, type, COUNT(*) FROM messages WHERE type = 'GROUP' AND					
+		// is user group admin ?																	-- is group member? --
+	((SELECT administrator FROM groups WHERE group_id = messages.receiver_id) = ? OR (SELECT COUNT(*) FROM group_users WHERE group_id = messages.receiver_id AND user_id = ?) = 1) 
+		AND (SELECT is_read FROM group_messages WHERE message_id = messages.message_id AND receiver_id = ?) = 0 GROUP BY receiver_id;
+	*/
+	
+	
 	if err != nil {
 		return messages, err
 	}

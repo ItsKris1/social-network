@@ -16,7 +16,7 @@
                     <div class="profile-btns">
                         <!-- Privacy and follow/unfollow button-->
                         <PrivacyBtn v-if="isMyProfile" :status="user.status" />
-                        <FollowBtn v-else-if="!user.following" @follow="toggleFollowingThisUser" />
+                        <FollowBtn v-else-if="!user.following" @follow="checkFollowRequest" :user="user" />
                         <UnfollowBtn v-else @unfollow="toggleFollowingThisUser" />
                         <!-- Send message button -->
                         <button v-if="showSendButton"
@@ -107,8 +107,15 @@ export default {
         },
 
 
+        checkFollowRequest(action) {
+            if (action === "followedUser") {
+                this.getUserData();
+                this.toggleFollowingThisUser();
+
+            }
+        },
+
         toggleFollowingThisUser() {
-            this.getUserData();
             this.user.following = !this.user.following
         }
     },

@@ -1,10 +1,12 @@
 import { createStore } from "vuex";
 import chat from "@/store/modules/chat.js"
+import notifications from "@/store/modules/notifications.js"
 import actions from "@/store/actions.js"
 
 export default createStore({
   modules: {
-    chat
+    chat,
+    notifications
   },
   //------------------------------------- state is like a variables, which hold a values.
   state: {
@@ -28,6 +30,11 @@ export default createStore({
       allGroups: [],
       userGroups: [],
     },
+
+
+    dataLoaded: {
+      userGroups: false
+    }
 
   },
   //------------------------------------ getters is a way for check state values.
@@ -135,6 +142,10 @@ export default createStore({
     updateUserGroups(state, userGroups) {
       state.groups.userGroups = userGroups
     },
+
+    updateDataLoaded(state, data) {
+      state.dataLoaded[data] = true;
+    }
 
 
   },

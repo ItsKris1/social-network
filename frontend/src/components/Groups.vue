@@ -1,9 +1,11 @@
 <template>
 
-    <div class="item-list__wrapper" id="groups" v-if="userGroups.type">
+    <div class="item-list__wrapper" id="groups" v-if="dataLoaded">
+
         <h3>Groups</h3>
         <ul class="item-list">
-            <li v-for="group in userGroups.groups" v-if="userGroups.groups !== null">
+            <li v-for="group in userGroups"
+                v-if="userGroups.length > 0">
                 <img class="small" src="../assets/icons/users-alt.svg" alt="">
                 <div class="item-text">{{ group.name }}</div>
             </li>
@@ -25,11 +27,12 @@ export default {
     name: 'Groups',
     components: { NewGroup },
     computed: mapState({
-        userGroups: state => state.groups.userGroups
-    })
-}
-    // created() {
-    //     this.$store.dispatch('getAllGroups');
-    // },
+        userGroups: state => state.groups.userGroups,
+        dataLoaded: state => state.dataLoaded.userGroups
+    }),
 
+    created() {
+
+    }
+}
 </script>

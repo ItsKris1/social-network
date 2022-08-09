@@ -3,12 +3,12 @@
     <div id="navbar">
 
         <div id="nav-titleSearch">
-            <router-link to="/" id="nav-title">Social Network</router-link>
+            <router-link to="/main" id="nav-title">Social Network</router-link>
             <Search />
         </div>
         <ul class="nav-links">
 
-            <li>
+            <li id="notifications-link">
                 <Notifications />
             </li>
             <li>
@@ -127,22 +127,18 @@ export default {
 }
 
 
-
-
-
-#navbar li::after,
+#navbar li:not(#notifications-link)::after,
 #nav-title::after {
     content: "";
     height: 2.5px;
     width: 0;
     display: block;
-
     position: absolute;
 
-    transition: width 0.35s ease-out;
+    transition: all 0.35s ease-out;
 }
 
-#navbar li:hover::after,
+#navbar li:not(#notifications-link):hover::after,
 #nav-title:hover::after {
     width: 100%;
     background-color: rgb(132, 148, 236);

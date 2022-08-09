@@ -93,9 +93,12 @@ export default {
         });
 
         const data = await response.json();
-        // console.log("/getUserGroups data", data)
+        console.log("/getUserGroups data", data)
         // context.state.groups.userGroups.loaded = true;
-        context.commit("updateUserGroups", data)
+
+        context.commit("updateUserGroups", data.groups)
+        context.commit("updateDataLoaded", "userGroups")
+
     },
 
     async getMyFollowers(context) {
@@ -139,10 +142,9 @@ export default {
             // console.log("New message")
             const data = JSON.parse(e.data);
             if (data.action == "chat") {
-
                 // only broadcast messages when participants(sender and reciever) chat is open
-                const isParticipantsChatOpen = state.openChats.some((chat) => {
 
+                const isParticipantsChatOpen = state.chat.openChats.some((chat) => {
                     // chat is open with receiver
                     if (chat.receiverId === data.chatMessage.receiverId) {
                         return true
@@ -154,21 +156,18 @@ export default {
                     if (data.chatMessage.type === "PERSON" && chat.receiverId === data.chatMessage.senderId) {
                         return true
                     }
-
-
                 })
                 if (isParticipantsChatOpen) {
                     // console.log("Dispatching a message..")
                     dispatch("addNewChatMessage", data.chatMessage)
+                    dispatch("markMessageRead", data.chatMessage)
                 } else {
-
-                    // THIS IS THE RECEIVER WS
-                    // i get from msg
-                    // sID, gID
-                    // add unread msgs
-                    console.log("Unread msg..")
-                    // dispatch("addUnreadChatMessage", data.chatMessage)
+                    // console.log("Unread msg..")
+                    dispatch("addUnreadChatMessage", data.chatMessage)
                 }
+            } else if (data.action == "notification") {
+                // console.log(data.notification)
+                dispatch("addNewNotification", data.notification)
             }
 
         })
