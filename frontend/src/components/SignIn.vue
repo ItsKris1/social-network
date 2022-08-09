@@ -79,6 +79,9 @@ export default {
                 message: "Login success!",
                 type: "success", //One of success, info, warning, error, default
               });
+
+
+              this.$store.dispatch("createWebSocketConn")
               this.$router.push("/main");
             }
             else {

@@ -26,6 +26,19 @@ func (handler *Handler) AllGroups(w http.ResponseWriter, r *http.Request) {
 	}
 	utils.RespondWithGroups(w, groups, 200)
 }
+// returns all groups that current user is a member of or admin
+func (handler *Handler) UserGroups(w http.ResponseWriter, r *http.Request) {
+	w = utils.ConfigHeader(w)
+	// access user id
+	userId := r.Context().Value(utils.UserKey).(string)
+	// request user Groups
+	groups, errGroups := handler.repos.GroupRepo.GetUserGroups(userId)
+	if errGroups != nil {
+		utils.RespondWithError(w, "Error on getting data", 200)
+		return
+	}
+	utils.RespondWithGroups(w, groups, 200)
+}
 
 // returns info about group - > name, description, id and administrator id
 // also includes group status for current user -> admin / member or pending member request
@@ -251,14 +264,21 @@ func (handler *Handler) NewGroup(w http.ResponseWriter, r *http.Request) {
 	/* ------------------------- save invitations in db ------------------------- */
 	for i := 0; i < len(newGroup.Invitations); i++ {
 		// save each follower in db
-		newNotif := models.Notification{
-			ID:       utils.UniqueId(),
-			TargetID: newGroup.Invitations[i],
-			Type:     "GROUP_INVITE",
-			Content:  newGroup.ID,
-		}
-		err = handler.repos.NotifRepo.Save(newNotif)
-		if err != nil {
+		// newNotif := models.Notification{
+		// 	ID:       utils.UniqueId(),
+		// 	TargetID: newGroup.Invitations[i],
+		// 	Type:     "GROUP_INVITE",
+		// 	Content:  newGroup.ID,
+		// 	Sender: newGroup.AdminID,
+		// }
+		// err = handler.repos.NotifRepo.Save(newNotif)
+		// if err != nil {
+		// 	utils.RespondWithError(w, "Internal server error", 200)
+		// 	return
+		// }
+
+		// save as a new member of group
+		if err = handler.repos.GroupRepo.SaveMember(newGroup.Invitations[i], newGroup.ID); err != nil {
 			utils.RespondWithError(w, "Internal server error", 200)
 			return
 		}

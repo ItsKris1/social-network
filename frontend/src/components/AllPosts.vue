@@ -1,10 +1,11 @@
  <template>
-    <!-- <button @click="showAllPosts">showFetch</button> -->
-    <div id="all_posts" v-if="$store.state.posts.allposts.length !== 0">
-        <Post v-for="post in allPosts" :key="post.id" v-bind:postData="post" />
-    </div>
+    <div id="all_posts">
+        <Post
+              v-if="allPosts !== undefined"
+              v-for="post in allPosts" :key="post.id" v-bind:postData="post" />
 
-    <p v-else>No posts</p>
+        <p class="additional-info large" v-else>No posts</p>
+    </div>
 
 </template>
 

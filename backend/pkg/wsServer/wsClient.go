@@ -4,7 +4,6 @@ import (
 	"log"
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
-
 	"github.com/gorilla/websocket"
 )
 
@@ -63,6 +62,7 @@ func (client *Client) SendChatMessage(msg models.ChatMessage) {
 		Action:      ChatAction,
 		ChatMessage: msg,
 	}
+
 	client.send <- message.encode()
 }
 
@@ -73,6 +73,7 @@ func (client *Client) SendChatMessage(msg models.ChatMessage) {
 // new messages to our WebSocket endpoint
 func (client *Client) Writer() {
 	for {
+
 		message, ok := <-client.send
 		if !ok {
 			log.Println("err on writing message")
@@ -82,7 +83,16 @@ func (client *Client) Writer() {
 		if err != nil {
 			return
 		}
-		w.Write(message)
+		_, err = w.Write(message)
+		if err != nil {
+			log.Println("Line 91", err)
+			return 
+		}
+
+		if err := w.Close(); err != nil {
+			log.Println("Line 95", err)
+        	return 
+		}
 	}
 }
 
@@ -93,11 +103,11 @@ func (client *Client) Reader(wsServer *Server) {
 	defer wsServer.UnregisterClient(client)
 	for {
 		// read in a message
-		_, msg, err := client.conn.ReadMessage()
+		_, _, err := client.conn.ReadMessage()
 		if err != nil {
 			log.Println(err)
 			return
 		}
-		log.Println(msg)
+		// log.Println(msg)
 	}
 }

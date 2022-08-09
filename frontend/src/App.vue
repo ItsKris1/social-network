@@ -4,8 +4,7 @@
 
     </router-view>
 
-    <Chat v-if="$route.name !== 'sign-in' && $route.name !== 'register' && $route.name !== 'auth'" />
-
+    <router-view name="Chat"></router-view>
 </template>
 
 <script>
@@ -13,7 +12,20 @@
 import Chat from './components/Chat/Chat.vue'
 export default {
     name: 'App',
-    components: { Chat }
+    components: { Chat },
+
+    mounted() {
+        window.addEventListener("load", this.createWebSocketConn)
+    },
+
+    methods: {
+        createWebSocketConn() {
+            if (this.$route.path === "/sign-in" || this.$route.path === "/reg" || this.$route.path === "/") {
+                return
+            }
+            this.$store.dispatch("createWebSocketConn")
+        }
+    }
 }
 </script>
 

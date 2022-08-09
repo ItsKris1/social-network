@@ -69,7 +69,6 @@ export default {
         }
     },
 
-
     methods: {
         async getMyFollowers() {
             await this.$store.dispatch("getMyFollowers")
@@ -93,7 +92,7 @@ export default {
             const form = e.currentTarget;
             const formData = new FormData(form);
             const formDataObject = Object.fromEntries(formData.entries())
-            formDataObject["invitations"] = Object.values(this.checkedFollowers);
+            formDataObject["invitations"] = this.getIds(this.checkedFollowers);
 
             const response = await fetch('http://localhost:8081/newGroup', {
                 method: 'post',
@@ -108,6 +107,19 @@ export default {
             this.$store.dispatch('getAllGroups');
         },
 
+        getIds() {
+            let arrOfIDS = [];
+            for (let name of this.checkedFollowers) {
+                for (let obj of this.$store.state.myFollowers) {
+                    if (obj.nickname === name) {
+                        arrOfIDS.push(obj.id)
+                    }
+                }
+            }
+
+            return arrOfIDS
+
+        }
 
     }
 }

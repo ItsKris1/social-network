@@ -1,9 +1,9 @@
 <template>
 
     <div class="messaging-wrapper" ref="messagingWrapper">
-        <ChatBox v-for="chat in chats" :name="chat.name" @closeChat="removeChat" :key="chat.id"></ChatBox>
+        <ChatBox v-for="chat in chats" v-bind="chat" @closeChat="removeChat" :key="chat.receiverId"></ChatBox>
 
-        <div class="messaging" @click="toggleShowContent">
+        <div class=" messaging" @click="toggleShowContent">
 
             <div class="messaging-header">
                 <p>Messaging</p>
@@ -11,44 +11,28 @@
             </div>
 
             <div class="messaging-content" v-show="showContent">
-                <ul class="item-list">
-                    <li>
+                <ul class="item-list" v-if="usersIFollow.type && usersIFollow.users !== null">
+
+                    <li v-for="user in usersIFollow.users">
                         <div class="user-picture small"></div>
-                        <div class="item-text" @click.stop="openChat">User 1</div>
-                    </li>
-                    <li>
-                        <div class="user-picture small"></div>
-                        <div class="item-text" @click.stop="openChat">User 2</div>
-                    </li>
-                    <li>
-                        <div class="user-picture small"></div>
-                        <div class="item-text" @click.stop="openChat">User 3</div>
+                        <div class="item-text" @click.stop="openChat($event, { receiverId: user.id, type: 'PERSON' })">
+                            {{ user.nickname }}</div>
                     </li>
 
-                    <li>
-                        <div class="user-picture small"></div>
-                        <div class="item-text" @click.stop="openChat">User 4</div>
-                    </li>
-                    <li>
-                        <div class="user-picture small"></div>
-                        <div class="item-text" @click.stop="openChat">User 5</div>
-                    </li>
                 </ul>
 
-                <ul class="item-list">
-                    <li>
+                <ul class="item-list" v-if="userGroups.type && userGroups.groups !== null">
+                    <li v-for="group in userGroups.groups">
                         <img src="../../assets/icons/users-alt.svg" alt="" class="small">
-                        <div class="item-text">Group 1</div>
+
+                        <div class="item-text" @click.stop="openChat($event, { receiverId: group.id, type: 'GROUP' })">
+                            {{ group.name }}</div>
                     </li>
-                    <li>
-                        <img src="../../assets/icons/users-alt.svg" alt="" class="small">
-                        <div class="item-text">Group 2</div>
-                    </li>
-                    <li>
-                        <img src="../../assets/icons/users-alt.svg" alt="" class="small">
-                        <div class="item-text">Group 3</div>
-                    </li>
+
                 </ul>
+
+                <p class="additional-info" v-if="usersIFollow.users === null && userGroups.groups === null">
+                    No one to message with :(</p>
             </div>
 
         </div>
@@ -58,6 +42,7 @@
 
 
 <script>
+import { mapState } from 'vuex';
 import ChatBox from './ChatBox.vue'
 export default {
     name: '',
@@ -66,20 +51,53 @@ export default {
         return {
             showContent: false,
             chats: [],
-            chatID: 0,
+            usersIFollow: [],
+
         }
     },
 
+    mounted() { },
+
+    created() {
+        this.getUsersIFollow();
+        this.$store.dispatch("getUserGroups");
+    },
+
+    computed: mapState({
+        userGroups: state => state.groups.userGroups,
+        unreadMessages: state => state.chat.unreadMessages,
+    }),
+
     methods: {
+        async getUsersIFollow() {
+            if (this.$store.state.id === "") {
+                await this.$store.dispatch("getMyUserID");
+            }
+
+            const response = await fetch('http://localhost:8081/following?userId=' + this.$store.state.id, {
+                credentials: 'include'
+            });
+
+            const data = await response.json();
+
+
+            this.usersIFollow = data;
+
+        },
+
+        getUnreadMessagesCount(userId) {
+            this.$store.getters.getUnreadMessagesCount(userId)
+        },
+
         toggleShowContent() {
             // console.log("Content toggled!")
+
             this.showContent = !this.showContent
         },
 
-        openChat(e) {
+        openChat(e, obj) {
             // console.log("Trying to add a chatbox")
             // console.log(e.target.textContent)
-
             const found = this.chats.some(chat => chat.name === e.target.textContent);
             if (found) {
                 return
@@ -89,22 +107,11 @@ export default {
                 this.chats.shift();
             }
             this.chats.push({
-                id: this.chatID,
                 "name": e.target.textContent,
+                ...obj
             });
 
-            this.chatID++;
-
-
-            // this.$nextTick(() => {
-            //     console.log("Viewport width", window.innerWidth)
-            //     console.log("Messaging area width", this.$refs.messagingWrapper.clientWidth)
-
-            // })
-
-
-
-
+            this.$store.commit("updateOpenChats", this.chats)
         },
 
 
@@ -116,7 +123,7 @@ export default {
 
             })
 
-
+            this.$store.commit("updateOpenChats", this.chats)
 
 
         }
