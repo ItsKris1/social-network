@@ -264,24 +264,24 @@ func (handler *Handler) NewGroup(w http.ResponseWriter, r *http.Request) {
 	/* ------------------------- save invitations in db ------------------------- */
 	for i := 0; i < len(newGroup.Invitations); i++ {
 		// save each follower in db
-		// newNotif := models.Notification{
-		// 	ID:       utils.UniqueId(),
-		// 	TargetID: newGroup.Invitations[i],
-		// 	Type:     "GROUP_INVITE",
-		// 	Content:  newGroup.ID,
-		// 	Sender: newGroup.AdminID,
-		// }
-		// err = handler.repos.NotifRepo.Save(newNotif)
-		// if err != nil {
-		// 	utils.RespondWithError(w, "Internal server error", 200)
-		// 	return
-		// }
-
-		// save as a new member of group
-		if err = handler.repos.GroupRepo.SaveMember(newGroup.Invitations[i], newGroup.ID); err != nil {
+		newNotif := models.Notification{
+			ID:       utils.UniqueId(),
+			TargetID: newGroup.Invitations[i],
+			Type:     "GROUP_INVITE",
+			Content:  newGroup.ID,
+			Sender: newGroup.AdminID,
+		}
+		err = handler.repos.NotifRepo.Save(newNotif)
+		if err != nil {
 			utils.RespondWithError(w, "Internal server error", 200)
 			return
 		}
+
+		// save as a new member of group
+		// if err = handler.repos.GroupRepo.SaveMember(newGroup.Invitations[i], newGroup.ID); err != nil {
+		// 	utils.RespondWithError(w, "Internal server error", 200)
+		// 	return
+		// }
 	}
 	newGroup.Administrator = true
 	//NOTIFY WEBSOCKET ABOUT NEW NOTIFICATION

@@ -4,46 +4,27 @@
         <span class="link-header">Notifications</span>
         <div class="item-list__wrapper" id="notifications" v-show="showNotifications">
             <ul class="item-list">
-                <li>
+                <li v-for="notification in notificationsFromDB.notifications"
+                    v-if="
+                    isDataValid(notificationsFromDB) &&
+                    notificationsFromDB.notifications.length > 0">
+
                     <div class="row1 ">
                         <img class="" src="../assets/icons/default-profile.svg">
 
                         <div>
-                            <span class="who">John Smith</span> sent you a follow request
+                            <span class="who">{{ notification.user.nickname }}</span> {{ notification.content }}
                         </div>
                     </div>
                     <div class="row2">
-                        <i class="uil uil-times accept"></i>
-                        <i class="uil uil-check decline"></i>
+                        <i class="uil uil-times decline"></i>
+                        <i class="uil uil-check accept" @click="acceptRequest(notification)"></i>
                     </div>
                 </li>
-                <li>
-                    <div class="row1">
-                        <img class="" src="../assets/icons/default-profile.svg">
-                        <div>
-                            <span class="who">Chris Brown</span> wants to join your group
-                        </div>
 
-                    </div>
-                    <div class="row2">
-                        <i class="uil uil-times accept"></i>
-                        <i class="uil uil-check decline"></i>
-                    </div>
-                </li>
-                <li>
-                    <div class="row1">
-                        <img class="" src="../assets/icons/default-profile.svg">
+                <li v-else class="additional-info">No notifications</li>
 
-                        <div>
-                            <span class="who">Goblins</span> invited you to join their group
-                        </div>
-                    </div>
-                    <div class="row2">
-                        <i class="uil uil-times accept"></i>
-                        <i class="uil uil-check decline"></i>
-                    </div>
-                </li>
-                <li>
+                <!-- <li>
                     <div class="row1">
                         <img class="" src="../assets/icons/users-alt.svg">
 
@@ -55,21 +36,7 @@
                         <i class="uil uil-times accept"></i>
                         <i class="uil uil-check decline"></i>
                     </div>
-                </li>
-
-                <li>
-                    <div class="row1">
-                        <img class="" src="../assets/icons/users-alt.svg">
-
-                        <div>
-                            <span class="who">ItsKris</span> did something very longworthy notification!
-                        </div>
-                    </div>
-                    <div class="row2">
-                        <i class="uil uil-times accept"></i>
-                        <i class="uil uil-check decline"></i>
-                    </div>
-                </li>
+                </li> -->
 
             </ul>
         </div>
@@ -82,13 +49,46 @@ export default {
     name: "notifications",
     data() {
         return {
-            showNotifications: false
+            showNotifications: false,
+            notificationsFromDB: {},
         }
+    },
+
+    created() {
+        this.fetchNotifications();
     },
 
     methods: {
         toggleShowNotifications() {
             this.showNotifications = !this.showNotifications
+        },
+
+        async fetchNotifications() {
+            const response = await fetch('http://localhost:8081/notifications', {
+                credentials: 'include'
+            })
+
+            const data = await response.json();
+            this.notificationsFromDB = data;
+            // console.log("/notifications data", data)
+        },
+
+        async acceptRequest(notification) {
+            const response = await fetch('http://localhost:8081/responseInviteRequest', {
+                credentials: 'include',
+                method: 'POST',
+                body: JSON.stringify({
+                    requestId: notification.id,
+                    response: "accept",
+                })
+            })
+
+            const data = await response.json();
+            console.log("/acceptRequest data", data)
+        },
+
+        isDataValid(resp) {
+            return resp.type === "Success" ? true : false;
         }
     },
 
