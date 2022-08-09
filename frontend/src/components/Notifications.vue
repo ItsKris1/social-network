@@ -17,8 +17,8 @@
                         </div>
                     </div>
                     <div class="row2">
-                        <i class="uil uil-times decline"></i>
-                        <i class="uil uil-check accept" @click="acceptRequest(notification)"></i>
+                        <i class="uil uil-times decline" @click="handleRequest(notification, 'decline')"></i>
+                        <i class="uil uil-check accept" @click="handleRequest(notification, 'accept')"></i>
                     </div>
                 </li>
 
@@ -73,13 +73,13 @@ export default {
             // console.log("/notifications data", data)
         },
 
-        async acceptRequest(notification) {
+        async handleRequest(notification, reqResponse) {
             const response = await fetch('http://localhost:8081/responseInviteRequest', {
                 credentials: 'include',
                 method: 'POST',
                 body: JSON.stringify({
                     requestId: notification.id,
-                    response: "accept",
+                    response: reqResponse,
                 })
             })
 
