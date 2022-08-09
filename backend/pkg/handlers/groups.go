@@ -236,7 +236,7 @@ func (handler *Handler) GroupRequests(w http.ResponseWriter, r *http.Request) {
 /*                                save new data                               */
 /* -------------------------------------------------------------------------- */
 
-func (handler *Handler) NewGroup(wsServer *ws.Server, w http.ResponseWriter, r *http.Request) {
+func (handler *Handler) NewGroup( wsServer *ws.Server, w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)
 	if r.Method != "POST" {
 		utils.RespondWithError(w, "Error on form submittion", 200)

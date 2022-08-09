@@ -31,6 +31,11 @@ export default createStore({
       userGroups: [],
     },
 
+
+    dataLoaded: {
+      userGroups: false
+    }
+
   },
   //------------------------------------ getters is a way for check state values.
   getters: {
@@ -137,6 +142,10 @@ export default createStore({
     updateUserGroups(state, userGroups) {
       state.groups.userGroups = userGroups
     },
+
+    updateDataLoaded(state, data) {
+      state.dataLoaded[data] = true;
+    }
 
 
   },

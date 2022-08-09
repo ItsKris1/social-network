@@ -32,8 +32,8 @@
 
                 </ul>
 
-                <ul class="item-list" v-if="userGroups.type && userGroups.groups !== null">
-                    <li v-for="group in userGroups.groups">
+                <ul class="item-list">
+                    <li v-for="group in userGroups">
 
                         <div class="group">
                             <img src="../../assets/icons/users-alt.svg" alt="" class="small">
@@ -51,7 +51,7 @@
 
                 </ul>
 
-                <p class="additional-info" v-if="usersIFollow.users === null && userGroups.groups === null">
+                <p class="additional-info" v-if="usersIFollow.users === null && userGroups === undefined">
                     No one to message with :(</p>
             </div>
 

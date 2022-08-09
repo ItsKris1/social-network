@@ -93,9 +93,12 @@ export default {
         });
 
         const data = await response.json();
-        // console.log("/getUserGroups data", data)
+        console.log("/getUserGroups data", data)
         // context.state.groups.userGroups.loaded = true;
-        context.commit("updateUserGroups", data)
+
+        context.commit("updateUserGroups", data.groups)
+        context.commit("updateDataLoaded", "userGroups")
+
     },
 
     async getMyFollowers(context) {

@@ -122,8 +122,14 @@ export default {
             })
 
             const data = await response.json();
-            console.log("/acceptRequest data", data)
+            console.log("/handleRequest data", data)
 
+            if (notification.type === "GROUP_INVITE" && reqResponse === "accept") {
+                const userGroups = this.$store.state.groups.userGroups;
+                console.log("userGroups", userGroups)
+                userGroups.push(notification.group);
+                this.$store.commit("updateUserGroups", userGroups)
+            }
             // remove the notification
             // this.removeNotification(notification.id)
             this.$store.dispatch("removeNotification", notification.id)
