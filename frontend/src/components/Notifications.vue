@@ -17,8 +17,8 @@
                         </div>
                     </div>
                     <div class="row2">
-                        <i class="uil uil-times decline" @click="handleRequest(notification, 'decline')"></i>
-                        <i class="uil uil-check accept" @click="handleRequest(notification, 'accept')"></i>
+                        <i class="uil uil-times decline" @click.stop="handleRequest(notification, 'decline')"></i>
+                        <i class="uil uil-check accept" @click.stop="handleRequest(notification, 'accept')"></i>
                     </div>
                 </li>
 
@@ -74,7 +74,18 @@ export default {
         },
 
         async handleRequest(notification, reqResponse) {
-            const response = await fetch('http://localhost:8081/responseInviteRequest', {
+            let endpoint;
+
+            switch (notification.type) {
+                case "FOLLOW":
+                    endpoint = "responseFollowRequest";
+                    break;
+                case "GROUP_INVITE":
+                    endpoint = "responseInviteRequest";
+                    break;
+            }
+
+            const response = await fetch(`http://localhost:8081/${endpoint}`, {
                 credentials: 'include',
                 method: 'POST',
                 body: JSON.stringify({
@@ -85,6 +96,17 @@ export default {
 
             const data = await response.json();
             console.log("/acceptRequest data", data)
+
+            // remove the notification
+            this.removeNotification(notification.id)
+
+        },
+
+        removeNotification(notifID) {
+            this.notificationsFromDB.notifications = this.notificationsFromDB.notifications.filter((notif) => {
+                return notif.id !== notifID
+            })
+
         },
 
         isDataValid(resp) {
