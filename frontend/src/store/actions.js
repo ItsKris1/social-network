@@ -162,8 +162,9 @@ export default {
                     // console.log("Unread msg..")
                     dispatch("addUnreadChatMessage", data.chatMessage)
                 }
-
-
+            } else if (data.action == "notification") {
+                // console.log(data.notification)
+                dispatch("addNewNotification", data.notification)
             }
 
         })

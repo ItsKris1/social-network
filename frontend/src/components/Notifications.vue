@@ -4,10 +4,10 @@
         <span class="link-header">Notifications</span>
         <div class="item-list__wrapper" id="notifications" v-show="showNotifications">
             <ul class="item-list">
-                <li v-for="notification in notificationsFromDB.notifications"
+                <li v-for="notification in allNotifications"
                     v-if="
                     isDataValid(notificationsFromDB) &&
-                    notificationsFromDB.notifications.length > 0">
+                    allNotifications.length > 0">
 
                     <div class="row1 ">
                         <img class="" src="../assets/icons/default-profile.svg">
@@ -45,17 +45,42 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
     name: "notifications",
     data() {
         return {
             showNotifications: false,
             notificationsFromDB: {},
+            // allNotifications: [],
         }
     },
 
-    created() {
-        this.fetchNotifications();
+    async created() {
+        await this.fetchNotifications();
+        // await this.initAllNotifications();
+    },
+
+    computed: {
+        // allNotifications: {
+
+        //     get() {
+        //         return [...this.notificationsFromDB.notifications, ...this.$store.state.notifications.newNotifications]
+        //     },
+
+        //     set(newValue) {
+
+        //     }
+        // }
+
+        ...mapState({
+            allNotifications: state => state.notifications.allNotifications
+        })
+    },
+
+    unmounted() {
+        this.$store.commit("updateAllNotifications", [])
     },
 
     methods: {
@@ -70,6 +95,8 @@ export default {
 
             const data = await response.json();
             this.notificationsFromDB = data;
+
+            this.$store.commit("updateAllNotifications", data.notifications)
             // console.log("/notifications data", data)
         },
 
@@ -98,20 +125,20 @@ export default {
             console.log("/acceptRequest data", data)
 
             // remove the notification
-            this.removeNotification(notification.id)
+            // this.removeNotification(notification.id)
+            this.$store.dispatch("removeNotification", notification.id)
 
         },
 
-        removeNotification(notifID) {
-            this.notificationsFromDB.notifications = this.notificationsFromDB.notifications.filter((notif) => {
-                return notif.id !== notifID
-            })
-
-        },
 
         isDataValid(resp) {
             return resp.type === "Success" ? true : false;
-        }
+        },
+
+        // initAllNotifications() {
+        //     const notificationsFromDB = this.notificationsFromDB;
+
+        // }
     },
 
 }

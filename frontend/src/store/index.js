@@ -1,10 +1,12 @@
 import { createStore } from "vuex";
 import chat from "@/store/modules/chat.js"
+import notifications from "@/store/modules/notifications.js"
 import actions from "@/store/actions.js"
 
 export default createStore({
   modules: {
-    chat
+    chat,
+    notifications
   },
   //------------------------------------- state is like a variables, which hold a values.
   state: {

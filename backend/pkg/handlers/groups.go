@@ -236,7 +236,7 @@ func (handler *Handler) GroupRequests(w http.ResponseWriter, r *http.Request) {
 /*                                save new data                               */
 /* -------------------------------------------------------------------------- */
 
-func (handler *Handler) NewGroup(w http.ResponseWriter, r *http.Request) {
+func (handler *Handler) NewGroup(wsServer *ws.Server, w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)
 	if r.Method != "POST" {
 		utils.RespondWithError(w, "Error on form submittion", 200)
@@ -275,6 +275,12 @@ func (handler *Handler) NewGroup(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			utils.RespondWithError(w, "Internal server error", 200)
 			return
+		}
+
+		for client := range wsServer.Clients {
+			if client.ID == newNotif.TargetID {
+				client.SendNotification(newNotif)
+			}
 		}
 
 		// save as a new member of group
