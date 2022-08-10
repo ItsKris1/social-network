@@ -1,3 +1,5 @@
+import router from "@/router"
+
 export default {
     async fetchPosts() {
         await fetch("http://localhost:8081/allPosts", {

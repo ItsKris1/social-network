@@ -16,7 +16,7 @@
 
             <NewPost></NewPost>
             <GroupPosts></GroupPosts>
-            
+
         </div>
 
         <div v-if="this.groupData.admin" class="right-section">
@@ -103,8 +103,7 @@ export default {
             })
                 .then((r => r.json()))
                 .then((json => {
-                    console.log(json);
-                    // console.log("getGroupInfo",json);
+                    // console.log("/groupInfo response", json);
                     this.groupData = json.groups[0];
                 }));
         },
