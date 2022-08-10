@@ -69,6 +69,11 @@ export default {
     created() {
         this.getGroupEvents();
     },
+    watch:{
+        $route(){
+            this.getGroupEvents()
+        }
+    },
     methods: {
         async getGroupEvents() {
             await fetch("http://localhost:8081/groupEvents?groupId=" + this.$route.params.id, {
