@@ -1,21 +1,23 @@
 <template>
     <div class="item-list__wrapper" id="groups">
-        <h3>Members:</h3>
+        <h3>Members</h3>
         <ul class="item-list">
             <li v-for="member in this.groupMembers">
-                <img class="small" src="../assets/icons/users-alt.svg" alt="">
+                <img class="small" src="../assets/icons/default-profile.svg" alt="">
                 <div class="item-text">{{ member.nickname }}</div>
             </li>
         </ul>
-        <button class="btn form-submit" @click="toggleModal">Invite users</button>
+        <button class="btn form-submit" @click="toggleModal">Invite users<i class="uil uil-user-plus"></i></button>
 
         <Modal v-if="this.isOpen" @closeModal="toggleModal">
-            <template #title>Choose users:</template>
+            <template #title>Invite users</template>
             <template #body>
-                {{ this.checkedNames }}
-                <div v-for="user in this.allUsers">
-                    <input type="checkbox" :value="user.id" v-model="checkedNames">{{ user.nickname }}
-                </div>
+
+                <MultiselectDropdown
+                                     v-model:checkedOptions="checkedNames"
+                                     placeholder="Select users"
+                                     :content="allUserNames" :clearInput="clearInput"
+                                     @inputCleared="toggleClearInput" />
                 <button class="btn form-submit" @click="toggleModal() ; inviteUsersToGroup()">Invite</button>
             </template>
         </Modal>
@@ -34,12 +36,20 @@ export default {
             isOpen: false,
             allUsers: [],
             checkedNames: [],
+            clearInput: false,
         };
     },
     created() {
         this.getGroupMembers();
         this.getAllUsers();
     },
+
+    computed: {
+        allUserNames() {
+            return this.allUsers.map(user => user.nickname)
+        }
+    },
+
     watch: {
         $route() {
             this.getGroupMembers();
@@ -73,13 +83,18 @@ export default {
             await fetch("http://localhost:8081/newGroupInvite", {
                 method: 'POST',
                 credentials: 'include',
-                body: JSON.stringify({ invitations: this.checkedNames, id: this.$route.params.id})
+                body: JSON.stringify({ invitations: this.checkedNames, id: this.$route.params.id })
             })
                 .then((response => response.json()))
                 .then((json => {
                     console.log("new group invite response:", json);
+                    this.clearInput = true;
                     // this.groupMembers = json.users;
                 }));
+        },
+
+        toggleClearInput() {
+            this.clearInput = !this.clearInput
         },
     },
     components: { Modal, MultiselectDropdown }

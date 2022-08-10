@@ -208,6 +208,8 @@ export default {
     /* transition: var(--hover-box-shadow-transition); */
 
     transition: box-shadow 0.15s ease-in-out;
+
+    width: 100%;
 }
 
 .start-post i {

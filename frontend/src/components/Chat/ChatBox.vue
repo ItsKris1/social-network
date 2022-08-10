@@ -204,6 +204,8 @@ export default {
     padding: 12px 20px;
 }
 
+
+
 .content {
     flex: 1;
     background-color: var(--color-white);

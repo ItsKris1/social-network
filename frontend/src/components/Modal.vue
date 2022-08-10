@@ -63,7 +63,7 @@
     gap: 15px;
 }
 
-.modal-content form .btn.form-submit {
+.modal-content .btn.form-submit {
     align-self: flex-end;
 }
 </style>

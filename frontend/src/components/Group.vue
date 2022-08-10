@@ -18,56 +18,6 @@
             <GroupPosts></GroupPosts>
 
         </div>
-
-        <div v-if="this.groupData.admin" class="right-section">
-            <!-- Group requests -->
-            <div class="item-list__wrapper" id="requests">
-                <h3>Requests</h3>
-                <ul class="item-list">
-                    <li>
-                        <div class="row1">
-                            <img class="small" src="../assets/icons/default-profile.svg">
-
-                            <div>
-                                <span class="who">John Smith</span>
-                            </div>
-                        </div>
-                        <div class="row2">
-                            <i class="uil uil-times accept"></i>
-                            <i class="uil uil-check decline"></i>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="row1">
-                            <img class="small" src="../assets/icons/default-profile.svg">
-                            <div>
-                                <span class="who">Chris Brown</span>
-                            </div>
-
-                        </div>
-                        <div class="row2">
-                            <i class="uil uil-times accept"></i>
-                            <i class="uil uil-check decline"></i>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="row1">
-                            <img class="small" src="../assets/icons/default-profile.svg">
-
-                            <div>
-                                <span class="who">Goblins</span>
-                            </div>
-                        </div>
-                        <div class="row2">
-                            <i class="uil uil-times accept"></i>
-                            <i class="uil uil-check decline"></i>
-                        </div>
-                    </li>
-
-                </ul>
-            </div>
-        </div>
-
     </div>
 </template>
 
@@ -115,7 +65,7 @@ export default {
 
 <style>
 .content {
-    margin-top: 100px;
+    margin-top: 50px;
 
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(min-content, 550px) minmax(min-content, 1fr);
