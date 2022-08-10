@@ -10,8 +10,8 @@ func DefineNotificationMsg(notif *models.Notification) {
 	case "FOLLOW":
 		notif.Content = "sent you a following request"
 	case "GROUP_INVITE":
-		notif.Content = "invited you to join their group"
+		notif.Content = "invited you to join group"
 	case "GROUP_REQUEST":
-		notif.Content = "has requested to join the group"
+		notif.Content = "has requested to join your group"
 	}
 }

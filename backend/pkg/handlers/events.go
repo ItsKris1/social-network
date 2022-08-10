@@ -72,14 +72,17 @@ func (handler *Handler) NewEvent(wsServer *ws.Server, w http.ResponseWriter, r *
 			Sender:   event.AuthorID,
 		}
 		// save notification in database
-		err = handler.repos.NotifRepo.Save(newNotif)
-		if err != nil {
-			utils.RespondWithError(w, "Internal server error", 200)
-			return
+		if members[i].ID != event.AuthorID {
+			err = handler.repos.NotifRepo.Save(newNotif)
+			if err != nil {
+				utils.RespondWithError(w, "Internal server error", 200)
+				return
+			}
 		}
+		
 		// NOTIFY  GROUP MEMBER ABOUT THE NEW EVENT IF ONLINE
 		for client := range wsServer.Clients {
-			if client.ID == members[i].ID {
+			if client.ID == members[i].ID && client.ID != event.AuthorID{
 				client.SendNotification(newNotif)
 			}
 		}
