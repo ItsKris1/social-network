@@ -74,6 +74,9 @@ func (handler *Handler) UserData(w http.ResponseWriter, r *http.Request) {
 		user, err = handler.repos.UserRepo.GetProfileMax(userId)
 	} else {
 		user, err = handler.repos.UserRepo.GetProfileMin(userId)
+		/* -------------------- check if follow status is pending ------------------- */
+		notif := models.Notification{Type: "FOLLOW", Content: currentUserId, TargetID: userId}
+		user.FollowRequestPending, err = handler.repos.NotifRepo.CheckIfExists(notif)
 	}
 	if err != nil {
 		utils.RespondWithError(w, "Error on getting data", 200)
