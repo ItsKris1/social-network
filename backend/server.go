@@ -55,7 +55,8 @@ func setRoutes(handler *handlers.Handler, wsServer *ws.Server) http.Handler {
 
 	mux.HandleFunc("/follow", handler.Auth(func(w http.ResponseWriter, r *http.Request) {
 		handler.Follow(wsServer, w, r)
-	})) //follow user
+	}))     //follow user
+	mux.HandleFunc("/cancelFollowRequest", handler.Auth(handler.CancelFollowRequest))
 	mux.HandleFunc("/unfollow", handler.Auth(handler.Unfollow))
 	mux.HandleFunc("/responseFollowRequest", handler.Auth(handler.ResponseFollowRequest))
 

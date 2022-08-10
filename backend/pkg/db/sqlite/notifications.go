@@ -9,7 +9,6 @@ type NotifRepository struct {
 	DB *sql.DB
 }
 
-// NOT TESTED
 func (repo *NotifRepository) Save(notification models.Notification) error {
 	stmt, err := repo.DB.Prepare("INSERT INTO notifications (notif_id, user_id,type,content,sender) values (?,?,?,?,?)")
 	if err != nil {
@@ -23,6 +22,14 @@ func (repo *NotifRepository) Save(notification models.Notification) error {
 
 func (repo *NotifRepository) Delete(notificationId string) error {
 	_, err := repo.DB.Exec("DELETE FROM notifications WHERE notif_id=?", notificationId)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (repo *NotifRepository) DeleteByType(notif models.Notification) error {
+	_, err := repo.DB.Exec("DELETE FROM notifications WHERE user_id =? AND type =? AND content = ?", notif.TargetID, notif.Type, notif.Content)
 	if err != nil {
 		return err
 	}

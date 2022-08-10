@@ -215,6 +215,27 @@ func (handler *Handler) Follow(wsServer *ws.Server, w http.ResponseWriter, r *ht
 	utils.RespondWithSuccess(w, "Following successful", 200)
 }
 
+
+func (handler *Handler) CancelFollowRequest(w http.ResponseWriter, r *http.Request) {
+	w = utils.ConfigHeader(w)
+	// access user id
+	currentUserId := r.Context().Value(utils.UserKey).(string)
+	// get status from request
+	query := r.URL.Query()
+	reqUserId := query.Get("userId")
+	// delete notification corresponding to follow request
+	notif := models.Notification{
+		Type:     "FOLLOW",
+		TargetID: reqUserId,
+		Content:  currentUserId,
+	}
+	if err := handler.repos.NotifRepo.DeleteByType(notif); err != nil {
+		utils.RespondWithError(w, "Error on canceling request", 200)
+		return
+	}
+	utils.RespondWithSuccess(w, "Follow request canceled successfuly", 200)
+}
+
 func (handler *Handler) Unfollow(w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)
 	// access user id
