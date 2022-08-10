@@ -26,6 +26,7 @@ func (handler *Handler) AllGroups(w http.ResponseWriter, r *http.Request) {
 	}
 	utils.RespondWithGroups(w, groups, 200)
 }
+
 // returns all groups that current user is a member of or admin
 func (handler *Handler) UserGroups(w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)
@@ -232,11 +233,35 @@ func (handler *Handler) GroupRequests(w http.ResponseWriter, r *http.Request) {
 	utils.RespondWithUsers(w, requestList, 200)
 }
 
+func (handler *Handler) CancelGroupRequests(w http.ResponseWriter, r *http.Request) {
+	w = utils.ConfigHeader(w)
+	// access current user id
+	currentUserId := r.Context().Value(utils.UserKey).(string)
+	// get group id from request
+	query := r.URL.Query()
+	groupId := query.Get("groupId")
+	if groupId == "" { //check if group id exists in request
+		utils.RespondWithError(w, "Error on getting data", 200)
+		return
+	}
+	// delete notification
+	notif := models.Notification{
+		Type:     "GROUP_REQUEST",
+		TargetID: groupId,
+		Content:  currentUserId,
+	}
+	if err := handler.repos.NotifRepo.DeleteByType(notif); err != nil {
+		utils.RespondWithError(w, "Error on canceling request", 200)
+		return
+	}
+	utils.RespondWithSuccess(w, "gROUP request canceled successfuly", 200)
+}
+
 /* -------------------------------------------------------------------------- */
 /*                                save new data                               */
 /* -------------------------------------------------------------------------- */
 
-func (handler *Handler) NewGroup( wsServer *ws.Server, w http.ResponseWriter, r *http.Request) {
+func (handler *Handler) NewGroup(wsServer *ws.Server, w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)
 	if r.Method != "POST" {
 		utils.RespondWithError(w, "Error on form submittion", 200)
@@ -269,7 +294,7 @@ func (handler *Handler) NewGroup( wsServer *ws.Server, w http.ResponseWriter, r 
 			TargetID: newGroup.Invitations[i],
 			Type:     "GROUP_INVITE",
 			Content:  newGroup.ID,
-			Sender: newGroup.AdminID,
+			Sender:   newGroup.AdminID,
 		}
 		err = handler.repos.NotifRepo.Save(newNotif)
 		if err != nil {

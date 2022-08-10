@@ -77,6 +77,7 @@ func setRoutes(handler *handlers.Handler, wsServer *ws.Server) http.Handler {
 	mux.HandleFunc("/groupEvents", handler.Auth(handler.GroupEvents))     // get group events
 	mux.HandleFunc("/groupPosts", handler.Auth(handler.GroupPosts))       // get group posts
 	mux.HandleFunc("/groupRequests", handler.Auth(handler.GroupRequests)) // get group member requests
+	mux.HandleFunc("/cancelGroupRequests", handler.Auth(handler.CancelGroupRequests)) //cancel request or joing group
 
 	mux.HandleFunc("/newGroup", handler.Auth(func(w http.ResponseWriter, r *http.Request) {
 		handler.NewGroup(wsServer, w, r)
