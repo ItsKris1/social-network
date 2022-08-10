@@ -34,7 +34,7 @@
     gap: 25px;
 
     padding: 30px 50px;
-    width: 30vw;
+    width: 400px;
 
 
 

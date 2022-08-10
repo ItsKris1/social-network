@@ -32,7 +32,7 @@
 
                 </ul>
 
-                <ul class="item-list">
+                <ul class="item-list" v-if="userGroups !== null">
                     <li v-for="group in userGroups">
 
                         <div class="group">
@@ -51,7 +51,7 @@
 
                 </ul>
 
-                <p class="additional-info" v-if="usersIFollow.users === null && userGroups === undefined">
+                <p class="additional-info" v-if="usersIFollow.users === null && userGroups === null">
                     No one to message with :(</p>
             </div>
 
@@ -129,7 +129,7 @@ export default {
                 credentials: 'include'
             });
             const data = await response.json();
-            console.log("/unReadmessages data", data)
+            // console.log("/unReadmessages data", data)
             this.unreadMsgsFromDB = data.chatStats;
 
         },

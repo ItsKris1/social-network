@@ -42,7 +42,7 @@ export default {
             const response = await fetch(`http://localhost:8081/changeStatus?status=${this.currentUserStatus}`, {
                 credentials: "include"
             });
-            console.log("Response", await response.json())
+            // console.log("Response", await response.json())
 
         }
     }

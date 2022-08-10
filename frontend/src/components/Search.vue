@@ -3,24 +3,21 @@
         <input @focus="toggleDropdown" v-model="searchQuery"
                :class="{ 'no-bottom-border': showDropdown }" type="text" placeholder="Search user or group">
 
-        <div class="shadow-wrapper" v-show="showDropdown">
-            <div id="dropdown">
-                <ul class="item-list">
-                    <li @click="goToUserProfile(user.id)" id="dropdownitem" v-for="user in filteredUsers">
-                        <div class="user-picture small"
-                             :style="{ backgroundImage: `url(http://localhost:8081/${user.avatar})` }"></div>
-                        <div class="item-text">{{ user.nickname }}</div>
-                    </li>
+        <div id="dropdown" v-show="showDropdown">
+            <ul class="item-list">
+                <li @click="goToUserProfile(user.id)" id="dropdownitem" v-for="user in filteredUsers">
+                    <div class="user-picture small"
+                         :style="{ backgroundImage: `url(http://localhost:8081/${user.avatar})` }"></div>
+                    <div class="item-text">{{ user.nickname }}</div>
+                </li>
 
-                    <li @click="goToGroupPage(group.id)" id="dropdownitem" v-for="group in filteredGroups">
-                        <img src="../assets/icons/users-alt.svg" alt="" class="small">
-                        <div class="item-text">{{ group.name }}</div>
-                    </li>
+                <li @click="goToGroupPage(group.id)" id="dropdownitem" v-for="group in filteredGroups">
+                    <img src="../assets/icons/users-alt.svg" alt="" class="small">
+                    <div class="item-text">{{ group.name }}</div>
+                </li>
 
-                </ul>
-            </div>
+            </ul>
         </div>
-
     </div>
 
 </template>
@@ -129,30 +126,26 @@ export default {
     border-bottom-right-radius: 0;
 }
 
-.shadow-wrapper {
-    position: absolute;
-    width: calc(100% + 8px);
-    transform: translateX(50%);
-    right: 50%;
-    overflow: hidden;
-    padding: 4px;
-}
 
 #dropdown {
-    position: relative;
+    position: absolute;
     background-color: var(--input-bg);
     color: var(--color-lg-black);
+    background-color: var(--input-bg);
     margin-top: -4px;
-    box-shadow: 0 0 5px 1px var(--hover-color);
+    /* box-shadow: 0 0 5px 1px var(--hover-color); */
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     width: 100%;
+    top: 44px;
+    box-shadow: var(--container-shadow);
 
 }
 
 
 #dropdown .item-list {
-    border-top: 1px solid rgb(211, 211, 211);
+    /* position: absolute; */
+    /* border-top: 1px solid rgb(211, 211, 211); */
     padding: 15px;
 }
 
@@ -173,8 +166,6 @@ export default {
 
 #searchDiv input[type="text"]:hover,
 #searchDiv input[type="text"]:focus {
-    /* position: relative; */
-    /* z-index: 2; */
-    box-shadow: var(--hover-box-shadow);
+    box-shadow: 0 0 0 2px rgb(98, 98, 204);
 }
 </style>
