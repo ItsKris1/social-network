@@ -1,9 +1,9 @@
 <template>
     <div class="item-list__wrapper" id="groups">
-        <h3>Events:</h3>
+        <h3>Events</h3>
         <ul class="item-list">
-            <li v-for="event in this.groupEvents">                
-                <img class="small" src="../assets/icons/users-alt.svg" alt="">
+            <li v-for="event in this.groupEvents">
+                <img class="small" src="../assets/icons/event.svg" alt="">
                 <div class="item-text" style="cursor:pointer" @click="this.showEvent(event)">{{ event.title }}</div>
 
                 <Modal v-if="this.eventIsOpen" @closeModal="closeEvent">
@@ -11,8 +11,8 @@
                         {{ this.eventData.title }}
                     </template>
                     <template #body>
-                        <div>{{this.eventData.date}}</div>
-                        <div>{{this.eventData.content}}</div>
+                        <div>{{ this.eventData.date }}</div>
+                        <div>{{ this.eventData.content }}</div>
 
                     </template>
                 </Modal>
@@ -21,21 +21,39 @@
         <button class="btn form-submit" @click="toggleModal">New event</button>
 
         <Modal v-if="this.isOpen" @closeModal="toggleModal">
-            <template #title>Crete new event</template>
+            <template #title>Create new event</template>
             <template #body>
-                <span>Title</span>
-                <input type="text" v-model="this.formData.title">
-                <span>Description</span>
-                <textarea v-model="this.formData.content" cols="30" rows="3"
-                    placeholder="What is this about?"></textarea>
-                <span>Date</span>
-                <input v-model="this.formData.date" type="date">
-                <span>Going?</span>
-                <select v-model="this.formData.going" name="going">
-                    <option value="YES">Yes</option>
-                    <option value="NO">No</option>
-                </select>
-                <button class="btn form-submit" @click="toggleModal() ; createNewEvent()">Create</button>
+                <form @submit.prevent="createNewEvent(); toggleModal();" id="new-event" ref="openForm">
+                    <div class="form-input">
+                        <label for="title">Title</label>
+                        <input type="text" v-model="this.formData.title" id="title" required>
+                    </div>
+                    <div class="form-input">
+                        <label for="description">Description</label>
+                        <textarea v-model="this.formData.content" cols="30" rows="3"
+                                  placeholder="What is this about?" id="description" required></textarea>
+                    </div>
+                    <div class="form-input">
+                        <label for="date">Date</label>
+                        <input v-model="this.formData.date" type="date" id="date" required>
+                    </div>
+                    <div class="form-input">
+                        <label for="going">Going</label>
+
+                        <div class="select-wrapper">
+                            <img src="../assets/icons/angle-down.svg" class="dropdown-arrow">
+                            <select v-model="this.formData.going" name="going" id="going" required>
+                                <option value="" selected hidden>Choose here</option>
+                                <option value="YES">Yes</option>
+                                <option value="NO">No</option>
+                            </select>
+
+                        </div>
+
+                    </div>
+                </form>
+
+                <button class="btn form-submit" form="new-event">Create</button>
             </template>
 
         </Modal>
@@ -62,15 +80,15 @@ export default {
                 title: "",
                 content: "",
                 date: null,
-                going: null
+                going: ""
             }
         };
     },
     created() {
         this.getGroupEvents();
     },
-    watch:{
-        $route(){
+    watch: {
+        $route() {
             this.getGroupEvents()
         }
     },
@@ -105,8 +123,18 @@ export default {
             this.getGroupEvents()
         },
         toggleModal() {
+            if (this.isOpen) {
+                // clear form data
+                this.formData = {
+                    title: "",
+                    content: "",
+                    date: null,
+                    going: ""
+                }
+            }
             this.isOpen = !this.isOpen;
         },
+
         showEvent(event) {
             this.eventData.title = event.title
             this.eventData.date = event.date

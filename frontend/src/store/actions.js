@@ -103,6 +103,16 @@ export default {
 
     },
 
+    addUserGroup({ state, commit }, userGroup) {
+        let userGroups = state.groups.userGroups;
+        console.log("userGroups state", userGroups)
+        if (userGroups === null) { userGroups = [] };
+        userGroups.push(userGroup);
+
+        console.log("userGroup", userGroup)
+        commit("updateUserGroups", userGroups)
+    },
+
     async getMyFollowers(context) {
         await context.dispatch("getMyProfileInfo");
         const myID = context.state.profileInfo.id;

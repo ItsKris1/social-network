@@ -34,7 +34,7 @@
     gap: 25px;
 
     padding: 30px 50px;
-    width: 30vw;
+    width: 400px;
 
 
 
@@ -55,7 +55,6 @@
     font-size: 1.25em;
     cursor: pointer;
 
-    transition: transform 0.25s ease-in-out;
 }
 
 .modal-content form {
@@ -64,11 +63,7 @@
     gap: 15px;
 }
 
-.modal-content form .btn.form-submit {
+.modal-content .btn.form-submit {
     align-self: flex-end;
-}
-
-.modal-header i:hover {
-    transform: scale(1.25);
 }
 </style>

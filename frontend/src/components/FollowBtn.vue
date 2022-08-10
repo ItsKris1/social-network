@@ -50,7 +50,7 @@ export default {
                 .then((r) => r.json())
                 .then((json => {
 
-                    console.log("server response:", json)
+                    // console.log("server response:", json)
 
                     if (this.user.status === "PRIVATE") {
                         this.buttonText = "Request sent"

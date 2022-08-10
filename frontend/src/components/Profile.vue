@@ -137,7 +137,7 @@ export default {
     grid-template-columns: 1fr minmax(min-content, 550px) 1fr;
     column-gap: 50px;
     margin-top: 50px;
-    justify-items: center;
+    /* justify-items: center; */
 
 }
 
