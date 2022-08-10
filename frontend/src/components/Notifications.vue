@@ -125,12 +125,19 @@ export default {
             // console.log("/handleRequest data", data)
 
             if (notification.type === "GROUP_INVITE" && reqResponse === "accept") {
-                console.log(notification)
+                // update user groups for live update
                 this.$store.dispatch("addUserGroup", notification.group)
+
+                //update all groups for live update
+                // let allGroups = this.$store.state.groups.allGroups;
+                // if (allGroups === null) {
+                //     allGroups = []
+                // };
+                // allGroups.push(notification.group)
+                // this.$store.commit("updateAllGroups", allGroups)
             }
 
             // remove the notification
-            // this.removeNotification(notification.id)
             this.$store.dispatch("removeNotification", notification.id)
 
         },

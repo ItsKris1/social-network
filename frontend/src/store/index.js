@@ -143,6 +143,7 @@ export default createStore({
       state.groups.userGroups = userGroups
     },
 
+
     updateDataLoaded(state, data) {
       state.dataLoaded[data] = true;
     }
