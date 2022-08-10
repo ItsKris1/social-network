@@ -27,7 +27,7 @@ export default {
     },
 
     created() {
-        console.log("user", this.user)
+        // console.log("user", this.user)
     },
 
     methods: {

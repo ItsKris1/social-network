@@ -129,7 +129,7 @@ export default {
                 credentials: 'include'
             });
             const data = await response.json();
-            console.log("/unReadmessages data", data)
+            // console.log("/unReadmessages data", data)
             this.unreadMsgsFromDB = data.chatStats;
 
         },

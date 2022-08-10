@@ -137,7 +137,7 @@ export default {
     createWebSocketConn({ commit, dispatch, state }) {
         const ws = new WebSocket("ws://localhost:8081/ws");
         ws.addEventListener("open", () => {
-            console.log("WS: Connection has established")
+            // console.log("WS: Connection has established")
         })
 
         ws.addEventListener("message", (e) => {

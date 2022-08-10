@@ -93,7 +93,8 @@ export default {
     },
     data() {
         return {
-            groupData: null
+            groupData: null,
+            isMemberOfGroup:false
         };
     },
     methods: {
@@ -107,6 +108,7 @@ export default {
                     this.groupData = json.groups[0];
                 }));
         },
+
     },
     components: { AllPosts, Groups, Notifications, NewPost, GroupPosts, GroupMembers, Modal, GroupEvents }
 }

@@ -1,2 +1,4 @@
 when clicked "follow" button, following column not gonna auto-rendered real-time.
-dont show all group info to non-members.
+make dont show all group info to non-members.
+make not difference when you search "A" or "a".
+make (on /main) "my groups" clickable link's to related groups.
