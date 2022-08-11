@@ -1,5 +1,8 @@
 <template>
-    <button class="btn" @click="handleFollow">{{ buttonText }}<i class="uil uil-user-plus"></i></button>
+    <button :class="buttonClass" @click="handleFollow">{{ buttonText }}
+        <i class="uil uil-user-plus" v-if="buttonText === 'Follow'"></i>
+        <i class="uil uil-check" v-else></i>
+    </button>
 </template>
 
 
@@ -27,18 +30,33 @@ export default {
     },
 
     created() {
-        // console.log("user", this.user)
+        if (this.user.requestPending === true) {
+            this.buttonText = "Request sent";
+        }
+
+        console.log("User", this.user)
+    },
+
+    computed: {
+        buttonClass() {
+            return {
+                btn: true,
+                // active hover class
+                active: this.buttonText === "Request sent"
+            }
+        }
     },
 
     methods: {
-        handleFollow() {
+        async handleFollow() {
             if (this.buttonText === "Request sent") {
                 // cancel the request
+                await this.cancelFollowRequest();
                 this.buttonText = "Follow"
                 return
             }
 
-            this.followUser();
+            await this.followUser();
 
         },
 
@@ -50,7 +68,7 @@ export default {
                 .then((r) => r.json())
                 .then((json => {
 
-                    // console.log("server response:", json)
+                    console.log("server response:", json)
 
                     if (this.user.status === "PRIVATE") {
                         this.buttonText = "Request sent"
@@ -61,6 +79,16 @@ export default {
 
                 }))
         },
+
+
+        async cancelFollowRequest() {
+            const response = await fetch(`http://localhost:8081/cancelFollowRequest?userid=${this.$route.params.id}`, {
+                credentials: 'include'
+            });
+            const data = await response.json();
+
+            console.log("/cancelFollowRequest response", data)
+        }
 
     }
 }

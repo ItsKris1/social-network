@@ -131,7 +131,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #layout-profile {
     display: grid;
     grid-template-columns: 1fr minmax(min-content, 550px) 1fr;
@@ -147,6 +147,7 @@ export default {
     align-items: center;
     gap: 50px;
 }
+
 
 .left-section {
     display: flex;
@@ -191,5 +192,9 @@ export default {
     flex-direction: column;
     align-items: center;
     gap: 10px;
+}
+
+.additional-info {
+    text-align: center;
 }
 </style>
