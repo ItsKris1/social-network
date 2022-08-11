@@ -80,7 +80,9 @@ export default {
 
                 }))
                 .then(() => {
-                    this.createFollowersListForShowing(this.followers, this.groupMembers)
+                    if (this.followers !== null) {
+                        this.createFollowersListForShowing(this.followers, this.groupMembers)
+                    }
                 })
 
         },
@@ -95,6 +97,8 @@ export default {
                 }));
         },
         createFollowersListForShowing(followers, members) {
+            console.log("Aa", followers);
+
             let isUserInGroup = false
             for (let i = 0; i < Object.keys(followers).length; i++) {
                 for (let j = 0; j < Object.keys(members).length; j++) {
