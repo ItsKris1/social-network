@@ -24,7 +24,7 @@ func (repo *EventRepository) GetAll(groupID string) ([]models.Event, error) {
 }
 
 func (repo *EventRepository) GetData(eventId string) (models.Event, error) {
-	row := repo.DB.QueryRow("SELECT title, content, event_id, group_id, strftime('%d.%m.%Y', date), created_by FROM events WHERE event_id = ? ", eventId)
+	row := repo.DB.QueryRow("SELECT title, content, event_id, group_id, strftime('%d.%m.%Y', date), created_by FROM event WHERE event_id = ? ", eventId)
 	var event models.Event
 	if err := row.Scan(&event.Title, &event.Content, &event.ID, &event.GroupID, &event.Date, &event.AuthorID); err != nil {
 		return event, err
