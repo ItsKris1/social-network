@@ -20,7 +20,6 @@ export default {
     emits: ["follow"],
     data() {
         return {
-            userid: "",
 
             // tracks button functionality
             // functionalities -> follow, send request, decline request
@@ -34,7 +33,7 @@ export default {
             this.buttonText = "Request sent";
         }
 
-        console.log("User", this.user)
+        // console.log("User", this.user)
     },
 
     computed: {
@@ -68,7 +67,7 @@ export default {
                 .then((r) => r.json())
                 .then((json => {
 
-                    console.log("server response:", json)
+                    // console.log("server response:", json)
 
                     if (this.user.status === "PRIVATE") {
                         this.buttonText = "Request sent"
@@ -87,7 +86,7 @@ export default {
             });
             const data = await response.json();
 
-            console.log("/cancelFollowRequest response", data)
+            // console.log("/cancelFollowRequest response", data)
         }
 
     }

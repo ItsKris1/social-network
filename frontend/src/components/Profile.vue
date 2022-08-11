@@ -14,14 +14,17 @@
                     </div>
 
                     <div class="profile-btns">
-                        <!-- Privacy and follow/unfollow button-->
+
                         <PrivacyBtn v-if="isMyProfile" :status="user.status" />
-                        <FollowBtn v-else-if="!user.following" @follow="checkFollowRequest" :user="user" />
-                        <UnfollowBtn v-else @unfollow="toggleFollowingThisUser" />
+
+                        <!-- Follow/unfollow button -->
+                        <component v-else :is="displayBtn" v-bind="{ user }" @follow="checkFollowRequest"></component>
+
                         <!-- Send message button -->
                         <button v-if="showSendButton"
                                 class="btn">Send message
                             <i class="uil uil-message"></i></button>
+
                     </div>
 
                 </div>
@@ -76,8 +79,17 @@ export default {
         },
         showSendButton() {
             return !this.isMyProfile && this.user.status === "PUBLIC" && !this.user.following
+        },
+
+        displayBtn() {
+            if (this.user.following) {
+                return UnfollowBtn
+            } else {
+                return FollowBtn
+            }
         }
     },
+
 
 
 

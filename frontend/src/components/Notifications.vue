@@ -88,7 +88,7 @@ export default {
             this.notificationsFromDB = data;
 
             this.$store.commit("updateAllNotifications", data.notifications)
-            console.log("/notifications data", data)
+            // console.log("/notifications data", data)
         },
 
         async handleRequest(notification, reqResponse) {
