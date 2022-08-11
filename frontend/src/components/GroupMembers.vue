@@ -13,11 +13,8 @@
             <template #title>Invite users</template>
             <template #body>
 
-                <MultiselectDropdown
-                                     v-model:checkedOptions="checkedNames"
-                                     placeholder="Select users"
-                                     :content="allUserNames" :clearInput="clearInput"
-                                     @inputCleared="toggleClearInput" />
+                <MultiselectDropdown v-model:checkedOptions="checkedNames" placeholder="Select followers"
+                    :content="allFollowersNames" :clearInput="clearInput" @inputCleared="toggleClearInput" />
                 <button class="btn form-submit" @click="toggleModal() ; inviteUsersToGroup()">Invite</button>
             </template>
         </Modal>
@@ -34,6 +31,9 @@ export default {
         return {
             groupMembers: null,
             isOpen: false,
+            followers: [],
+            listForShowing: [],
+
             allUsers: [],
             checkedNames: [],
             clearInput: false,
@@ -41,30 +41,48 @@ export default {
     },
     created() {
         this.getGroupMembers();
-        this.getAllUsers();
+        this.getFollowers();
     },
 
     computed: {
-        allUserNames() {
-            return this.allUsers.map(user => user.nickname)
+        allFollowersNames() {
+            return this.listForShowing.map(user => user.nickname)
         }
     },
 
     watch: {
         $route() {
             this.getGroupMembers();
+            this.getFollowers();
         }
     },
     methods: {
-        async getAllUsers() {
-            await fetch("http://localhost:8081/allUsers", {
+
+        async getFollowers() {
+            let id
+            await fetch('http://localhost:8081/currentUser', {
                 credentials: "include"
             })
                 .then((response => response.json()))
                 .then((json => {
-                    // console.log("Allusers:", json);
-                    this.allUsers = json.users;
+                    // console.log("CurrentUser: ", json);
+                    id = json.users[0].id
                 }));
+
+
+            await fetch('http://localhost:8081/followers?userId=' + id, {
+                credentials: "include"
+            })
+                .then((response => response.json()))
+                .then((json => {
+                    // console.log("Followers:", json);
+                    this.followers = json.users;
+
+                }))
+                .then(() => {
+                    this.createFollowersListForShowing(this.followers, this.groupMembers)
+                })
+
         },
         async getGroupMembers() {
             await fetch("http://localhost:8081/groupMembers?groupId=" + this.$route.params.id, {
@@ -75,6 +93,20 @@ export default {
                     // console.log("GroupMembers:", json);
                     this.groupMembers = json.users;
                 }));
+        },
+        createFollowersListForShowing(followers, members) {
+            let isUserInGroup = false
+            for (let i = 0; i < Object.keys(followers).length; i++) {
+                for (let j = 0; j < Object.keys(members).length; j++) {
+                    if (followers[i].nickname === members[j].nickname) {
+                        isUserInGroup = true
+                    }
+                }
+                if (!isUserInGroup) {
+                    this.listForShowing.push(followers[i])
+                }
+                isUserInGroup = false
+            }
         },
         toggleModal() {
             this.isOpen = !this.isOpen;
