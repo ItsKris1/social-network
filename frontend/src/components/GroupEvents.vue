@@ -18,7 +18,7 @@
                 </Modal>
             </li>
         </ul>
-        <button class="btn form-submit" @click="toggleModal">New event</button>
+        <button class="btn form-submit" @click="toggleModal">New event<i class="uil uil-plus"></i></button>
 
         <Modal v-if="this.isOpen" @closeModal="toggleModal">
             <template #title>Create new event</template>

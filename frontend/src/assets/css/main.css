@@ -274,7 +274,8 @@ select {
 .item-list {
     display: flex;
     flex-direction: column;
-    gap: 10px
+    gap: 10px;
+    width: 100%;
 }
 
 .item-list li {

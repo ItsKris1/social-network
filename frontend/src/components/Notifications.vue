@@ -1,7 +1,10 @@
 <template>
 
     <div class="relative-wrapper" @click="toggleShowNotifications">
-        <span class="link-header">Notifications</span>
+        <span class="link-header">Notifications
+            <div class="notification-ring" v-show="hasNotifications"></div>
+
+        </span>
         <div class="item-list__wrapper" id="notifications" v-show="showNotifications">
             <ul class="item-list">
                 <li v-for="notification in allNotifications"
@@ -13,10 +16,18 @@
                         <img class="" src="../assets/icons/default-profile.svg">
 
                         <div>
-                            <span class="who">{{ notification.user.nickname }}</span> {{ notification.content }}
+                            <span class="who">{{ notification.user.nickname }}</span>
+                            {{ notification.content }}
+                            <span class="who">{{ additionalText(notification) }}</span>
                         </div>
                     </div>
-                    <div class="row2">
+
+                    <div class="row2" v-if="notification.type === 'EVENT'">
+                        <i class="uil uil-times"
+                           @click.stop="this.$store.dispatch('removeNotification', notification.id)"></i>
+                    </div>
+
+                    <div class="row2" v-else>
                         <i class="uil uil-times decline" @click.stop="handleRequest(notification, 'decline')"></i>
                         <i class="uil uil-check accept" @click.stop="handleRequest(notification, 'accept')"></i>
                     </div>
@@ -63,20 +74,14 @@ export default {
     },
 
     computed: {
-        // allNotifications: {
-
-        //     get() {
-        //         return [...this.notificationsFromDB.notifications, ...this.$store.state.notifications.newNotifications]
-        //     },
-
-        //     set(newValue) {
-
-        //     }
-        // }
 
         ...mapState({
             allNotifications: state => state.notifications.allNotifications
-        })
+        }),
+
+        hasNotifications() {
+            return this.allNotifications.length > 0;
+        }
     },
 
     unmounted() {
@@ -97,7 +102,7 @@ export default {
             this.notificationsFromDB = data;
 
             this.$store.commit("updateAllNotifications", data.notifications)
-            // console.log("/notifications data", data)
+            console.log("/notifications data", data)
         },
 
         async handleRequest(notification, reqResponse) {
@@ -151,6 +156,25 @@ export default {
         //     const notificationsFromDB = this.notificationsFromDB;
 
         // }
+
+        additionalText(notification) {
+            let a = "";
+
+            switch (notification.type) {
+                case "EVENT":
+                    a = `${notification.event.title} in group ${notification.group.name}`;
+                    break;
+
+                case "GROUP_INVITE":
+                    a = notification.group.name;
+                    break;
+            }
+            // event need group name, event name
+            // group invite -> who invited and to what group
+
+
+            return a
+        }
     },
 
 }
@@ -215,5 +239,15 @@ export default {
 .link-header:hover::after {
     width: 100%;
     background-color: rgb(132, 148, 236);
+}
+
+.notification-ring {
+    position: absolute;
+    height: 10px;
+    width: 10px;
+    background-color: rgb(207, 59, 59);
+    border-radius: 50%;
+    right: -12.5px;
+    top: 0;
 }
 </style>
