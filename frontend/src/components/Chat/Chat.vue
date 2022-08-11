@@ -220,7 +220,6 @@ export default {
 .messaging {
 
     width: 300px;
-    background-color: var(--color-white);
 }
 
 .messaging-header {
@@ -258,6 +257,7 @@ export default {
 }
 
 .messaging-content {
+    background-color: var(--color-white);
     padding: 20px;
 }
 

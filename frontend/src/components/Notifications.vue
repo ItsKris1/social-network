@@ -190,12 +190,8 @@ export default {
     left: 50%;
     font-weight: 400;
     margin-top: 10px;
-    /* min-width: 400px; */
-    /* max-width: 450px; */
-    /* right: 5px; */
-    /* top: 50px; */
-    /* display: none; */
     width: 400px;
+    cursor: default;
 }
 
 
@@ -239,5 +235,17 @@ export default {
     border-radius: 50%;
     right: -12.5px;
     top: 0;
+}
+
+.decline,
+.accept {
+    display: inline-block;
+    transition: transform 0.25s linear;
+}
+
+.decline:hover,
+.accept:hover {
+    display: inline-block;
+    transform: scale3d(1.125, 1.125, 1.125);
 }
 </style>

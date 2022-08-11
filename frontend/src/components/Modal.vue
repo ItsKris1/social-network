@@ -66,4 +66,14 @@
 .modal-content .btn.form-submit {
     align-self: flex-end;
 }
+
+/* close icon */
+.uil-times.close {
+    cursor: pointer;
+    transition: transform 0.25s ease;
+}
+
+.uil-times.close:hover {
+    transform: scale(1.15);
+}
 </style>
