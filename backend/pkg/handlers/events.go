@@ -62,6 +62,7 @@ func (handler *Handler) NewEvent(wsServer *ws.Server, w http.ResponseWriter, r *
 		utils.RespondWithError(w, "Internal server error", 200)
 		return
 	}
+
 	// for each member create notification
 	for i := 0; i < len(members); i++ {
 		newNotif := models.Notification{

@@ -16,15 +16,15 @@
                         <img class="" src="../assets/icons/default-profile.svg">
 
                         <div>
-                            <span class="who">{{ notification.user.nickname }}</span>
+                            {{ notification.user.nickname }}
                             {{ notification.content }}
-                            <span class="who">{{ additionalText(notification) }}</span>
+                            {{ additionalText(notification) }}
                         </div>
                     </div>
 
                     <div class="row2" v-if="notification.type === 'EVENT'">
                         <i class="uil uil-times"
-                           @click.stop="this.$store.dispatch('removeNotification', notification.id)"></i>
+                           @click.stop="removeEventNotif(notification)"></i>
                     </div>
 
                     <div class="row2" v-else>
@@ -34,20 +34,6 @@
                 </li>
 
                 <li v-else class="additional-info">No notifications</li>
-
-                <!-- <li>
-                    <div class="row1">
-                        <img class="" src="../assets/icons/users-alt.svg">
-
-                        <div>
-                            <span class="who">ItsKris</span> did something
-                        </div>
-                    </div>
-                    <div class="row2">
-                        <i class="uil uil-times accept"></i>
-                        <i class="uil uil-check decline"></i>
-                    </div>
-                </li> -->
 
             </ul>
         </div>
@@ -145,6 +131,10 @@ export default {
             // remove the notification
             this.$store.dispatch("removeNotification", notification.id)
 
+        },
+
+        async removeEventNotif() {
+            // TODO
         },
 
 

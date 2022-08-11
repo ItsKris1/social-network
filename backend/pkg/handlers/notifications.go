@@ -3,7 +3,6 @@ package handlers
 import (
 	"net/http"
 	"social-network/pkg/utils"
-	"fmt"
 )
 
 func (handler *Handler) Notifications(w http.ResponseWriter, r *http.Request) {
@@ -25,11 +24,9 @@ func (handler *Handler) Notifications(w http.ResponseWriter, r *http.Request) {
 		case "FOLLOW":
 			notifs[i].User, _ = handler.repos.UserRepo.GetDataMin(notifs[i].Content)
 		case "EVENT":
-			fmt.Println("EVENT ID", notifs[i].Content)
 			notifs[i].Event, _ = handler.repos.EventRepo.GetData(notifs[i].Content)
 			notifs[i].User, _ = handler.repos.UserRepo.GetDataMin(notifs[i].Sender)
-
-			fmt.Println("EVENT", notifs[i].Event)
+			notifs[i].Group, _ = handler.repos.GroupRepo.GetData(notifs[i].Event.GroupID)
 		case "GROUP_REQUEST":
 			notifs[i].User, _ = handler.repos.UserRepo.GetDataMin(notifs[i].Content)
 			notifs[i].Group, _ = handler.repos.GroupRepo.GetData(notifs[i].TargetID)
