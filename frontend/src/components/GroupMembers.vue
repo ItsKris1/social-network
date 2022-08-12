@@ -33,7 +33,6 @@ export default {
             isOpen: false,
             followers: [],
             listForShowing: [],
-
             allUsers: [],
             checkedNames: [],
             clearInput: false,
@@ -97,7 +96,6 @@ export default {
                 }));
         },
         createFollowersListForShowing(followers, members) {
-            console.log("Aa", followers);
 
             let isUserInGroup = false
             for (let i = 0; i < Object.keys(followers).length; i++) {
@@ -123,7 +121,7 @@ export default {
             })
                 .then((response => response.json()))
                 .then((json => {
-                    console.log("new group invite response:", json);
+                    // console.log("new group invite response:", json);
                     this.clearInput = true;
                     // this.groupMembers = json.users;
                 }));
