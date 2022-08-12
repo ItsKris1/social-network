@@ -6,12 +6,12 @@ import "social-network/pkg/models"
 func DefineNotificationMsg(notif *models.Notification) {
 	switch notif.Type {
 	case "EVENT":
-		notif.Content = "created a new event"
+		notif.Content = " created a new event " 
 	case "FOLLOW":
-		notif.Content = "sent you a following request"
+		notif.Content = " sent you a following request "
 	case "GROUP_INVITE":
-		notif.Content = "invited you to join group"
+		notif.Content = " invited you to join group "
 	case "GROUP_REQUEST":
-		notif.Content = "has requested to join your group"
+		notif.Content = " has requested to join your group "
 	}
 }

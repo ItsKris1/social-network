@@ -17,6 +17,8 @@
             <input type="text" name="sent-message" id="sent-message__input" placeholder="Send a message"
                    ref="sendMessageInput">
             <button type="submit"><i class="uil uil-message"></i></button>
+            <Emojis :input="this.$refs.sendMessageInput"
+                    :messagebox="this.$refs.contentDiv"></Emojis>
         </form>
 
     </div>
@@ -25,157 +27,125 @@
 
 <script>
 import { mapState } from 'vuex';
+import Emojis from './Emojis.vue';
 
 
 export default {
-    props: ["name", "receiverId", "type"], // userid is ID of the user we have chat open with
-    emits: ['closeChat'],
-
+    props: ["name", "receiverId", "type"],
+    emits: ["closeChat"],
     data() {
         return {
             previousMessages: [],
-        }
+        };
     },
-
     created() {
         this.getPreviousMessages();
     },
-
     unmounted() {
         this.clearChatNewMessages();
     },
-
-
     computed: {
         allMessages() {
-            return [...this.previousMessages, ...this.$store.getters.getMessages(this.receiverId, this.type)]
+            return [...this.previousMessages, ...this.$store.getters.getMessages(this.receiverId, this.type)];
         },
-
         ...mapState({
             myID: state => state.id
         })
-
     },
-
     watch: {
         allMessages() {
             this.$nextTick(() => {
                 this.$refs.contentDiv.scrollTop = this.$refs.contentDiv.scrollHeight;
-
-            })
-
+            });
         }
     },
-
     methods: {
         async getPreviousMessages() {
             const response = await fetch("http://localhost:8081/messages", {
-                credentials: 'include',
+                credentials: "include",
                 method: "POST",
                 body: JSON.stringify({
                     type: this.type,
                     receiverId: this.receiverId
                 })
-            })
-
+            });
             const data = await response.json();
             // console.log("/previous messages data", data)
-
             // if response is NULL assign an empty array
             this.previousMessages = data.chatMessage ? data.chatMessage : [];
-
         },
-
         async sendMessage() {
             const sendMessageInput = this.$refs.sendMessageInput;
-
             if (sendMessageInput.value === "") {
-                return
+                return;
             }
-
             const msgObj = {
                 receiverId: this.receiverId,
                 content: sendMessageInput.value,
                 type: this.type
-            }
-
+            };
             await fetch("http://localhost:8081/newMessage", {
                 body: JSON.stringify(msgObj),
                 method: "POST",
                 credentials: "include"
             });
-
             // const data = await response.json();
             // console.log("/newMessage data", data)
-
-            this.$store.dispatch("addNewChatMessage", { ...msgObj, senderId: this.myID })
+            this.$store.dispatch("addNewChatMessage", { ...msgObj, senderId: this.myID });
             sendMessageInput.value = "";
-
         },
-
         clearChatNewMessages() {
             // CLEAR NEW MESSAGES
             // because chat is closed and next time we open the chat we fetch all the messages
-
             if (this.type === "GROUP") {
                 let msgs = this.$store.state.chat.newGroupChatMessages;
-
                 // filter new messages by removing all messages that were sent to that receiverId
                 // receiverId is equal to group ID
                 msgs = msgs.filter((msg) => {
                     if (msg.receiverId === this.receiverId) {
-                        return false
+                        return false;
                     }
-                })
-                this.$store.commit("updateNewGroupChatMessages", msgs)
-            } else {
+                });
+                this.$store.commit("updateNewGroupChatMessages", msgs);
+            }
+            else {
                 let msgs = this.$store.state.chat.newChatMessages;
-
                 // filter new messages by removing all messages that were sent or received in that chat
                 msgs = msgs.filter((msg) => {
                     if (msg.receiverId === this.receiverId || msg.senderId === this.receiverId) {
-                        return false
+                        return false;
                     }
-
-                })
-                this.$store.commit("updateNewChatMessages", msgs)
+                });
+                this.$store.commit("updateNewChatMessages", msgs);
             }
-
         },
-
         // determines whether to display sender name in chatbox
         displayName(message, index) {
             let isSentMsg = message.senderId === this.myID;
             if (isSentMsg) {
-                return false
+                return false;
             }
-
             if (index < 1) {
-                return true
+                return true;
             }
-
-            let isSequentMsg = message.senderId === this.allMessages[index - 1].senderId
+            let isSequentMsg = message.senderId === this.allMessages[index - 1].senderId;
             if (isSequentMsg) {
-                return false
+                return false;
             }
-
-            return true
+            return true;
         },
-
         getClass(message) {
             let isSentMsg = message.senderId === this.myID;
-            return isSentMsg ? { "sent-message": true } : { "recieved-message": true }
+            return isSentMsg ? { "sent-message": true } : { "recieved-message": true };
         },
-
         msgPosition(message) {
             let isSentMsg = message.senderId === this.myID;
-
             return {
                 alignSelf: isSentMsg ? "flex-end" : "flex-start"
-            }
+            };
         }
-
     },
+    components: { Emojis }
 }
 
 </script>
@@ -261,13 +231,16 @@ export default {
     background-color: var(--color-white);
     padding: 10px;
     display: flex;
+    flex-wrap: wrap;
     gap: 5px;
+    align-items: center;
 
 }
 
 .send-message input {
     padding: 12px 20px;
     border-radius: 30px;
+    flex: 1;
 
 }
 
@@ -277,5 +250,9 @@ export default {
     border: none;
     background-color: inherit;
     font-size: 1.25em;
+}
+
+.send-message button:hover {
+    color: var(--hover-color);
 }
 </style>

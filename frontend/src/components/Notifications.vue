@@ -14,12 +14,7 @@
 
                     <div class="row1 ">
                         <img class="" src="../assets/icons/default-profile.svg">
-
-                        <div>
-                            {{ notification.user.nickname }}
-                            {{ notification.content }}
-                            {{ additionalText(notification) }}
-                        </div>
+                        <NotificationMsg :notification="notification"></NotificationMsg>
                     </div>
 
                     <div class="row2" v-if="notification.type === 'EVENT'">
@@ -43,6 +38,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import NotificationMsg from './NotificationMsg.vue';
 
 export default {
     name: "notifications",
@@ -51,49 +47,38 @@ export default {
             showNotifications: false,
             notificationsFromDB: {},
             // allNotifications: [],
-        }
+        };
     },
-
     async created() {
         await this.fetchNotifications();
         // await this.initAllNotifications();
     },
-
     computed: {
-
         ...mapState({
             allNotifications: state => state.notifications.allNotifications
         }),
-
         hasNotifications() {
             return this.allNotifications.length > 0;
         }
     },
-
     unmounted() {
-        this.$store.commit("updateAllNotifications", [])
+        this.$store.commit("updateAllNotifications", []);
     },
-
     methods: {
         toggleShowNotifications() {
-            this.showNotifications = !this.showNotifications
+            this.showNotifications = !this.showNotifications;
         },
-
         async fetchNotifications() {
-            const response = await fetch('http://localhost:8081/notifications', {
-                credentials: 'include'
-            })
-
+            const response = await fetch("http://localhost:8081/notifications", {
+                credentials: "include"
+            });
             const data = await response.json();
             this.notificationsFromDB = data;
-
-            this.$store.commit("updateAllNotifications", data.notifications)
+            this.$store.commit("updateAllNotifications", data.notifications);
             // console.log("/notifications data", data)
         },
-
         async handleRequest(notification, reqResponse) {
             let endpoint;
-
             switch (notification.type) {
                 case "FOLLOW":
                     endpoint = "responseFollowRequest";
@@ -102,23 +87,19 @@ export default {
                     endpoint = "responseInviteRequest";
                     break;
             }
-
             const response = await fetch(`http://localhost:8081/${endpoint}`, {
-                credentials: 'include',
-                method: 'POST',
+                credentials: "include",
+                method: "POST",
                 body: JSON.stringify({
                     requestId: notification.id,
                     response: reqResponse,
                 })
-            })
-
+            });
             const data = await response.json();
             // console.log("/handleRequest data", data)
-
             if (notification.type === "GROUP_INVITE" && reqResponse === "accept") {
                 // update user groups for live update
-                this.$store.dispatch("addUserGroup", notification.group)
-
+                this.$store.dispatch("addUserGroup", notification.group);
                 //update all groups for live update
                 // let allGroups = this.$store.state.groups.allGroups;
                 // if (allGroups === null) {
@@ -127,46 +108,35 @@ export default {
                 // allGroups.push(notification.group)
                 // this.$store.commit("updateAllGroups", allGroups)
             }
-
             // remove the notification
-            this.$store.dispatch("removeNotification", notification.id)
-
+            this.$store.dispatch("removeNotification", notification.id);
         },
-
         async removeEventNotif() {
             // TODO
         },
-
-
         isDataValid(resp) {
             return resp.type === "Success" ? true : false;
         },
-
         // initAllNotifications() {
         //     const notificationsFromDB = this.notificationsFromDB;
-
         // }
-
         additionalText(notification) {
             let a = "";
-
             switch (notification.type) {
                 case "EVENT":
-                    a = `${notification.event.title} in group ${notification.group.name}`;
+                    console.log("Notif", notification);
+                    a = `${notification.event.title}`;
                     break;
-
                 case "GROUP_INVITE":
                     a = notification.group.name;
                     break;
             }
             // event need group name, event name
             // group invite -> who invited and to what group
-
-
-            return a
+            return a;
         }
     },
-
+    components: { NotificationMsg }
 }
 
 </script>

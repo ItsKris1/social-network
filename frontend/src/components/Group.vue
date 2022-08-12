@@ -44,7 +44,7 @@ export default {
     data() {
         return {
             groupData: null,
-            isMemberOfGroup:false
+            isMemberOfGroup: false
         };
     },
     methods: {
@@ -65,7 +65,7 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 .content {
     margin-top: 50px;
 
