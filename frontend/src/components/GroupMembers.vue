@@ -14,7 +14,8 @@
             <template #body>
 
                 <MultiselectDropdown v-model:checkedOptions="checkedNames" placeholder="Select followers"
-                    :content="allFollowersNames" :clearInput="clearInput" @inputCleared="toggleClearInput" />
+                                     :content="allFollowersNames" :clearInput="clearInput"
+                                     @inputCleared="toggleClearInput" />
                 <button class="btn form-submit" @click="toggleModal() ; inviteUsersToGroup()">Invite</button>
             </template>
         </Modal>
@@ -115,14 +116,31 @@ export default {
         toggleModal() {
             this.isOpen = !this.isOpen;
         },
+
+        getIds() {
+            let arrOfIDS = [];
+            for (let name of this.checkedNames) {
+                for (let obj of this.listForShowing) {
+                    if (obj.nickname === name) {
+                        arrOfIDS.push(obj.id)
+                    }
+                }
+            }
+
+            return arrOfIDS
+
+        },
+
+
         async inviteUsersToGroup() {
             await fetch("http://localhost:8081/newGroupInvite", {
                 method: 'POST',
                 credentials: 'include',
-                body: JSON.stringify({ invitations: this.checkedNames, id: this.$route.params.id })
+                body: JSON.stringify({ invitations: this.getIds(), id: this.$route.params.id })
             })
                 .then((response => response.json()))
                 .then((json => {
+
                     console.log("new group invite response:", json);
                     this.clearInput = true;
                     // this.groupMembers = json.users;
