@@ -251,4 +251,8 @@ export default {
     background-color: inherit;
     font-size: 1.25em;
 }
+
+.send-message button:hover {
+    color: var(--hover-color);
+}
 </style>

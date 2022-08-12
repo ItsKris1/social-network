@@ -29,23 +29,6 @@ export default {
         },
 
         toggleShowEmojis() {
-            // console.log(this.messagebox.scrollHeight)
-            // console.log(this.messagebox.scrollTop)
-            // console.log(this.messagebox.offsetHeight)
-            // if (this.showEmojis === false) {
-            //     this.messagebox.scrollTop += 35;
-            //     console.log("here")
-            // }
-
-            // if (this.showEmojis === false) {
-            //     this.messagebox.scrollTop += 30;
-
-            // } else {
-            //     this.messagebox.scrollTop -= 30;
-            // }
-            // console.log(this.messagebox.scrollTop)
-
-            // this.messagebox.scrollTop += 35;
             this.showEmojis = !this.showEmojis
         },
 
@@ -58,12 +41,24 @@ export default {
 <style scoped>
 i {
     font-size: 1.35em;
-    /* color: var(--color-lg-black); */
 }
+
+i:hover {
+    color: var(--hover-color);
+}
+
+
 
 .emojis {
     display: flex;
     padding-top: 5px;
+    padding-left: 7px;
     width: 100%;
+    gap: 5px;
+}
+
+.emoji {
+    font-size: 1.25em;
+    cursor: pointer;
 }
 </style>
