@@ -81,8 +81,10 @@ export default {
               });
 
 
-              this.$store.dispatch("createWebSocketConn")
-              this.$router.push("/main");
+              this.$store.dispatch("createWebSocketConn").then(() => this.$router.push("/main"))
+
+
+              // await this.$store.dispatch("getMyUserID")
             }
             else {
               this.$router.push("/");

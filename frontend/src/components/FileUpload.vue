@@ -29,11 +29,19 @@ export default {
     watch: {
         clearInput() {
             if (this.clearInput) {
+                console.log("Ay FU")
                 this.removeImage();
                 this.$emit("inputCleared");
             }
 
-        }
+        },
+
+
+        // imageFile() {
+        //     if (this.imageFile === null) {
+
+        //     }
+        // }
     },
 
     methods: {

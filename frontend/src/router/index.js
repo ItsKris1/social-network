@@ -54,15 +54,14 @@ const router = createRouter({
 });
 
 
-// router.beforeEach((to, from) => {
+router.beforeEach(async (to, from) => {
+  const isAuthenticated = await store.dispatch("isLoggedIn");
 
-//   console.log("To", to)
-//   console.log("From", from)
-
-//   if (store.state.wsConn === null) {
-//     store.dispatch("createWebSocketConn")
-//   }
-//   return true
-// })
+  // if user is not authenticated redirect back to sign in page BUT
+  // only if the page user wants to go is not sign-in or register
+  if (!isAuthenticated && to.name !== "sign-in" && to.name !== "register") {
+    return { name: "sign-in" }
+  }
+})
 
 export default router;

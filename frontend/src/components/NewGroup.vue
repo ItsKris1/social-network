@@ -22,12 +22,11 @@
                               required
                               placeholder="Describe here"></textarea>
                 </div>
-
+                <!--    @inputCleared="toggleClearInput"
+                                     :clear-input="clearInput" -->
                 <MultiselectDropdown
 
                                      v-model:checkedOptions="checkedFollowers"
-                                     @inputCleared="toggleClearInput"
-                                     :clear-input="clearInput"
                                      :content="getMyFollowersNames"
                                      label-name="Invite users"
                                      placeholder="Select users" />
@@ -79,6 +78,7 @@ export default {
             if (this.isOpen) {
                 // this.form.reset();
                 this.$refs.theForm.reset();
+                this.checkedFollowers = [];
             }
             this.isOpen = !this.isOpen
 
@@ -94,6 +94,7 @@ export default {
             const formDataObject = Object.fromEntries(formData.entries())
             formDataObject["invitations"] = this.getIds(this.checkedFollowers);
 
+            console.log(this.getIds(this.checkedFollowers))
             const response = await fetch('http://localhost:8081/newGroup', {
                 method: 'post',
                 credentials: 'include',

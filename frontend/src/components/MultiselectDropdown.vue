@@ -42,6 +42,7 @@ export default {
         return {
             dropdownCheckedOptions: [],
             showDropdown: false,
+            clearSome: false,
         }
     },
 
@@ -49,6 +50,7 @@ export default {
     watch: {
         clearInput() {
             if (this.clearInput) {
+                // console.log("Ay MD")
                 this.dropdownCheckedOptions = [];
                 this.showDropdown = false;
                 this.$emit("inputCleared");
@@ -56,9 +58,31 @@ export default {
 
         },
 
-        dropdownCheckedOptions(checkedOption) {
-            this.$emit('update:checkedOptions', checkedOption)
+        dropdownCheckedOptions(newValue) {
+            if (this.clearSome) {
+                return
+            }
+            this.$emit('update:checkedOptions', newValue)
+        },
+
+
+        checkedOptions(newValue) {
+            // console.log("ye")
+            // console.log(newValue.target)
+            // console.log(newValue === {})
+            // console.log("Empty!")
+
+            if (Object.keys(newValue).length === 0) {
+                this.dropdownCheckedOptions = [];
+                this.clearSome = true;
+                this.showDropdown = false;
+
+            }
         }
+    },
+
+    unmounted() {
+        console.log("Unmounted!")
     }
 }
 
