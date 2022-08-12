@@ -99,7 +99,7 @@ export default {
             })
                 .then((response => response.json()))
                 .then((json => {
-                    console.log("All Events:", json);
+                    // console.log("All Events:", json);
                     this.groupEvents = json.events
                 }));
         },
@@ -117,9 +117,9 @@ export default {
                 })
             })
                 .then((r => r.json()))
-                .then((json => {
-                    console.log("newEvent", json);
-                }))
+                // .then((json => {
+                //     // console.log("newEvent", json);
+                // }))
             this.getGroupEvents()
         },
         toggleModal() {
