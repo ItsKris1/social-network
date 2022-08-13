@@ -66,7 +66,7 @@ export default createStore({
       }
       let arr = [];
       state.users.allusers.filter((user) => {
-        if (user.nickname.includes(searchquery)) {
+        if (user.nickname.toLowerCase().includes(searchquery.toLowerCase())) {
           arr.push(user);
         }
       });
@@ -79,7 +79,7 @@ export default createStore({
       }
       let arr = [];
       state.groups.allGroups.filter((group) => {
-        if (group.name.includes(searchquery)) {
+        if (group.name.toLowerCase().includes(searchquery.toLowerCase())) {
           arr.push(group);
         }
       });
