@@ -7,15 +7,15 @@
                 <div class="item-text">{{ member.nickname }}</div>
             </li>
         </ul>
-        <button class="btn form-submit" @click="toggleModal">Invite users<i class="uil uil-user-plus"></i></button>
+        <button v-if="this.isMember" class="btn form-submit" @click="toggleModal">Invite users<i class="uil uil-user-plus"></i></button>
+        <button v-if="!this.isMember" class="btn form-submit" @click="this.joinGroup">Join group +(/endpoint?)</button>
 
         <Modal v-if="this.isOpen" @closeModal="toggleModal">
             <template #title>Invite users</template>
             <template #body>
 
                 <MultiselectDropdown v-model:checkedOptions="checkedNames" placeholder="Select followers"
-                                     :content="allFollowersNames" :clearInput="clearInput"
-                                     @inputCleared="toggleClearInput" />
+                    :content="allFollowersNames" :clearInput="clearInput" @inputCleared="toggleClearInput" />
                 <button class="btn form-submit" @click="toggleModal() ; inviteUsersToGroup()">Invite</button>
             </template>
         </Modal>
@@ -56,6 +56,9 @@ export default {
             this.getFollowers();
         }
     },
+    props: {
+        isMember: false
+    },
     methods: {
 
         async getFollowers() {
@@ -84,7 +87,6 @@ export default {
                         this.createFollowersListForShowing(this.followers, this.groupMembers)
                     }
                 })
-
         },
         async getGroupMembers() {
             await fetch("http://localhost:8081/groupMembers?groupId=" + this.$route.params.id, {
@@ -127,6 +129,15 @@ export default {
 
             return arrOfIDS
 
+        },
+        async joinGroup(){
+            await fetch("http://localhost:8081/newGroupRequest", {
+                credentials: 'include',
+            })
+            .then(response=>response.json())
+            .then(json=>{
+                console.log(json);
+            })
         },
 
 

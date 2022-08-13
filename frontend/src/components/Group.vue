@@ -3,8 +3,8 @@
     <div class="content" v-if="groupData">
 
         <div class="left-section">
-            <GroupMembers />
-            <GroupEvents />
+            <GroupMembers v-bind:isMember="isMemberOfGroup" />
+            <GroupEvents v-if="this.isMemberOfGroup" />
         </div>
 
         <div class="middle-section">
@@ -14,9 +14,10 @@
                 <p class="about-text">{{ this.groupData.description }}</p>
             </div>
 
-            <NewPost></NewPost>
-            <GroupPosts></GroupPosts>
-
+            <NewPost v-if="this.isMemberOfGroup" />
+            <GroupPosts v-if="this.isMemberOfGroup" />
+            <p class="additional-info large" v-if="!this.isMemberOfGroup">Only group members can see additional
+                information.</p>
         </div>
     </div>
 </template>
@@ -54,8 +55,11 @@ export default {
             })
                 .then((r => r.json()))
                 .then((json => {
-                    // console.log("/groupInfo response", json);
+                    console.log("/groupInfo response", json);
                     this.groupData = json.groups[0];
+                    if (json.groups[0].admin === true || json.groups[0].member === true) {
+                        this.isMemberOfGroup = true
+                    }
                 }));
         },
 
