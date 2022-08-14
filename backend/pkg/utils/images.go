@@ -7,7 +7,7 @@ import (
 )
 
 // Patht to default image location
-const defaultImage = "imageUpload\\default.png"
+const defaultImage = "imageUpload/default.png"
 
 // Creates new file and reads image bytes into it
 // returns path to new image
