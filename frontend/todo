@@ -1,6 +1,3 @@
 when clicked "follow" button, following column not gonna auto-rendered real-time.
-make dont show all group info to non-members.
-make not difference when you search "A" or "a".
 make (on /main) "my groups" clickable link's to related groups.
-When inviting new users to group, its show alrdy members on list.
 When user dont have avatar image its cause err
