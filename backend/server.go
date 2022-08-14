@@ -55,8 +55,10 @@ func setRoutes(handler *handlers.Handler, wsServer *ws.Server) http.Handler {
 
 	mux.HandleFunc("/follow", handler.Auth(func(w http.ResponseWriter, r *http.Request) {
 		handler.Follow(wsServer, w, r)
-	}))     //follow user
-	mux.HandleFunc("/cancelFollowRequest", handler.Auth(handler.CancelFollowRequest))
+	})) //follow user
+	mux.HandleFunc("/cancelFollowRequest", handler.Auth(func(w http.ResponseWriter, r *http.Request) {
+		handler.CancelFollowRequest(wsServer, w, r)
+	}))
 	mux.HandleFunc("/unfollow", handler.Auth(handler.Unfollow))
 	mux.HandleFunc("/responseFollowRequest", handler.Auth(handler.ResponseFollowRequest))
 
@@ -69,7 +71,7 @@ func setRoutes(handler *handlers.Handler, wsServer *ws.Server) http.Handler {
 	mux.HandleFunc("/newComment", handler.Auth(handler.NewComment)) // create route
 
 	/* --------------------------------- groups --------------------------------- */
-	mux.HandleFunc("/allGroups", handler.Auth(handler.AllGroups)) // group list
+	mux.HandleFunc("/allGroups", handler.Auth(handler.AllGroups))   // group list
 	mux.HandleFunc("/userGroups", handler.Auth(handler.UserGroups)) // group list of user groups
 
 	mux.HandleFunc("/groupInfo", handler.Auth(handler.GroupInfo))         // get group info
@@ -77,11 +79,13 @@ func setRoutes(handler *handlers.Handler, wsServer *ws.Server) http.Handler {
 	mux.HandleFunc("/groupEvents", handler.Auth(handler.GroupEvents))     // get group events
 	mux.HandleFunc("/groupPosts", handler.Auth(handler.GroupPosts))       // get group posts
 	mux.HandleFunc("/groupRequests", handler.Auth(handler.GroupRequests)) // get group member requests
-	mux.HandleFunc("/cancelGroupRequests", handler.Auth(handler.CancelGroupRequests)) //cancel request or joing group
+	mux.HandleFunc("/cancelGroupRequests", handler.Auth(func(w http.ResponseWriter, r *http.Request) {
+		handler.CancelGroupRequest(wsServer, w, r)
+	})) //cancel request or joing group
 
 	mux.HandleFunc("/newGroup", handler.Auth(func(w http.ResponseWriter, r *http.Request) {
 		handler.NewGroup(wsServer, w, r)
-	}))                                   // create new group
+	})) // create new group
 	mux.HandleFunc("/newGroupPost", handler.Auth(handler.NewGroupPost))                           // create new group post
 	mux.HandleFunc("/newGroupInvite", handler.Auth(func(w http.ResponseWriter, r *http.Request) { // invite new users to group
 		handler.NewGroupInvite(wsServer, w, r)
@@ -102,9 +106,9 @@ func setRoutes(handler *handlers.Handler, wsServer *ws.Server) http.Handler {
 	mux.HandleFunc("/notifications", handler.Auth(handler.Notifications)) //get all notifs from db on login
 
 	/* ------------------------------ chat messages ----------------------------- */
-	mux.HandleFunc("/messages", handler.Auth(handler.Messages)) //get all chat messages for specific chat
+	mux.HandleFunc("/messages", handler.Auth(handler.Messages))             //get all chat messages for specific chat
 	mux.HandleFunc("/unreadMessages", handler.Auth(handler.UnreadMessages)) //get list of messages that isn't read
-	mux.HandleFunc("/messageRead", handler.Auth(handler.MessageRead)) //mark message as read
+	mux.HandleFunc("/messageRead", handler.Auth(handler.MessageRead))       //mark message as read
 	mux.HandleFunc("/newMessage", handler.Auth(func(w http.ResponseWriter, r *http.Request) {
 		handler.NewMessage(wsServer, w, r)
 	})) // new chat message

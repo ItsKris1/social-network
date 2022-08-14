@@ -16,8 +16,8 @@ type Notification struct {
 type NotifRepository interface {
 	Save(Notification) error
 	Delete(notificationId string) error
-	DeleteByType(Notification)error
-	CheckIfExists(Notification)(bool, error) // true if exists, false otherwise
+	DeleteByType(Notification) error
+	CheckIfExists(Notification) (bool, error) // true if exists, false otherwise
 
 	//get all pending requests to join group
 	GetGroupRequestsIds(groupId string) ([]string, error)
@@ -27,4 +27,6 @@ type NotifRepository interface {
 	GetGroupId(notificationId string) (string, error)
 	// get all notifications for client
 	GetAll(userId string) ([]Notification, error)
+	//get Id based on sender/receiver and type
+	GetId(Notification) (string, error)
 }

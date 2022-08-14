@@ -97,3 +97,12 @@ func (repo *NotifRepository) GetAll(userId string) ([]models.Notification, error
 	}
 	return notifications, nil
 }
+
+func (repo *NotifRepository) GetId(notif models.Notification) (string, error) {
+	row := repo.DB.QueryRow("SELECT notif_id FROM notifications WHERE type = ? AND user_id = ? AND content = ? ", notif.Type, notif.TargetID, notif.Content)
+	var notifId string
+	if err := row.Scan(&notifId); err != nil {
+		return notifId, err
+	}
+	return notifId, nil
+}

@@ -1,9 +1,11 @@
 package ws
 
 import (
+	"fmt"
 	"log"
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
+
 	"github.com/gorilla/websocket"
 )
 
@@ -57,6 +59,15 @@ func (client *Client) SendNotification(notif models.Notification) {
 	client.send <- message.encode()
 }
 
+func (client *Client) DeleteNotification(notif models.Notification) {
+	message := WsMessage{
+		Action:       NotificationDeleteAction,
+		Notification: notif,
+	}
+	fmt.Println("DELETE ->  ", message)
+	client.send <- message.encode()
+}
+
 func (client *Client) SendChatMessage(msg models.ChatMessage) {
 	message := WsMessage{
 		Action:      ChatAction,
@@ -86,12 +97,12 @@ func (client *Client) Writer() {
 		_, err = w.Write(message)
 		if err != nil {
 			log.Println("Line 91", err)
-			return 
+			return
 		}
 
 		if err := w.Close(); err != nil {
 			log.Println("Line 95", err)
-        	return 
+			return
 		}
 	}
 }

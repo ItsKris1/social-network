@@ -233,7 +233,7 @@ func (handler *Handler) GroupRequests(w http.ResponseWriter, r *http.Request) {
 	utils.RespondWithUsers(w, requestList, 200)
 }
 
-func (handler *Handler) CancelGroupRequests(w http.ResponseWriter, r *http.Request) {
+func (handler *Handler) CancelGroupRequest(wsServer *ws.Server, w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)
 	// access current user id
 	currentUserId := r.Context().Value(utils.UserKey).(string)
@@ -250,11 +250,29 @@ func (handler *Handler) CancelGroupRequests(w http.ResponseWriter, r *http.Reque
 		TargetID: groupId,
 		Content:  currentUserId,
 	}
+	// get notification id
+	notifId, err := handler.repos.NotifRepo.GetId(notif)
+	if err != nil {
+		utils.RespondWithError(w, "Error on finding request", 200)
+		return
+	}
 	if err := handler.repos.NotifRepo.DeleteByType(notif); err != nil {
 		utils.RespondWithError(w, "Error on canceling request", 200)
 		return
 	}
-	utils.RespondWithSuccess(w, "gROUP request canceled successfuly", 200)
+	// if receiver(admin) online, send info about deleted request
+	adminId, err := handler.repos.GroupRepo.GetAdmin(groupId)
+	if err != nil {
+		utils.RespondWithError(w, "Error on finding notification receiver", 200)
+		return
+	}
+	for client := range wsServer.Clients {
+		if client.ID == adminId {
+			notif.ID = notifId
+			client.DeleteNotification(notif)
+		}
+	}
+	utils.RespondWithSuccess(w, "Group request canceled successfuly", 200)
 }
 
 /* -------------------------------------------------------------------------- */

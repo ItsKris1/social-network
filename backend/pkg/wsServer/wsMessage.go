@@ -8,10 +8,11 @@ import (
 
 /* --------------------- actions for websocket messages --------------------- */
 const NotificationAction = "notification"
+const NotificationDeleteAction = "deleteNotification"
 const ChatAction = "chat"
 
 type WsMessage struct {
-	UserID 		 string `json:"uid"`
+	UserID       string              `json:"uid"`
 	Action       string              `json:"action"` //msg request action
 	Notification models.Notification `json:"notification"`
 	ChatMessage  models.ChatMessage  `json:"chatMessage"`
