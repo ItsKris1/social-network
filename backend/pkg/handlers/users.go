@@ -218,14 +218,18 @@ func (handler *Handler) Follow(wsServer *ws.Server, w http.ResponseWriter, r *ht
 	utils.RespondWithSuccess(w, "Following successful", 200)
 }
 
-
 func (handler *Handler) CancelFollowRequest(w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)
 	// access user id
 	currentUserId := r.Context().Value(utils.UserKey).(string)
 	// get status from request
 	query := r.URL.Query()
-	reqUserId := query.Get("userId")
+	reqUserId := query.Get("userid")
+	/* ------------------------- check if userid exists ------------------------- */
+	if reqUserId == "" {
+		utils.RespondWithError(w, "Error on canceling request. User id not provided.", 200)
+		return
+	}
 	// delete notification corresponding to follow request
 	notif := models.Notification{
 		Type:     "FOLLOW",

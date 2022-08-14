@@ -29,7 +29,7 @@ func (repo *NotifRepository) Delete(notificationId string) error {
 }
 
 func (repo *NotifRepository) DeleteByType(notif models.Notification) error {
-	_, err := repo.DB.Exec("DELETE FROM notifications WHERE user_id =? AND type =? AND content = ?", notif.TargetID, notif.Type, notif.Content)
+	_, err := repo.DB.Exec("DELETE FROM notifications WHERE user_id = ? AND type = ? AND content = ?", notif.TargetID, notif.Type, notif.Content)
 	if err != nil {
 		return err
 	}
