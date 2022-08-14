@@ -75,7 +75,7 @@ export default {
             const data = await response.json();
             this.notificationsFromDB = data;
             this.$store.commit("updateAllNotifications", data.notifications);
-            // console.log("/notifications data", data)
+            console.log("/notifications data", data)
         },
         async handleRequest(notification, reqResponse) {
             let endpoint;

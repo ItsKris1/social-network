@@ -8,7 +8,7 @@
             </li>
         </ul>
         <button v-if="this.isMember" class="btn form-submit" @click="toggleModal">Invite users<i class="uil uil-user-plus"></i></button>
-        <button v-if="!this.isMember" class="btn form-submit" @click="this.joinGroup">Join group +(/endpoint?)</button>
+        <button v-if="!this.isMember" class="btn form-submit" @click="this.joinGroup">Join group +</button>
 
         <Modal v-if="this.isOpen" @closeModal="toggleModal">
             <template #title>Invite users</template>
@@ -131,12 +131,16 @@ export default {
 
         },
         async joinGroup(){
-            await fetch("http://localhost:8081/newGroupRequest", {
+            await fetch("http://localhost:8081/newGroupRequest?groupId=" + this.$route.params.id, {
                 credentials: 'include',
             })
             .then(response=>response.json())
             .then(json=>{
-                console.log(json);
+                // console.log(json);
+                this.$toast.open({
+                            message: json.message,
+                            type: "success",
+                        });
             })
         },
 

@@ -85,7 +85,7 @@ export default {
             formData.set("dateofbirth", this.form.dateofbirth);
             formData.set("nickname", this.form.nickname);
             formData.set("aboutme", this.form.aboutme);
-            // await fetch('https://d0eb791a-34e8-410a-afb4-595a0ed0c134.mock.pstmn.io/reg', {
+            
             await fetch("http://localhost:8081/register", {
                 credentials: "include",
                 method: "POST",

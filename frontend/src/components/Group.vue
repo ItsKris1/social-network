@@ -1,27 +1,25 @@
 <template>
-
     <div class="content" v-if="groupData">
 
         <div class="left-section">
             <GroupMembers v-bind:isMember="isMemberOfGroup" />
             <GroupEvents v-if="this.isMemberOfGroup" />
+            <GroupJoinRequests v-bind:isAdmin="this.isAdmin"/>         
         </div>
 
         <div class="middle-section">
-            <!-- Group about -->
             <div class="about">
                 <h2 class="about-title">{{ this.groupData.name }}</h2>
                 <p class="about-text">{{ this.groupData.description }}</p>
             </div>
-
             <NewPost v-if="this.isMemberOfGroup" />
             <GroupPosts v-if="this.isMemberOfGroup" />
             <p class="additional-info large" v-if="!this.isMemberOfGroup">Only group members can see additional
-                information.</p>
+                information.
+            </p>            
         </div>
     </div>
 </template>
-
 
 <script>
 import AllPosts from './AllPosts.vue'
@@ -32,6 +30,7 @@ import GroupPosts from './GroupPosts.vue';
 import GroupMembers from './GroupMembers.vue';
 import Modal from './Modal.vue';
 import GroupEvents from './GroupEvents.vue';
+import GroupJoinRequests from './GroupJoinRequests.vue';
 export default {
     name: "Group",
     created() {
@@ -45,7 +44,8 @@ export default {
     data() {
         return {
             groupData: null,
-            isMemberOfGroup: false
+            isMemberOfGroup: false,
+            isAdmin:false,
         };
     },
     methods: {
@@ -60,11 +60,14 @@ export default {
                     if (json.groups[0].admin === true || json.groups[0].member === true) {
                         this.isMemberOfGroup = true
                     }
+                    if(json.groups[0].admin === true){
+                        this.isAdmin = true
+                    }
                 }));
         },
 
     },
-    components: { AllPosts, Groups, Notifications, NewPost, GroupPosts, GroupMembers, Modal, GroupEvents }
+    components: { AllPosts, Groups, Notifications, NewPost, GroupPosts, GroupMembers, Modal, GroupEvents, GroupJoinRequests }
 }
 </script>
 
