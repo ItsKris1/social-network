@@ -5,7 +5,7 @@ run.go
 # .dockerignore
 ndc.sh
 ../backend/tempDB.db
-audit_checklist.md
+# audit_checklist.md
 
 
 
