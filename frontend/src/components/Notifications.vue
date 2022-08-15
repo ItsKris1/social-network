@@ -86,6 +86,9 @@ export default {
                 case "GROUP_INVITE":
                     endpoint = "responseInviteRequest";
                     break;
+                case "GROUP_REQUEST":
+                    endpoint = "responseGroupRequest"
+                    break;
             }
             const response = await fetch(`http://localhost:8081/${endpoint}`, {
                 credentials: "include",
@@ -93,6 +96,7 @@ export default {
                 body: JSON.stringify({
                     requestId: notification.id,
                     response: reqResponse,
+                    groupId: notification.group.id
                 })
             });
             const data = await response.json();

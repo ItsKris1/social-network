@@ -40,7 +40,8 @@ export default {
         $route() {
             if (this.$route.path.includes("group")){
                 this.getGroupInfo(); 
-            }                      
+            }
+            // this.getGroupInfo()
         }
     },
     data() {
