@@ -28,8 +28,7 @@
                     <MultiselectDropdown v-if="newpost.privacy === 'almost-private'"
                                          v-model:checkedOptions="newpost.checkedFollowers"
                                          placeholder="Select followers"
-                                         :content="getMyFollowersNames" :clearInput="clearInput"
-                                         @inputCleared="toggleClearInput" />
+                                         :content="getMyFollowersNames" />
                 </div>
 
                 <div class="form-input">
@@ -112,6 +111,7 @@ export default {
         clearForm() {
             this.newpost.privacy = "";
             this.newpost.body = "";
+            // this.newpost.image = null;
             this.toggleClearInput();
         },
 

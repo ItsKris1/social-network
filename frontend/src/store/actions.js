@@ -144,6 +144,23 @@ export default {
             });
     },
 
+    async isLoggedIn() {
+        const response = await fetch('http://localhost:8081/sessionActive', {
+            credentials: 'include'
+        });
+
+        const data = await response.json();
+
+        if (data.message === "Session active") {
+            // console.log("ah yes")
+            return true
+        } else {
+            // console.log("ah no")
+            return false
+        }
+
+    },
+
     createWebSocketConn({ commit, dispatch, state }) {
         const ws = new WebSocket("ws://localhost:8081/ws");
         ws.addEventListener("open", () => {
