@@ -82,7 +82,7 @@ export default {
     },
 
     unmounted() {
-        console.log("Unmounted!")
+        // console.log("Unmounted!")
     }
 }
 

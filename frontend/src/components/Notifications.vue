@@ -75,7 +75,7 @@ export default {
             const data = await response.json();
             this.notificationsFromDB = data;
             this.$store.commit("updateAllNotifications", data.notifications);
-            console.log("/notifications data", data)
+            // console.log("/notifications data", data)
         },
         async handleRequest(notification, reqResponse) {
             let endpoint;
@@ -100,13 +100,6 @@ export default {
             if (notification.type === "GROUP_INVITE" && reqResponse === "accept") {
                 // update user groups for live update
                 this.$store.dispatch("addUserGroup", notification.group);
-                //update all groups for live update
-                // let allGroups = this.$store.state.groups.allGroups;
-                // if (allGroups === null) {
-                //     allGroups = []
-                // };
-                // allGroups.push(notification.group)
-                // this.$store.commit("updateAllGroups", allGroups)
             }
             // remove the notification
             this.$store.dispatch("removeNotification", notification.id);
@@ -117,14 +110,11 @@ export default {
         isDataValid(resp) {
             return resp.type === "Success" ? true : false;
         },
-        // initAllNotifications() {
-        //     const notificationsFromDB = this.notificationsFromDB;
-        // }
         additionalText(notification) {
             let a = "";
             switch (notification.type) {
                 case "EVENT":
-                    console.log("Notif", notification);
+                    // console.log("Notif", notification);
                     a = `${notification.event.title}`;
                     break;
                 case "GROUP_INVITE":

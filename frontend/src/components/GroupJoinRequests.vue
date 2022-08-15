@@ -44,7 +44,7 @@ export default {
             await fetch("http://localhost:8081/groupRequests?groupId=" + this.$route.params.id, {
                 credentials: "include"
             }).then(r => r.json()).then(json => {
-                console.log(json)
+                // console.log(json)
                 this.joinRequests = json.notifications
             })
         },
@@ -58,7 +58,7 @@ export default {
                     response: response
                 })
             }).then(r => r.json()).then(json => {
-                console.log(json)
+                // console.log(json)
                 if (json.type === "Success"){
                     this.getJoinRequests()
                     this.$toast.open({
