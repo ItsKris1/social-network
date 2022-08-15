@@ -8,6 +8,7 @@
                     <div class="user-picture" :style="{ backgroundImage: `url(http://localhost:8081/${user.avatar})` }">
                     </div>
                     <div class="user-profile__info">
+                        <h2 class="username">{{user.firstName}} {{user.lastName}}</h2>
                         <h3 class="username">{{ user.nickname }}</h3>
                         <p class="user-email" v-if="user.login">{{ user.login }}</p>
                         <p class="user-dateOfBirth" v-if="user.dateOfBirth">{{ user.dateOfBirth }}</p>
@@ -102,7 +103,6 @@ export default {
                 .then((json) => {
                     this.user = json.users[0];
                     // console.log("User", this.user)
-
                 });
 
         },
