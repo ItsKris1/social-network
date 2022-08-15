@@ -38,7 +38,9 @@ export default {
     },
     watch: {
         $route() {
-            this.getGroupInfo();
+            if (this.$route.path.includes("group")){
+                this.getGroupInfo(); 
+            }                      
         }
     },
     data() {
@@ -55,7 +57,7 @@ export default {
             })
                 .then((r => r.json()))
                 .then((json => {
-                    console.log("/groupInfo response", json);
+                    // console.log("/groupInfo response", json);
                     this.groupData = json.groups[0];
                     if (json.groups[0].admin === true || json.groups[0].member === true) {
                         this.isMemberOfGroup = true
@@ -65,7 +67,6 @@ export default {
                     }
                 }));
         },
-
     },
     components: { AllPosts, Groups, Notifications, NewPost, GroupPosts, GroupMembers, Modal, GroupEvents, GroupJoinRequests }
 }

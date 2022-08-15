@@ -12,8 +12,8 @@
                             </div>
                         </div>
                         <div class="row2">
-                            <i class="uil uil-times accept" @click="reactToRequest(notif.id,'accept')"></i>
-                            <i class="uil uil-check decline" @click="reactToRequest(user.id,'decline')"></i>
+                            <i class="uil uil-times decline" @click="reactToRequest(notif.id,'decline')"></i>
+                            <i class="uil uil-check accept" @click="reactToRequest(notif.id,'accept')"></i>
                         </div>
                     </li>
                 </div>
@@ -59,6 +59,12 @@ export default {
                 })
             }).then(r => r.json()).then(json => {
                 console.log(json)
+                if (json.type === "Success"){
+                    this.getJoinRequests()
+                    this.$toast.open({
+                            message: "Done!",
+                        });
+                }
             })
         }
     },
