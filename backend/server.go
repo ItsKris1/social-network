@@ -100,6 +100,7 @@ func setRoutes(handler *handlers.Handler, wsServer *ws.Server) http.Handler {
 
 	/* ------------------------------ notifications ----------------------------- */
 	mux.HandleFunc("/notifications", handler.Auth(handler.Notifications)) //get all notifs from db on login
+	mux.HandleFunc("/deleteNotification", handler.Auth(handler.DeleteNotification)) // delete notif when read
 
 	/* ------------------------------ chat messages ----------------------------- */
 	mux.HandleFunc("/messages", handler.Auth(handler.Messages)) //get all chat messages for specific chat

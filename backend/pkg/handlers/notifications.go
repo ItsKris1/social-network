@@ -36,3 +36,20 @@ func (handler *Handler) Notifications(w http.ResponseWriter, r *http.Request) {
 	}
 	utils.RespondWithNotifications(w, notifs, 200)
 }
+
+func (handler *Handler) DeleteNotification(w http.ResponseWriter, r *http.Request) {
+	w = utils.ConfigHeader(w)
+	// get notif id from request
+	query := r.URL.Query()
+	notifId := query.Get("notifId")
+	if notifId == "" { //check if notif id exists in request
+		utils.RespondWithError(w, "Error on getting data", 200)
+		return
+	}
+	err := handler.repos.NotifRepo.Delete(notifId)
+	if err != nil {
+		utils.RespondWithError(w, "Error on deleteing notification from database", 200)
+		return
+	}
+	utils.RespondWithSuccess(w, "Notification deleted successfuly", 200)
+}
