@@ -425,7 +425,7 @@ func (handler *Handler) NewGroupRequest(wsServer *ws.Server, w http.ResponseWrit
 //NOT TESTED
 // handle response from group administrator for requests to join group
 // waits for requestId and response -accept/decline
-func (handler *Handler) ResponseGroupRequest(w http.ResponseWriter, r *http.Request) {
+func (handler *Handler) ResponseGroupRequest(wsServer *ws.Server, w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)
 	if r.Method != "POST" {
 		utils.RespondWithError(w, "Error on data submittion", 200)
@@ -474,6 +474,12 @@ func (handler *Handler) ResponseGroupRequest(w http.ResponseWriter, r *http.Requ
 			utils.RespondWithError(w, "Internal server error", 200)
 			return
 		}
+		// if joiner online, send updated group status
+		for client := range wsServer.Clients {
+			if client.ID == joinerId {
+				client.SendGroupRequestAccept(response.GroupID)
+			}
+		}
 	}
 	// delete from pending notification table
 	if err = handler.repos.NotifRepo.Delete(response.RequestID); err != nil {
@@ -481,7 +487,6 @@ func (handler *Handler) ResponseGroupRequest(w http.ResponseWriter, r *http.Requ
 		return
 	}
 	utils.RespondWithSuccess(w, "Response was successful", 200)
-	// EXTRA -> send notification to client about response (the one who is applaying to join)
 }
 
 // NOT TESTED

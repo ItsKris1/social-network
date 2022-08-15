@@ -4,6 +4,7 @@ import (
 	"log"
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
+
 	"github.com/gorilla/websocket"
 )
 
@@ -66,6 +67,15 @@ func (client *Client) SendChatMessage(msg models.ChatMessage) {
 	client.send <- message.encode()
 }
 
+func (client *Client) SendGroupRequestAccept(groupId string) {
+	message := WsMessage{
+		Action:  GroupAcceptAction,
+		Message: groupId,
+	}
+
+	client.send <- message.encode()
+}
+
 /* -------------------------------------------------------------------------- */
 /*                    basic reader and writer for websocket conn              */
 /* -------------------------------------------------------------------------- */
@@ -86,12 +96,12 @@ func (client *Client) Writer() {
 		_, err = w.Write(message)
 		if err != nil {
 			log.Println("Line 91", err)
-			return 
+			return
 		}
 
 		if err := w.Close(); err != nil {
 			log.Println("Line 95", err)
-        	return 
+			return
 		}
 	}
 }
