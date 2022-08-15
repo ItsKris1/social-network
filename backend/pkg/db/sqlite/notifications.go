@@ -37,18 +37,18 @@ func (repo *NotifRepository) DeleteByType(notif models.Notification) error {
 }
 
 // NOT TESTED
-func (repo *NotifRepository) GetGroupRequestsIds(groupId string) ([]string, error) {
-	var requests = []string{}
-	rows, err := repo.DB.Query("SELECT content FROM notifications WHERE user_id = ? AND type = 'GROUP_REQUEST';", groupId)
+func (repo *NotifRepository) GetGroupRequests(groupId string) ([]models.Notification, error) {
+	var notifications = []models.Notification{}
+	rows, err := repo.DB.Query("SELECT content, notif_id, type, sender, user_id FROM notifications WHERE user_id = ? AND type = 'GROUP_REQUEST';", groupId)
 	if err != nil {
-		return requests, err
+		return notifications, err
 	}
 	for rows.Next() {
-		var id string
-		rows.Scan(&id)
-		requests = append(requests, id)
+		var notif models.Notification
+		rows.Scan(&notif.Content, &notif.ID, &notif.Type, &notif.Sender, &notif.TargetID)
+		notifications = append(notifications, notif)
 	}
-	return requests, nil
+	return notifications, nil
 }
 
 func (repo *NotifRepository) GetUserFromRequest(notificationId string) (string, error) {

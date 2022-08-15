@@ -3,16 +3,16 @@
         <div class="item-list__wrapper" id="requests">
             <h3>Requests</h3>
             <ul class="item-list">
-                <div v-for="user in this.joinRequests">
+                <div v-for="notif in this.joinRequests">
                     <li>
                         <div class="row1">
-                            <img class="small" :src="'http://localhost:8081/' + user.avatar">
+                            <img class="small" :src="'http://localhost:8081/' + notif.user.avatar">
                             <div>
-                                <span class="who">{{ user.nickname }}</span>
+                                <span class="who">{{ notif.user.nickname }}</span>
                             </div>
                         </div>
                         <div class="row2">
-                            <i class="uil uil-times accept" @click="reactToRequest(user.id,'accept')"></i>
+                            <i class="uil uil-times accept" @click="reactToRequest(notif.id,'accept')"></i>
                             <i class="uil uil-check decline" @click="reactToRequest(user.id,'decline')"></i>
                         </div>
                     </li>
@@ -45,7 +45,7 @@ export default {
                 credentials: "include"
             }).then(r => r.json()).then(json => {
                 console.log(json)
-                this.joinRequests = json.users
+                this.joinRequests = json.notifications
             })
         },
         async reactToRequest(requestId, response){

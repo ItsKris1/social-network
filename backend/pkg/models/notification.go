@@ -20,7 +20,7 @@ type NotifRepository interface {
 	CheckIfExists(Notification)(bool, error) // true if exists, false otherwise
 
 	//get all pending requests to join group
-	GetGroupRequestsIds(groupId string) ([]string, error)
+	GetGroupRequests(groupId string) ([]Notification, error)
 	// get specific user_id from request to join
 	GetUserFromRequest(notificationId string) (string, error)
 	// get group id from specific request

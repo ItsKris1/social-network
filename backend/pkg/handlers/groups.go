@@ -216,21 +216,19 @@ func (handler *Handler) GroupRequests(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	/* ---------------------- get pending requests form db ---------------------- */
-	requests, err := handler.repos.NotifRepo.GetGroupRequestsIds(groupId)
+	notifications, err := handler.repos.NotifRepo.GetGroupRequests(groupId)
 	if err != nil {
 		utils.RespondWithError(w, "Error on getting data", 200)
 		return
 	}
-	var requestList []models.User
-	for i := 0; i < len(requests); i++ {
-		user, err := handler.repos.UserRepo.GetDataMin(requests[i])
+	for i := 0; i < len(notifications); i++ {
+		notifications[i].User, err = handler.repos.UserRepo.GetDataMin(notifications[i].Content)
 		if err != nil {
 			utils.RespondWithError(w, "Error on getting data", 200)
 			return
 		}
-		requestList = append(requestList, user)
 	}
-	utils.RespondWithUsers(w, requestList, 200)
+	utils.RespondWithNotifications(w, notifications, 200)
 }
 
 func (handler *Handler) CancelGroupRequests(w http.ResponseWriter, r *http.Request) {
