@@ -39,23 +39,23 @@ Using the two browsers, log in with different users in each one. Then refresh bo
 
 # Followers
 Try to follow a private user.
-[ ] Are you able to send a following request to the private user?
+[x] Are you able to send a following request to the private user?
 
 Try to follow a public user.
-[ ] Are you able to follow the public user without the need of sending a following request?
+[x] Are you able to follow the public user without the need of sending a following request?
 
 Open two browsers(ex: Chrome and Firefox), log in as two different private users and with one of them try to follow the other.
-[ ] Is the user who received the request able to accept or decline the following request?
+[x] Is the user who received the request able to accept or decline the following request?
 
 After following another user successfully try to unfollow him.
-[ ] Were you able to do so?
+[x] Were you able to do so?
 
 # Profile
 Try opening your own profile.
 [x] Does the profile displays every information requested in the register form, apart from the password?
 
 Try opening your own profile.
-[ ] Does the profile displays every post created by the user?
+[x] Does the profile displays every post created by the user?
 
 Try opening your own profile.
 [x] Does the profile displays the users that you follow and the ones who are following you?
@@ -64,16 +64,16 @@ Try opening your own profile.
 [x] Are you able to change between private profile and public profile?
 
 Open two browsers and log in with different users on them, with one of the users having a private profile and successfully follow that user.
-[ ] Are you able to see a followed user private profile?
+[x] Are you able to see a followed user private profile?
 
 Using the two browsers with the same users, with one of the users having a private profile and be sure not to follow him.
-[ ] Are you prevented from seeing a non-followed user private profile?
+[x] Are you prevented from seeing a non-followed user private profile?
 
 Using the two browsers with the users, with one of the users having a public profile and be sure not to follow him.
-[ ] Are you able to see a non-followed user public profile?
+[x] Are you able to see a non-followed user public profile?
 
 Using the two browsers with the users, with one of the users having a public profile and successfully follow that user.
-[ ] Are you able to see a followed user public profile?
+[x] Are you able to see a followed user public profile?
 
 # Posts
 [x] Are you able to create a post and commenting already created posts after logging in?
@@ -93,13 +93,13 @@ Try creating a group.
 [x] Were you able to invite one of your followers to join the group?
 
 Open two browsers, log in with different users on each browser, follow each other and with one of the users create a group and invite the other user.
-[ ] Did the other user received a group invitation that he/she can refuse/accept?
+[x] Did the other user received a group invitation that he/she can refuse/accept?
 
 Using the same browsers and the same users, with one of the users create a group and with the other try to make a group entering request.
-[ ] Did the owner of the group received a request that he/she can refuse/accept?
+[x] Did the owner of the group received a request that he/she can refuse/accept?
 [x] Can a user make group invitations, after being part of the group (being the user different from the creator of the group)?
-[ ] Can a user make a group entering request (a request to enter a group)?
-[ ] After being part of a group, can the user create posts and comment already created posts?
+[x] Can a user make a group entering request (a request to enter a group)?
+[x] After being part of a group, can the user create posts and comment already created posts?
 
 Try to create an event in a group.
 [x] Were you asked for a title, a description, a day/time and at least two options (going, not going)?
@@ -128,13 +128,13 @@ Using the three browsers with the users, continue chatting between the users in 
 [x] Can you check the notifications on every page of the project?
 
 Open two browsers, log in as two different private users and with one of them try to follow the other.
-[ ] Did the other user received a notification regarding the following request?
+[x] Did the other user received a notification regarding the following request?
 
 Open two browsers, log in with different users on each browser, follow each other and with one of the users create a group and invite the other user.
-[ ] Did the invited user received a notification regarding the group invitation request?
+[x] Did the invited user received a notification regarding the group invitation request?
 
 Open two browsers, log in with different users on each browser, create a group with one of them and with the other send a group entering request.
-[ ] Did the other user received a notification regarding the group entering request?
+[x] Did the other user received a notification regarding the group entering request?
 
 Open two browsers, log in with different users on each browser, become part of the same group with both users and with one of the users create an event.
 [x] Did the other user received a notification regarding the creation of the event?
