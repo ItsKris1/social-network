@@ -39,6 +39,7 @@ export default {
     watch: {
         $route() {
             if (this.$route.path.includes("group")){
+                this.isMemberOfGroup=false;
                 this.getGroupInfo(); 
             }
             // this.getGroupInfo()
@@ -53,6 +54,7 @@ export default {
     },
     methods: {
         async getGroupInfo() {
+            console.log("OOO");
             await fetch("http://localhost:8081/groupInfo?groupId=" + this.$route.params.id, {
                 credentials: "include"
             })
