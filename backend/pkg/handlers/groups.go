@@ -443,6 +443,15 @@ func (handler *Handler) ResponseGroupRequest(w http.ResponseWriter, r *http.Requ
 		utils.RespondWithError(w, "Error on form submittion", 200)
 		return
 	}
+	/* ---------------------- check if all fields provided ---------------------- */
+	if response.Response != "accept" && response.Response != "decline" {
+		utils.RespondWithError(w, "Response unvalid", 200)
+		return
+	}
+	if response.GroupID == "" || response.RequestID == "" {
+		utils.RespondWithError(w, "Response incomplete", 200)
+		return
+	}
 	/* ------------------- chack if curren user is group admin ------------------ */
 	// access user id
 	userId := r.Context().Value(utils.UserKey).(string)

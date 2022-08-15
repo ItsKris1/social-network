@@ -86,13 +86,13 @@ func (repo *NotifRepository) GetGroupId(notificationId string) (string, error) {
 
 func (repo *NotifRepository) GetAll(userId string) ([]models.Notification, error) {
 	var notifications = []models.Notification{}
-	rows, err := repo.DB.Query("SELECT content, notif_id, type, sender FROM notifications WHERE user_id = ?;", userId)
+	rows, err := repo.DB.Query("SELECT content, notif_id, type, sender, user_id FROM notifications WHERE user_id = ? OR (SELECT administrator FROM groups WHERE group_id = notifications.user_id) = ?;", userId, userId)
 	if err != nil {
 		return notifications, err
 	}
 	for rows.Next() {
 		var notif models.Notification
-		rows.Scan(&notif.Content, &notif.ID, &notif.Type, &notif.Sender)
+		rows.Scan(&notif.Content, &notif.ID, &notif.Type, &notif.Sender, &notif.TargetID)
 		notifications = append(notifications, notif)
 	}
 	return notifications, nil
