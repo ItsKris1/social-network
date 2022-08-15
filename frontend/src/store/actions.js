@@ -180,6 +180,8 @@ export default {
             } else if (data.action == "notification") {
                 // console.log(data.notification)
                 dispatch("addNewNotification", data.notification)
+            }else if(data.action == "groupAccept"){
+                console.log("you have been accepted, in group with id: ", data.message)
             }
 
         })
