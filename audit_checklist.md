@@ -54,8 +54,8 @@ After following another user successfully try to unfollow him.
 
 #Profile
 Try opening your own profile.
-[ ] Does the profile displays every information requested in the register form, apart from the password?
-*If nickname provided only nickname is shown, not First and Last name. Not sure if that counts as - display every info requested*
+[x] Does the profile displays every information requested in the register form, apart from the password?
+-Works-*If nickname provided only nickname is shown, not First and Last name. Not sure if that counts as - display every info requested*
 
 Try opening your own profile.
 [x] Does the profile displays every post created by the user?
