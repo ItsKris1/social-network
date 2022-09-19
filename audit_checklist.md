@@ -163,3 +163,6 @@ Try and run the application, then use the docker command "docker ps -a"
 [ ] +Is there other notification apart from the ones explicit on the subject?
 [x] +Does the project present a script to build the images and containers? (using a script to simplify the build)
 [x] +Do you think in general this project is well done?
+
+*after pressing log-out btn user is not redirected to log-in page, but logging-out funcionality happens correctly*
+
