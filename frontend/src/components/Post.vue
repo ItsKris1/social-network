@@ -112,6 +112,7 @@ export default {
             })
             this.$store.dispatch('fetchPosts')
             this.$store.dispatch('fetchMyPosts')
+            this.$store.dispatch('getGroupPosts')
 
             this.comment.body = "";
             this.removeImage();

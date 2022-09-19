@@ -89,8 +89,8 @@ Try creating a comment.
 
 Try creating a post.
 [x] Can you specify the type of privacy of the post (private, public, almost private)?
-[ ] If you choose the almost private privacy option, can you specify the users that are allowed to see the post?
-*Needs update -> right now to back-end list of nicknames is sent, back-end will need list of userIds for funcionality to work*
+[x] If you choose the almost private privacy option, can you specify the users that are allowed to see the post?
+-Works-*Needs update -> right now to back-end list of nicknames is sent, back-end will need list of userIds for funcionality to work*
 
 # Groups
 Try creating a group.
