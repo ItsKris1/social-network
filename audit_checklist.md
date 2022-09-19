@@ -105,8 +105,8 @@ Using the same browsers and the same users, with one of the users create a group
 *when accepting request from sidebar notification does not dissaper*
 [x] Can a user make group invitations, after being part of the group (being the user different from the creator of the group)?
 [x] Can a user make a group entering request (a request to enter a group)?
-[ ] After being part of a group, can the user create posts and comment already created posts?
-*Yes, but after creating comment it is not shown until page refresh*
+[x] After being part of a group, can the user create posts and comment already created posts?
+-Fixed-*Yes, but after creating comment it is not shown until page refresh*
 
 Try to create an event in a group.
 [x] Were you asked for a title, a description, a day/time and at least two options (going, not going)?
