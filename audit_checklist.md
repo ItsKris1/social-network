@@ -39,23 +39,26 @@ Using the two browsers, log in with different users in each one. Then refresh bo
 
 #Followers
 Try to follow a private user.
-[ ] Are you able to send a following request to the private user?
+[x] Are you able to send a following request to the private user?
 
 Try to follow a public user.
 [ ] Are you able to follow the public user without the need of sending a following request?
+*Able to follow, but it would be nice if the page updated with new status Ex. the followers list now included the new follower*
 
 Open two browsers(ex: Chrome and Firefox), log in as two different private users and with one of them try to follow the other.
 [ ] Is the user who received the request able to accept or decline the following request?
-
+*Follow request notification is received only after page refresh / changing pages not instant*
 After following another user successfully try to unfollow him.
 [ ] Were you able to do so?
+*Unfollow works, but instant update wuold be nice*
 
 #Profile
 Try opening your own profile.
 [ ] Does the profile displays every information requested in the register form, apart from the password?
+*If nickname provided only nickname is shown, not First and Last name. Not sure if that counts as - display every info requested*
 
 Try opening your own profile.
-[ ] Does the profile displays every post created by the user?
+[x] Does the profile displays every post created by the user?
 
 Try opening your own profile.
 [x] Does the profile displays the users that you follow and the ones who are following you?
@@ -64,16 +67,16 @@ Try opening your own profile.
 [x] Are you able to change between private profile and public profile?
 
 Open two browsers and log in with different users on them, with one of the users having a private profile and successfully follow that user.
-[ ] Are you able to see a followed user private profile?
+[x] Are you able to see a followed user private profile?
 
 Using the two browsers with the same users, with one of the users having a private profile and be sure not to follow him.
-[ ] Are you prevented from seeing a non-followed user private profile?
+[x] Are you prevented from seeing a non-followed user private profile?
 
 Using the two browsers with the users, with one of the users having a public profile and be sure not to follow him.
-[ ] Are you able to see a non-followed user public profile?
+[x] Are you able to see a non-followed user public profile?
 
 Using the two browsers with the users, with one of the users having a public profile and successfully follow that user.
-[ ] Are you able to see a followed user public profile?
+[x] Are you able to see a followed user public profile?
 
 #Posts
 [x] Are you able to create a post and commenting already created posts after legging in?
@@ -86,59 +89,68 @@ Try creating a comment.
 
 Try creating a post.
 [x] Can you specify the type of privacy of the post (private, public, almost private)?
-[x] If you choose the almost private privacy option, can you specify the users that are allowed to see the post?
+[ ] If you choose the almost private privacy option, can you specify the users that are allowed to see the post?
+*Needs update -> right now to back-end list of nicknames is sent, back-end will need list of userIds for funcionality to work*
 
 #Groups
 Try creating a group.
 [x] Were you able to invite one of your followers to join the group?
 
 Open two browsers, log in with different users on each browser, follow each other and with one of the users create a group and invite the other user.
-[ ] Did the other user received a group invitation that he/she can refuse/accept?
+[x] Did the other user received a group invitation that he/she can refuse/accept?
 
 Using the same browsers and the same users, with one of the users create a group and with the other try to make a group entering request.
 [ ] Did the owner of the group received a request that he/she can refuse/accept?
+*request stent successfuly, but again notification showed up only after refresh. Could include group name in notification. Also for requester it would be nice if joing group btn would indicate if request already sent (pending)*
+*when accepting request from sidebar notification does not dissaper*
 [x] Can a user make group invitations, after being part of the group (being the user different from the creator of the group)?
-[ ] Can a user make a group entering request (a request to enter a group)?
+[x] Can a user make a group entering request (a request to enter a group)?
 [ ] After being part of a group, can the user create posts and comment already created posts?
+*Yes, but after creating comment it is not shown until page refresh*
 
 Try to create an event in a group.
 [x] Were you asked for a title, a description, a day/time and at least two options (going, not going)?
 
 Using the same browsers and the same users, after both of them becoming part of the same group, create an event with one of them.
 [ ] Is the other user able to see the event and vote in which option he wants?
+*Can see the event, but cant vote*
+*OPTIONAL: notification about new event could include hyperlink to event*
 
 #Chat
 Try and open two browsers (ex: Chrome and Firefox), log in with different users in each one. Then with one of the users try to send a private message to the other user.
 [ ] Did the other user received the message in realtime?
-
+*only after page refres*
 Using the two browsers with the users start a chat between the two of them.
 [ ] Did the chat between the users went well? (did not crash the server)
 
 Try and open three browsers (ex: Chrome and Firefox or a private browser), log in with different users in each one. Then with one of the users try to send a private message to one of the other users.
-[ ] Did only the targeted user received the message?
+[x] Did only the targeted user received the message?
 
 Using the three browsers with the users, enter with each user a common group. Then start sending messages to the common chat room using one of the users.
 [ ] Did all the users that are common to the group receive the message in realtime?
-
+*real-time feature lacking, receive msg after page refresh*
+*but msg is sent to all group participants!*
 Using the three browsers with the users, continue chatting between the users in the group.
 [ ] Did the chat between the users went well? (did not crash the server)
-[ ] Can you confirm that it is possible to send emojis via chat to other users?
+[x] Can you confirm that it is possible to send emojis via chat to other users?
 
 #Notifications
 [x] Can you check the notifications on every page of the project?
 
 Open two browsers, log in as two different private users and with one of them try to follow the other.
 [ ] Did the other user received a notification regarding the following request?
-
+*did after page refresh*
 Open two browsers, log in with different users on each browser, follow each other and with one of the users create a group and invite the other user.
 [ ] Did the invited user received a notification regarding the group invitation request?
+*did after refresh*
 
 Open two browsers, log in with different users on each browser, create a group with one of them and with the other send a group entering request.
 [ ] Did the other user received a notification regarding the group entering request?
+*did after refresh*
 
 Open two browsers, log in with different users on each browser, become part of the same group with both users and with one of the users create an event.
-[x] Did the other user received a notification regarding the creation of the event?
-
+[ ] Did the other user received a notification regarding the creation of the event?
+*Notif received, but unable to close/delete it or respond to event -> goig or not going*
 #Docker
 Try and run the application, then use the docker command "docker ps -a"
 [x] Can you confirm that there are two containers, one for the backend and the other for the frontend?
