@@ -53,8 +53,7 @@ func Migrations(db *sql.DB) error {
 		return err
 	}
 
-	fmt.Printf("Applied %d migrations to database.db!", n)
-	fmt.Println()
+	fmt.Printf("Applied %d migrations to database.db!\n", n)
 
 	return nil
 }
