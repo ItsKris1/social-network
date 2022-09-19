@@ -7,7 +7,7 @@
                 <div class="item-text">{{ member.nickname }}</div>
             </li>
         </ul>
-        <button v-if="this.isMember" class="btn form-submit" @click="toggleModal">Invite users<i class="uil uil-user-plus"></i></button>
+        <button v-if="this.isMember" class="btn form-submit" @click="toggleModal();getFollowers()">Invite users<i class="uil uil-user-plus"></i></button>
         <button v-if="!this.isMember" class="btn form-submit" @click="this.joinGroup">Join group +</button>
 
         <Modal v-if="this.isOpen" @closeModal="toggleModal">
@@ -41,7 +41,7 @@ export default {
     },
     created() {
         this.getGroupMembers();
-        this.getFollowers();
+        // this.getFollowers();
     },
 
     computed: {
@@ -53,7 +53,7 @@ export default {
     watch: {
         $route() {
             this.getGroupMembers();
-            this.getFollowers();
+            // this.getFollowers();
         }
     },
     props: {

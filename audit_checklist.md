@@ -1,4 +1,4 @@
-#Functional
+# Functional
 [x] Has the requirement for the allowed packages been respected?
 
 Open the project
@@ -7,7 +7,7 @@ Open the project
 Open the project
 [x] Is the file system for the frontend well organized?
 
-#Database
+# Database
 [x] Is SQLite being used in the project as the database?
 [ ] Does the app implement a migration system?
 [ ] Is that migration file system well organized? (like the example from the subject)
@@ -15,7 +15,7 @@ Open the project
 Start the social network application, then enter the database using the command "sqlite3 <database_name.db>".
 [ ] Are the migrations being applied by the migration system?
 
-#Authentication
+# Authentication
 [x] Does the app implement sessions for the authentication of the users?
 [x] Are the correct form elements being used in the registration? (Email, Password, First Name, Last Name, Date of Birth, Avatar/Image (Optional), Nickname (Optional), About Me (Optional))
 
@@ -37,12 +37,12 @@ Open two browsers (ex: Chrome and Firefox), log in into one and refresh the othe
 Using the two browsers, log in with different users in each one. Then refresh both the browsers.
 [x] Can you confirm that both browsers continue with the right users?
 
-#Followers
+# Followers
 Try to follow a private user.
 [x] Are you able to send a following request to the private user?
 
 Try to follow a public user.
-[ ] Are you able to follow the public user without the need of sending a following request?
+[x] Are you able to follow the public user without the need of sending a following request?
 *Able to follow, but it would be nice if the page updated with new status Ex. the followers list now included the new follower*
 
 Open two browsers(ex: Chrome and Firefox), log in as two different private users and with one of them try to follow the other.
@@ -78,8 +78,8 @@ Using the two browsers with the users, with one of the users having a public pro
 Using the two browsers with the users, with one of the users having a public profile and successfully follow that user.
 [x] Are you able to see a followed user public profile?
 
-#Posts
-[x] Are you able to create a post and commenting already created posts after legging in?
+# Posts
+[x] Are you able to create a post and commenting already created posts after logging in?
 
 Try creating a post.
 [x] Are you able to include an image (JPG or PNG) or a GIF on it?
@@ -92,7 +92,7 @@ Try creating a post.
 [ ] If you choose the almost private privacy option, can you specify the users that are allowed to see the post?
 *Needs update -> right now to back-end list of nicknames is sent, back-end will need list of userIds for funcionality to work*
 
-#Groups
+# Groups
 Try creating a group.
 [x] Were you able to invite one of your followers to join the group?
 
@@ -116,7 +116,7 @@ Using the same browsers and the same users, after both of them becoming part of 
 *Can see the event, but cant vote*
 *OPTIONAL: notification about new event could include hyperlink to event*
 
-#Chat
+# Chat
 Try and open two browsers (ex: Chrome and Firefox), log in with different users in each one. Then with one of the users try to send a private message to the other user.
 [ ] Did the other user received the message in realtime?
 *only after page refres*
@@ -134,7 +134,7 @@ Using the three browsers with the users, continue chatting between the users in 
 [ ] Did the chat between the users went well? (did not crash the server)
 [x] Can you confirm that it is possible to send emojis via chat to other users?
 
-#Notifications
+# Notifications
 [x] Can you check the notifications on every page of the project?
 
 Open two browsers, log in as two different private users and with one of them try to follow the other.
@@ -155,7 +155,7 @@ Open two browsers, log in with different users on each browser, become part of t
 Try and run the application, then use the docker command "docker ps -a"
 [x] Can you confirm that there are two containers, one for the backend and the other for the frontend?
 
-#Bonus
+# Bonus
 [ ] +Can you log in using Github or other type of external OAuthenticator (open standard for access delegation)?
 [ ] +Did the student created a migration to fill the database?
 [ ] +If you unfollow a user, do you get a confirmation pop-up?

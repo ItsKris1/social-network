@@ -94,13 +94,13 @@ export default {
             const formDataObject = Object.fromEntries(formData.entries())
             formDataObject["invitations"] = this.getIds(this.checkedFollowers);
 
-            console.log(this.getIds(this.checkedFollowers))
+            // console.log(this.getIds(this.checkedFollowers))
             const response = await fetch('http://localhost:8081/newGroup', {
                 method: 'post',
                 credentials: 'include',
                 body: JSON.stringify(formDataObject)
             })
-            console.log("Submit new group", await response.json())
+            // console.log("Submit new group", await response.json())
 
             form.reset()
             this.toggleModal();
