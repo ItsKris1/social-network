@@ -15,7 +15,6 @@ import (
 func InitDB() *sql.DB {
 
 	db, err := sql.Open("sqlite3", "./tempDB.db")
-	// code example
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -25,9 +24,7 @@ func InitDB() *sql.DB {
 		log.Fatal(err)
 	}
 
-	// createTables(db) // temporary code
 	return db
-	// return nil // delete this line where return db conn
 }
 
 // InitRepositories should be called in server.go
@@ -48,6 +45,9 @@ func Migrations(db *sql.DB) error {
 		Dir: "../backend/pkg/db/migration/sqlite",
 	}
 
+	// function arguments: DB connection pool, DB management system, 
+	// migration location, migration direction
+	// for single migration, use ExecMax
 	n, err := migrate.Exec(db, "sqlite3", migrations, migrate.Up)
 	if err != nil {
 		return err
