@@ -53,7 +53,6 @@ After following another user successfully try to unfollow him.
 #Profile
 Try opening your own profile.
 [x] Does the profile displays every information requested in the register form, apart from the password?
-*OPTIONAL: maybe if user hasn't provided nickname, then only first+Last name is shown? Right now it dublicates Ex. if no nickname, then first+ last name is shown 2 times*
 
 Try opening your own profile.
 [x] Does the profile displays every post created by the user?
