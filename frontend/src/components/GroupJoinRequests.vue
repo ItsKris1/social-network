@@ -64,6 +64,8 @@ export default {
                     this.$toast.open({
                             message: "Done!",
                         });
+                    // delete notification
+                    this.$store.dispatch("removeNotification", requestId);
                 }
             })
         }
