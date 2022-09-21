@@ -4,7 +4,8 @@
         <ul class="item-list users" v-if="this.following">
             <li v-for="user in this.following" :key="user.id">
                 <div class="user-picture small"></div>
-                <div class="item-text">{{ user.nickname }}</div>
+                <div class="item-text"><router-link :to="{ path: `/profile/${user.id}`}">{{ user.nickname }}
+</router-link></div>
             </li>
             <!--  -->
         </ul>

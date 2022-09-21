@@ -2,9 +2,10 @@
     <div class="item-list__wrapper" id="groups">
         <h3>Members</h3>
         <ul class="item-list">
-            <li v-for="member in this.groupMembers">
+            <li v-for="member in this.groupMembers" :key="member.id">
                 <img class="small" src="../assets/icons/default-profile.svg" alt="">
-                <div class="item-text">{{ member.nickname }}</div>
+                <div class="item-text"><router-link :to="{ path: `/profile/${member.id}`}">{{ member.nickname }}
+</router-link></div>
             </li>
         </ul>
         <button v-if="this.isMember" class="btn form-submit" @click="toggleModal();getFollowers()">Invite users<i class="uil uil-user-plus"></i></button>
