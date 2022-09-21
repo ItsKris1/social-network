@@ -9,7 +9,7 @@
                     </div>
                     <div class="user-profile__info">
                         <h2 class="username">{{user.firstName}} {{user.lastName}}</h2>
-                        <h3 class="username">{{ user.nickname }}</h3>
+                        <h3 v-if="showNickname" class="username">{{ user.nickname }}</h3>
                         <p class="user-email" v-if="user.login">{{ user.login }}</p>
                         <p class="user-dateOfBirth" v-if="user.dateOfBirth">{{ user.dateOfBirth }}</p>
                     </div>
@@ -90,6 +90,12 @@ export default {
             } else {
                 return FollowBtn
             }
+        },
+        showNickname(){
+            if (this.user.nickname == this.user.firstName + " "+ this.user.lastName){
+                return false
+            }
+            return true
         }
     },
 
