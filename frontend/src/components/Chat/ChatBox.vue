@@ -13,7 +13,7 @@
 
         </div>
 
-        <form @submit.prevent="sendMessage" autocomplete="off" class="send-message">
+        <form @submit.prevent="sendMessage" autocomplete="off" class="send-message" @keyup.enter="sendMessage">
             <input type="text" name="sent-message" id="sent-message__input" placeholder="Send a message"
                    ref="sendMessageInput">
             <button type="submit"><i class="uil uil-message"></i></button>
