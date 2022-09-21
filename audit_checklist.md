@@ -43,19 +43,17 @@ Try to follow a private user.
 
 Try to follow a public user.
 [x] Are you able to follow the public user without the need of sending a following request?
-*Able to follow, but it would be nice if the page updated with new status Ex. the followers list now included the new follower*
 
 Open two browsers(ex: Chrome and Firefox), log in as two different private users and with one of them try to follow the other.
-[ ] Is the user who received the request able to accept or decline the following request?
-*Follow request notification is received only after page refresh / changing pages not instant*
+[x] Is the user who received the request able to accept or decline the following request?
+
 After following another user successfully try to unfollow him.
-[ ] Were you able to do so?
-*Unfollow works, but instant update wuold be nice*
+[x] Were you able to do so?
 
 #Profile
 Try opening your own profile.
 [x] Does the profile displays every information requested in the register form, apart from the password?
--Works-*If nickname provided only nickname is shown, not First and Last name. Not sure if that counts as - display every info requested*
+*OPTIONAL: maybe if user hasn't provided nickname, then only first+Last name is shown? Right now it dublicates Ex. if no nickname, then first+ last name is shown 2 times*
 
 Try opening your own profile.
 [x] Does the profile displays every post created by the user?
@@ -90,7 +88,7 @@ Try creating a comment.
 Try creating a post.
 [x] Can you specify the type of privacy of the post (private, public, almost private)?
 [x] If you choose the almost private privacy option, can you specify the users that are allowed to see the post?
--Works-*Needs update -> right now to back-end list of nicknames is sent, back-end will need list of userIds for funcionality to work*
+*Needs update -> right now to back-end list of nicknames is sent, back-end will need list of userIds for funcionality to work.*
 
 # Groups
 Try creating a group.
@@ -106,7 +104,7 @@ Using the same browsers and the same users, with one of the users create a group
 [x] Can a user make group invitations, after being part of the group (being the user different from the creator of the group)?
 [x] Can a user make a group entering request (a request to enter a group)?
 [x] After being part of a group, can the user create posts and comment already created posts?
--Fixed-*Yes, but after creating comment it is not shown until page refresh*
+*Yes, but after creating comment it is not shown until page refresh*
 
 Try to create an event in a group.
 [x] Were you asked for a title, a description, a day/time and at least two options (going, not going)?
@@ -119,7 +117,7 @@ Using the same browsers and the same users, after both of them becoming part of 
 # Chat
 Try and open two browsers (ex: Chrome and Firefox), log in with different users in each one. Then with one of the users try to send a private message to the other user.
 [ ] Did the other user received the message in realtime?
-*only after page refres*
+*funny behivior -> if user A follows user B, he can send B a message, but if B doesn't follow back, he can see that there is new message(by red indicator) but can't access or see it becaus ethe other user is not in the chat list (it may be with private users)*
 Using the two browsers with the users start a chat between the two of them.
 [ ] Did the chat between the users went well? (did not crash the server)
 
@@ -127,9 +125,7 @@ Try and open three browsers (ex: Chrome and Firefox or a private browser), log i
 [x] Did only the targeted user received the message?
 
 Using the three browsers with the users, enter with each user a common group. Then start sending messages to the common chat room using one of the users.
-[ ] Did all the users that are common to the group receive the message in realtime?
-*real-time feature lacking, receive msg after page refresh*
-*but msg is sent to all group participants!*
+[x] Did all the users that are common to the group receive the message in realtime?
 Using the three browsers with the users, continue chatting between the users in the group.
 [ ] Did the chat between the users went well? (did not crash the server)
 [x] Can you confirm that it is possible to send emojis via chat to other users?
@@ -138,15 +134,14 @@ Using the three browsers with the users, continue chatting between the users in 
 [x] Can you check the notifications on every page of the project?
 
 Open two browsers, log in as two different private users and with one of them try to follow the other.
-[ ] Did the other user received a notification regarding the following request?
-*did after page refresh*
+[x] Did the other user received a notification regarding the following request?
+
 Open two browsers, log in with different users on each browser, follow each other and with one of the users create a group and invite the other user.
-[ ] Did the invited user received a notification regarding the group invitation request?
-*did after refresh*
+[x] Did the invited user received a notification regarding the group invitation request?
 
 Open two browsers, log in with different users on each browser, create a group with one of them and with the other send a group entering request.
-[ ] Did the other user received a notification regarding the group entering request?
-*did after refresh*
+[x] Did the other user received a notification regarding the group entering request?
+*OPTIONAL: Join group btn after sending join request could be disabled maybe?*
 
 Open two browsers, log in with different users on each browser, become part of the same group with both users and with one of the users create an event.
 [ ] Did the other user received a notification regarding the creation of the event?

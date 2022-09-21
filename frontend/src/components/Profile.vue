@@ -19,7 +19,7 @@
                         <PrivacyBtn v-if="isMyProfile" :status="user.status" />
 
                         <!-- Follow/unfollow button -->
-                        <component v-else :is="displayBtn" v-bind="{ user }" @follow="checkFollowRequest"></component>
+                        <component v-else :is="displayBtn" v-bind="{ user }" @follow="checkFollowRequest" @unfollow="unfollow"></component>
 
                         <!-- Send message button -->
                         <button v-if="showSendButton"
@@ -30,8 +30,8 @@
 
                 </div>
                 <div class="multiple-item-list" v-if="showProfileData">
-                    <Following />
-                    <Followers />
+                    <Following :following="following"/>
+                    <Followers :followers="followers" />
                 </div>
 
             </div>
@@ -42,7 +42,7 @@
                     <h2 class="about-title">About me</h2>
                     <p class="about-text">{{ user.about }}</p>
                 </div>
-                <AllMyPosts v-bind:userid="this.user.id" />
+                <AllMyPosts :posts="this.posts" />
 
             </div>
 
@@ -68,11 +68,13 @@ export default {
         return {
             user: null,
             isMyProfile: false,
+            followers: [],
+            following: [],
+            posts:[],
         }
     },
     created() {
-        this.getUserData()
-        this.checkProfile()
+        this.updateProfileData()
     },
     computed: {
         showProfileData() {
@@ -95,6 +97,13 @@ export default {
 
 
     methods: {
+        updateProfileData(){
+            this.getUserData()
+            this.getPosts()
+            this.getFollowers()
+            this.getFollowing()
+            this.checkProfile()
+        },
         async getUserData() {
             await fetch("http://localhost:8081/userData?userId=" + this.$route.params.id, {
                 credentials: "include",
@@ -102,7 +111,6 @@ export default {
                 .then((r) => r.json())
                 .then((json) => {
                     this.user = json.users[0];
-                    // console.log("User", this.user)
                 });
 
         },
@@ -121,7 +129,7 @@ export default {
 
         checkFollowRequest(action) {
             if (action === "followedUser") {
-                this.getUserData();
+                this.updateProfileData()
                 this.toggleFollowingThisUser();
 
             }
@@ -129,13 +137,43 @@ export default {
 
         toggleFollowingThisUser() {
             this.user.following = !this.user.following
-        }
+        },
+        unfollow(){
+            this.updateProfileData()
+        },
+        async getFollowers() {
+            await fetch('http://localhost:8081/followers?userId=' + this.$route.params.id, {
+                credentials: 'include'
+            })
+                .then((response => response.json()))
+                .then((json => {
+                    this.followers = json.users
+                }))
+        },
+        async getFollowing() {
+            await fetch('http://localhost:8081/following?userId=' + this.$route.params.id, {
+                credentials: 'include'
+            })
+                .then((response => response.json()))      
+                .then((json => {
+                    this.following = json.users
+                }))
+
+        },
+        async getPosts() {
+            await fetch("http://localhost:8081/userPosts?id=" + this.$route.params.id, {
+                credentials: "include",
+            })
+                .then((r) => r.json())
+                .then((r) => {
+                    this.posts = r.posts
+                });
+        },
     },
     watch: { //watching changes in route
         $route() {
             if (this.$route.name === "Profile") {
-                this.getUserData();
-                this.checkProfile();
+                this.updateProfileData()
             }
 
         }

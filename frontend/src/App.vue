@@ -20,7 +20,7 @@ export default {
 
     methods: {
         createWebSocketConn() {
-            if (this.$route.path === "/sign-in" || this.$route.path === "/reg" || this.$route.path === "/") {
+            if (this.$route.path === "/sign-in" || this.$route.path === "/reg" ) {
                 return
             }
             this.$store.dispatch("createWebSocketConn")
