@@ -98,13 +98,10 @@ Open two browsers, log in with different users on each browser, follow each othe
 [x] Did the other user received a group invitation that he/she can refuse/accept?
 
 Using the same browsers and the same users, with one of the users create a group and with the other try to make a group entering request.
-[ ] Did the owner of the group received a request that he/she can refuse/accept?
-*request stent successfuly, but again notification showed up only after refresh. Could include group name in notification. Also for requester it would be nice if joing group btn would indicate if request already sent (pending)*
-*when accepting request from sidebar notification does not dissaper*
+[x] Did the owner of the group received a request that he/she can refuse/accept?
 [x] Can a user make group invitations, after being part of the group (being the user different from the creator of the group)?
 [x] Can a user make a group entering request (a request to enter a group)?
 [x] After being part of a group, can the user create posts and comment already created posts?
-*Yes, but after creating comment it is not shown until page refresh*
 
 Try to create an event in a group.
 [x] Were you asked for a title, a description, a day/time and at least two options (going, not going)?
@@ -159,5 +156,4 @@ Try and run the application, then use the docker command "docker ps -a"
 [x] +Does the project present a script to build the images and containers? (using a script to simplify the build)
 [x] +Do you think in general this project is well done?
 
--Fixed-*after pressing log-out btn user is not redirected to log-in page, but logging-out funcionality happens correctly*
 
