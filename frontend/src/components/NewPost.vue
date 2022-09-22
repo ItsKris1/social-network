@@ -129,9 +129,9 @@ export default {
             formData.set("body", this.newpost.body)
             formData.set("image", this.newpost.image)
             formData.set("privacy", this.newpost.privacy)
-            formData.set("checkedfollowers", this.newpost.checkedFollowers.map(x => x.id))
-
-
+            if (this.newpost.checkedFollowers != null){
+                formData.set("checkedfollowers", this.newpost.checkedFollowers.map(x => x.id))
+            }
             const response = await fetch('http://localhost:8081/newPost', {
                 method: 'POST',
                 credentials: 'include',
