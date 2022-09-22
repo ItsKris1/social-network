@@ -35,7 +35,7 @@ export default {
                 this.commit("updateMyPosts", myposts);
                 // console.log(myposts);
             });
-        console.log("here")
+        // console.log("here")
 
         // .then((json) => console.log("get posts -", json));
     },
@@ -66,6 +66,7 @@ export default {
                 // console.log("userinfo -", json);
             });
     },
+
     async getAllUsers() {
         await fetch("http://localhost:8081/allUsers", {
             credentials: "include",

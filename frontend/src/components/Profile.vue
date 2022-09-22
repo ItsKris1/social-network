@@ -1,5 +1,4 @@
 <template>
-
     <div v-if="user && this.$store.state.id !== ''">
         <div id="layout-profile">
 
@@ -42,7 +41,7 @@
                     <h2 class="about-title">About me</h2>
                     <p class="about-text">{{ user.about }}</p>
                 </div>
-                <AllMyPosts :posts="this.posts" />
+                <AllMyPosts :posts="this.posts"/>
 
             </div>
 
@@ -60,12 +59,12 @@ import Followers from './Followers.vue'
 import FollowBtn from './FollowBtn.vue'
 import PrivacyBtn from './PrivacyBtn.vue'
 import UnfollowBtn from './UnfollowBtn.vue'
-// import { mapGetters } from 'vuex'
 export default {
     name: 'Profile',
     components: { AllMyPosts, Followers, Following, FollowBtn, PrivacyBtn, UnfollowBtn },
     data() {
         return {
+            // flag: false,
             user: null,
             isMyProfile: false,
             followers: [],
@@ -98,10 +97,6 @@ export default {
             return true
         }
     },
-
-
-
-
     methods: {
         updateProfileData(){
             this.getUserData()
@@ -174,7 +169,8 @@ export default {
                 .then((r) => {
                     this.posts = r.posts
                 });
-        },
+                // this.flag = false
+        },        
     },
     watch: { //watching changes in route
         $route() {

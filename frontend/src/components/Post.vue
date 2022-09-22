@@ -113,13 +113,13 @@ export default {
             this.$store.dispatch('fetchPosts')
             this.$store.dispatch('fetchMyPosts')
             this.$store.dispatch('getGroupPosts')
+            this.$parent.$parent.getPosts()
 
             this.comment.body = "";
             this.removeImage();
             console.log('Comment submitted.');
         },
         showPostId(postId) {
-
             console.log('post id: ', postId);
         },
         checkPicture(e) {
@@ -151,7 +151,6 @@ export default {
 
 
         },
-
 
         removeImage() {
             this.comment.image = {};
