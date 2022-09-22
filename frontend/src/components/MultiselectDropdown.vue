@@ -6,7 +6,7 @@
         <p class="custom-label">{{ labelName }}</p>
 
         <ul class="checkedOptionsList" v-if="dropdownCheckedOptions.length !== 0">
-            <li v-for="checkedOption in dropdownCheckedOptions"> {{ checkedOption }}</li>
+            <li v-for="checkedOption in dropdownCheckedOptions"> {{ checkedOption.nickname }}</li>
         </ul>
 
         <div class="dropdown">
@@ -18,10 +18,10 @@
             <ul class="item-list" v-show="showDropdown">
                 <li v-if="content !== null" v-for="option in content">
                     <input type="checkbox"
-                           :id="option"
+                           :id="option.id"
                            :value="option"
                            v-model="dropdownCheckedOptions" />
-                    <label :for="option">{{ option }}</label>
+                    <label :for="option.id">{{ option.nickname }}</label>
 
                 </li>
 

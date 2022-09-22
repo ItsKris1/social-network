@@ -60,6 +60,9 @@ export default createStore({
     allGroups(state) {
       return state.groups.allGroups;
     },
+    followers(state){
+      return state.myFollowers
+    },
     filterUsers: (state) => (searchquery) => {
       if (searchquery === "") {
         return [];
