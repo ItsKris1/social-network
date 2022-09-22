@@ -7,7 +7,7 @@
         </span>
         <div class="item-list__wrapper" id="notifications" v-show="showNotifications">
             <ul class="item-list">
-                <li v-for="notification in allNotifications"
+                <li  v-for="notification in allNotifications" :key="notification.id"
                     v-if="
                     isDataValid(notificationsFromDB) &&
                     allNotifications.length > 0">
@@ -18,8 +18,8 @@
                     </div>
 
                     <div class="row2" v-if="notification.type === 'EVENT'">
-                        <i class="uil uil-times"
-                           @click.stop="removeEventNotif(notification)"></i>
+                         <i class="uil uil-times decline" @click.stop="handleEventRequest(notification, 'NO')"></i>
+                        <i class="uil uil-check accept" @click.stop="handleEventRequest(notification, 'YES')"></i>
                     </div>
 
                     <div class="row2" v-else>
@@ -65,6 +65,22 @@ export default {
         this.$store.commit("updateAllNotifications", []);
     },
     methods: {
+        async handleEventRequest(notification, reqResponse){
+            const response = await fetch(`http://localhost:8081/participate`, {
+                credentials: "include",
+                method: "POST",
+                body: JSON.stringify({
+                    requestId: notification.id,
+                    eventId: notification.event.id,
+                    response: reqResponse,
+                })
+            });
+            const data = await response.json();
+            if (data.type == "Success"){
+                // remove the notification
+                this.$store.dispatch("removeNotification", notification.id);
+            }
+        },
         toggleShowNotifications() {
             this.showNotifications = !this.showNotifications;
         },

@@ -106,9 +106,7 @@ Try to create an event in a group.
 [x] Were you asked for a title, a description, a day/time and at least two options (going, not going)?
 
 Using the same browsers and the same users, after both of them becoming part of the same group, create an event with one of them.
-[ ] Is the other user able to see the event and vote in which option he wants?
-*Can see the event, but cant vote*
-*OPTIONAL: notification about new event could include hyperlink to event*
+[x] Is the other user able to see the event and vote in which option he wants?
 
 # Chat
 Try and open two browsers (ex: Chrome and Firefox), log in with different users in each one. Then with one of the users try to send a private message to the other user.
@@ -137,11 +135,10 @@ Open two browsers, log in with different users on each browser, follow each othe
 
 Open two browsers, log in with different users on each browser, create a group with one of them and with the other send a group entering request.
 [x] Did the other user received a notification regarding the group entering request?
-*OPTIONAL: Join group btn after sending join request could be disabled maybe?*
 
 Open two browsers, log in with different users on each browser, become part of the same group with both users and with one of the users create an event.
-[ ] Did the other user received a notification regarding the creation of the event?
-*Notif received, but unable to close/delete it or respond to event -> goig or not going*
+[x] Did the other user received a notification regarding the creation of the event?
+
 #Docker
 Try and run the application, then use the docker command "docker ps -a"
 [x] Can you confirm that there are two containers, one for the backend and the other for the frontend?
