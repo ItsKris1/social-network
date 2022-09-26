@@ -105,6 +105,9 @@ export default {
                 case "GROUP_REQUEST":
                     endpoint = "responseGroupRequest"
                     break;
+                case "CHAT_REQUEST":
+                    endpoint = "responseChatRequest"
+                    break;
             }
             const response = await fetch(`http://localhost:8081/${endpoint}`, {
                 credentials: "include",

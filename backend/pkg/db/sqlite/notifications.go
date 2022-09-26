@@ -97,3 +97,34 @@ func (repo *NotifRepository) GetAll(userId string) ([]models.Notification, error
 	}
 	return notifications, nil
 }
+
+func (repo *NotifRepository)GetCahtNotifById(notificationId string) (models.Notification, error){
+row := repo.DB.QueryRow("SELECT content, user_id, sender FROM notifications WHERE notif_id = ?", notificationId)
+	var notif models.Notification
+	if err := row.Scan(&notif.Content, &notif.TargetID, &notif.Sender); err != nil {
+		return notif, err
+	}
+	return notif, nil
+}
+
+func (repo *NotifRepository)CheckIfChatRequestExists(senderId, receiverId string)(bool, error){
+		row := repo.DB.QueryRow("SELECT COUNT() FROM notifications WHERE user_id = ? AND sender = ? AND type = 'CHAT_REQUEST' ", receiverId, senderId)
+	var resp int
+	if err := row.Scan(&resp); err != nil {
+		return false, err
+	}
+	if resp >= 1 {
+		return true, nil
+	} else {
+		return false, nil
+	}
+}
+
+func (repo *NotifRepository)GetContentFromChatRequest(senderId, receiverId string)(string, error){
+	row := repo.DB.QueryRow("SELECT content FROM notifications WHERE user_id = ? AND sender = ? AND type = 'CHAT_REQUEST' ", receiverId, senderId)
+	var resp string
+	if err := row.Scan(&resp); err != nil {
+		return resp, err
+	}
+	return resp, nil
+}

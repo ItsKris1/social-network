@@ -114,7 +114,7 @@ export default {
         async getUsersIFollow() {
             await this.$store.dispatch("getMyUserID");
 
-            const response = await fetch('http://localhost:8081/following?userId=' + this.$store.state.id, {
+            const response = await fetch('http://localhost:8081/chatList?userId=' + this.$store.state.id, {
                 credentials: 'include'
             });
 

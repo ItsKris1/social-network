@@ -13,5 +13,7 @@ func DefineNotificationMsg(notif *models.Notification) {
 		notif.Content = " invited you to join group "
 	case "GROUP_REQUEST":
 		notif.Content = " has requested to join your group "
+	case "CHAT_REQUEST":
+		notif.Content = " wants to chat with you"
 	}
 }

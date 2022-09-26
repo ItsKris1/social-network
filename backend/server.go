@@ -110,6 +110,8 @@ func setRoutes(handler *handlers.Handler, wsServer *ws.Server) http.Handler {
 	mux.HandleFunc("/newMessage", handler.Auth(func(w http.ResponseWriter, r *http.Request) {
 		handler.NewMessage(wsServer, w, r)
 	})) // new chat message
+	mux.HandleFunc("/chatList", handler.Auth(handler.ChatList)) //get list of users to display in chatbox
+	mux.HandleFunc("/responseChatRequest", handler.Auth(handler.ResponseChatRequest)) // response to chat request
 
 	/* ---------------------------- websocket server ---------------------------- */
 	mux.HandleFunc("/ws", handler.Auth(func(w http.ResponseWriter, r *http.Request) {
