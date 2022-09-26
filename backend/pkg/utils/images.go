@@ -12,7 +12,7 @@ const defaultImage = "imageUpload/default.svg"
 
 // Creates new file and reads image bytes into it
 // returns path to new image
-//returns default avatar or provided one
+// returns default avatar or provided one
 func SaveAvatar(r *http.Request) string {
 	// Read data from request
 	file, fileHeader, errRead := r.FormFile("avatar")
@@ -36,7 +36,8 @@ func SaveAvatar(r *http.Request) string {
 		return defaultImage
 	}
 	localFile.Write(fileData)
-	return strings.Replace(localFile.Name(), "\\", "/", -1)
+	newFilename := strings.Split(localFile.Name(), "\\")[1]
+	return "imageUpload/" + newFilename
 }
 
 /* ------------------------- for posts and comments ------------------------- */

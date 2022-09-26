@@ -22,12 +22,11 @@
                               required
                               placeholder="Describe here"></textarea>
                 </div>
-                <!--    @inputCleared="toggleClearInput"
-                                     :clear-input="clearInput" -->
+    
                 <MultiselectDropdown
 
                                      v-model:checkedOptions="checkedFollowers"
-                                     :content="getMyFollowersNames"
+                                     :content="getMyFollowersList"
                                      label-name="Invite users"
                                      placeholder="Select users" />
 
@@ -63,9 +62,9 @@ export default {
     },
 
     computed: {
-        getMyFollowersNames() {
-            return this.$store.getters.getMyFollowersNames;
-        }
+        getMyFollowersList() {
+            return this.$store.getters.followers;
+        },
     },
 
     methods: {
@@ -112,7 +111,7 @@ export default {
             let arrOfIDS = [];
             for (let name of this.checkedFollowers) {
                 for (let obj of this.$store.state.myFollowers) {
-                    if (obj.nickname === name) {
+                    if (obj.nickname === name.nickname) {
                         arrOfIDS.push(obj.id)
                     }
                 }

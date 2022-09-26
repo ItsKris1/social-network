@@ -16,7 +16,7 @@
             <template #body>
 
                 <MultiselectDropdown v-model:checkedOptions="checkedNames" placeholder="Select followers"
-                    :content="allFollowersNames" :clearInput="clearInput" @inputCleared="toggleClearInput" />
+                    :content="listForShowing" />
                 <button class="btn form-submit" @click="toggleModal() ; inviteUsersToGroup()">Invite</button>
             </template>
         </Modal>
@@ -29,6 +29,9 @@ import Modal from './Modal.vue';
 import MultiselectDropdown from './MultiselectDropdown.vue';
 export default {
     name: "GroupMembers",
+      props: {
+        isMember: false
+    },
     data() {
         return {
             groupMembers: null,
@@ -47,7 +50,7 @@ export default {
 
     computed: {
         allFollowersNames() {
-            return this.listForShowing.map(user => user.nickname)
+            return this.listForShowing
         }
     },
 
@@ -57,37 +60,12 @@ export default {
             // this.getFollowers();
         }
     },
-    props: {
-        isMember: false
-    },
+  
     methods: {
-
         async getFollowers() {
-            let id
-            await fetch('http://localhost:8081/currentUser', {
-                credentials: "include"
-            })
-                .then((response => response.json()))
-                .then((json => {
-                    // console.log("CurrentUser: ", json);
-                    id = json.users[0].id
-                }));
+            this.$store.dispatch("getMyFollowers");
+            this.createFollowersListForShowing(this.$store.state.myFollowers, this.groupMembers)
 
-
-            await fetch('http://localhost:8081/followers?userId=' + id, {
-                credentials: "include"
-            })
-                .then((response => response.json()))
-                .then((json => {
-                    // console.log("Followers:", json);
-                    this.followers = json.users;
-
-                }))
-                .then(() => {
-                    if (this.followers !== null) {
-                        this.createFollowersListForShowing(this.followers, this.groupMembers)
-                    }
-                })
         },
         async getGroupMembers() {
             await fetch("http://localhost:8081/groupMembers?groupId=" + this.$route.params.id, {
@@ -100,7 +78,7 @@ export default {
                 }));
         },
         createFollowersListForShowing(followers, members) {
-
+            this.listForShowing = [];
             let isUserInGroup = false
             for (let i = 0; i < Object.keys(followers).length; i++) {
                 for (let j = 0; j < Object.keys(members).length; j++) {
@@ -122,12 +100,11 @@ export default {
             let arrOfIDS = [];
             for (let name of this.checkedNames) {
                 for (let obj of this.listForShowing) {
-                    if (obj.nickname === name) {
+                    if (obj.nickname === name.nickname) {
                         arrOfIDS.push(obj.id)
                     }
                 }
             }
-
             return arrOfIDS
 
         },
@@ -158,10 +135,6 @@ export default {
                     this.clearInput = true;
                     // this.groupMembers = json.users;
                 }));
-        },
-
-        toggleClearInput() {
-            this.clearInput = !this.clearInput
         },
     },
     components: { Modal, MultiselectDropdown }
