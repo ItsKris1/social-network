@@ -1,5 +1,5 @@
 <template>
-    <div v-if="isAdmin && this.joinRequests.length > 0" class="right-section">
+    <div v-if="isAdmin && this.joinRequests.length > 0">
         <div class="item-list__wrapper" id="requests">
             <h3>Requests</h3>
             <ul class="item-list">
@@ -8,7 +8,7 @@
                         <div class="row1">
                             <img class="small" :src="'http://localhost:8081/' + notif.user.avatar">
                             <div>
-                                <span class="who">{{ notif.user.nickname }}</span>
+                                {{ notif.user.nickname }}
                             </div>
                         </div>
                         <div class="row2">
@@ -16,6 +16,7 @@
                             <i class="uil uil-check accept" @click="reactToRequest(notif.id,'accept')"></i>
                         </div>
                     </li>
+
                 </div>
             </ul>
         </div>
@@ -73,3 +74,15 @@ export default {
 
 }
 </script>
+
+<style scoped>
+
+#requests .item-list {
+    gap: 10px;
+}
+
+#requests .item-list li {
+    justify-content: space-between;
+    gap: 20px;
+}
+</style>
