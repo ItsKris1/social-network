@@ -137,6 +137,21 @@ export default {
 
             commit('updateUnreadMessages', unreadMsgs);
         },
+
+        addNewChat({commit, state}, chatBox) {
+            let chats = state.openChats;
+            chats.push(chatBox);
+            commit("updateOpenChats", chats);
+        },
+
+        removeChat({commit, state}, name) {
+            let newChats = state.openChats.filter((chat) => {
+                return chat.name !== name
+            });
+
+            commit("updateOpenChats", newChats);
+        },
+
     },
 
 }

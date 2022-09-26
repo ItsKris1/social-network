@@ -1,7 +1,7 @@
 <template>
 
     <div class="messaging-wrapper" ref="messagingWrapper">
-        <ChatBox v-for="chat in chats" v-bind="chat" @closeChat="removeChat" :key="chat.receiverId"></ChatBox>
+        <ChatBox v-for="chat in openChats" v-bind="chat" @closeChat="removeChat" :key="chat.receiverId"></ChatBox>
 
         <div class=" messaging" @click="toggleShowContent">
 
@@ -17,6 +17,21 @@
                     v-if="usersIFollow.type && usersIFollow.users !== null">
 
                     <li v-for="user in usersIFollow.users">
+                        <div class="user">
+                            <div class="user-picture small"></div>
+                            <div class="item-text"
+                                 @click.stop="openChat($event, { receiverId: user.id, type: 'PERSON' })">
+                                {{ user.nickname }}</div>
+                        </div>
+
+                        <p class="unreadMessagesCount"
+                           v-if="totalUnreadMessagesCount(user.id, 'PERSON') !== 0">
+                            {{ totalUnreadMessagesCount(user.id, 'PERSON') }}</p>
+
+                    </li>
+
+
+                    <li v-for="user in usersIDontFollow">
                         <div class="user">
                             <div class="user-picture small"></div>
                             <div class="item-text"
@@ -91,7 +106,8 @@ export default {
 
     computed: {
         ...mapState({
-            userGroups: state => state.groups.userGroups
+            userGroups: state => state.groups.userGroups,
+            openChats: state => state.chat.openChats
         }),
 
         ...mapGetters(['getUnreadMessagesCount', 'getUnreadGroupMessagesCount']),
@@ -164,11 +180,11 @@ export default {
         removeChat(name) {
             // console.log(name)
             // console.log("Removing chat")
-            this.chats = this.chats.filter((chat) => {
-                return chat.name !== name
-            })
+            // this.chats = this.chats.filter((chat) => {
+            //     return chat.name !== name
+            // })
 
-            this.$store.commit("updateOpenChats", this.chats)
+            this.$store.dispatch("removeChat", name)
         },
 
 

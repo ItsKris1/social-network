@@ -175,24 +175,26 @@ export default {
                 // only broadcast messages when participants(sender and reciever) chat is open
 
                 const isParticipantsChatOpen = state.chat.openChats.some((chat) => {
-                    // chat is open with receiver
-                    if (chat.receiverId === data.chatMessage.receiverId) {
+                    // Chat is open with the person who sent the message
+                    if (data.chatMessage.type === "PERSON" && data.chatMessage.senderId  === chat.receiverId) {
                         return true
                     }
 
-                    // chat is open with sender
-                    // check type cuz we may have a scenario where we have the chat open with sender
-                    // but not the group and that will cause to broadcast the message to GROUP chat;
-                    if (data.chatMessage.type === "PERSON" && chat.receiverId === data.chatMessage.senderId) {
+                    if (data.chatMessage.type === "GROUP" && data.chatMessage.receiverId === chat.receiverId) {
                         return true
                     }
+
+
                 })
                 if (isParticipantsChatOpen) {
                     // console.log("Dispatching a message..")
                     dispatch("addNewChatMessage", data.chatMessage)
                     dispatch("markMessageRead", data.chatMessage)
                 } else {
-                    // console.log("Unread msg..")
+                    console.log("Unread msg..")
+    
+                    // if message was received from user who is not in the user list, add that
+
                     dispatch("addUnreadChatMessage", data.chatMessage)
                 }
             } else if (data.action == "notification") {

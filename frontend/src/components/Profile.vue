@@ -21,9 +21,9 @@
                         <component v-else :is="displayBtn" v-bind="{ user }" @follow="checkFollowRequest" @unfollow="unfollow"></component>
 
                         <!-- Send message button -->
-                        <button v-if="showSendButton"
-                                class="btn">Send message
-                            <i class="uil uil-message"></i></button>
+                        <!-- <button v-if="showSendButton"
+                                class="btn" @click="addChat">Send message
+                            <i class="uil uil-message"></i></button> -->
 
                     </div>
 
@@ -170,7 +170,20 @@ export default {
                     this.posts = r.posts
                 });
                 // this.flag = false
-        },        
+        },
+        
+        addChat() {
+            // check if user doesnt have a chat with that person already
+            // ....
+
+            let newChat = {
+                name: this.user.nickname,
+                receiverId: this.user.id,
+                type: "PERSON"
+            };
+
+            this.$store.dispatch("addNewChat", newChat);
+        }
     },
     watch: { //watching changes in route
         $route() {
