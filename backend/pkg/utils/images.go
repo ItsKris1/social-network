@@ -36,8 +36,7 @@ func SaveAvatar(r *http.Request) string {
 		return defaultImage
 	}
 	localFile.Write(fileData)
-	newFilename := strings.Split(localFile.Name(), "\\")[1]
-	return "imageUpload/" + newFilename
+	return strings.Replace(localFile.Name(), "\\", "/", -1)
 }
 
 /* ------------------------- for posts and comments ------------------------- */
