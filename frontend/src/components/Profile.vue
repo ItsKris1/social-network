@@ -141,7 +141,8 @@ export default {
             this.user.following = !this.user.following
         },
         unfollow(){
-            this.updateProfileData()
+            this.updateProfileData();
+            this.$store.dispatch("fetchChatUserList");
         },
         async getFollowers() {
             await fetch('http://localhost:8081/followers?userId=' + this.$route.params.id, {

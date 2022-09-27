@@ -78,6 +78,8 @@ export default {
     mounted() { },
 
     unmounted() {
+        console.log("Unmounted!")
+        console.log(" ")
         this.$store.commit("updateUnreadMessages", [])
     },
 
