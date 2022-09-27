@@ -100,6 +100,8 @@ func (handler *Handler) NewMessage(wsServer *ws.Server, w http.ResponseWriter, r
 	/* -------------------- attach sender id ------------------------------------ */
 	msg.SenderId = r.Context().Value(utils.UserKey).(string)
 
+	var newChatFlag = ""; //flag is raised with valu "NEW" if tha chat does not exist for user yet
+
 	// check if receiver is following current user
 	isFollowingBack, err := handler.repos.UserRepo.IsFollowing(msg.SenderId, msg.ReceiverId)
 	if err != nil {
@@ -150,6 +152,8 @@ func (handler *Handler) NewMessage(wsServer *ws.Server, w http.ResponseWriter, r
 			}
 			utils.RespondWithSuccess(w, "New request saved", 200)
 				return
+		}else if status == "PUBLIC" && !hasHistory{
+			newChatFlag = "NEW"
 		}
 	}
 	/* --------------------------- generate message id -------------------------- */
@@ -169,7 +173,7 @@ func (handler *Handler) NewMessage(wsServer *ws.Server, w http.ResponseWriter, r
 	if msg.Type == "PERSON" {
 		for client := range wsServer.Clients {
 			if client.ID == msg.ReceiverId {
-				client.SendChatMessage(msg)
+				client.SendChatMessage(msg, newChatFlag)
 			}
 		}
 	} else if msg.Type == "GROUP" { //incase of group find and respond to all recievers
@@ -189,7 +193,7 @@ func (handler *Handler) NewMessage(wsServer *ws.Server, w http.ResponseWriter, r
 					continue
 				}
 				if client.ID == allMembers[i].ID {
-					client.SendChatMessage(msg)
+					client.SendChatMessage(msg, "")
 				}
 			}
 
