@@ -191,10 +191,11 @@ export default {
                     dispatch("addNewChatMessage", data.chatMessage)
                     dispatch("markMessageRead", data.chatMessage)
                 } else {
-                    console.log("Unread msg..")
+                    // console.log("Unread msg..", data.chatMessage)
+                    if (data.message === "NEW") {
+                        dispatch("fetchChatUserList");
+                    }
     
-                    // if message was received from user who is not in the user list, add that
-
                     dispatch("addUnreadChatMessage", data.chatMessage)
                 }
             } else if (data.action == "notification") {

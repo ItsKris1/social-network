@@ -6,6 +6,7 @@ export default {
 
         unreadMessages: [],
         openChats: [],
+        chatUserList: [],
     }),
 
     getters: {
@@ -68,6 +69,10 @@ export default {
 
         updateUnreadMessages(state, unreadMsgs) {
             state.unreadMessages = unreadMsgs
+        },
+
+        updateChatUserList(state, userList) {
+            state.chatUserList = userList
         }
 
     },
@@ -151,6 +156,25 @@ export default {
 
             commit("updateOpenChats", newChats);
         },
+
+
+        addChatUser() {
+
+        },
+
+        async fetchChatUserList({rootState, commit, dispatch}) {
+            if (rootState.id == "") {
+                await dispatch("getMyUserID");
+            }
+
+            const response = await fetch('http://localhost:8081/chatList?userId=' + rootState.id, {
+                credentials: 'include'
+            });
+
+            const data = await response.json();
+
+            commit("updateChatUserList", data.users);
+        }
 
     },
 

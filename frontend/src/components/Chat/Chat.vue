@@ -13,10 +13,9 @@
             </div>
 
             <div class="messaging-content" v-show="showContent">
-                <ul class="item-list"
-                    v-if="usersIFollow.type && usersIFollow.users !== null">
+                <ul class="item-list">
 
-                    <li v-for="user in usersIFollow.users">
+                    <li v-for="user in chatUserList">
                         <div class="user">
                             <div class="user-picture small"></div>
                             <div class="item-text"
@@ -83,7 +82,7 @@ export default {
     },
 
     created() {
-        this.getUsersIFollow();
+        this.$store.dispatch("fetchChatUserList");
         this.$store.dispatch("getUserGroups");
         this.fetchUnreadMessages();
     },
@@ -91,7 +90,8 @@ export default {
     computed: {
         ...mapState({
             userGroups: state => state.groups.userGroups,
-            openChats: state => state.chat.openChats
+            openChats: state => state.chat.openChats,
+            chatUserList: state => state.chat.chatUserList
         }),
 
         ...mapGetters(['getUnreadMessagesCount', 'getUnreadGroupMessagesCount']),
