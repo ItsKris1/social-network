@@ -80,10 +80,15 @@ export default {
                 // remove the notification
                 this.$store.dispatch("removeNotification", notification.id);
             }
+
+            if (!this.hasNotifications) {
+                this.toggleShowNotifications();
+            }
         },
         toggleShowNotifications() {
             this.showNotifications = !this.showNotifications;
         },
+
         async fetchNotifications() {
             const response = await fetch("http://localhost:8081/notifications", {
                 credentials: "include"
@@ -124,12 +129,22 @@ export default {
                 // update user groups for live update
                 this.$store.dispatch("addUserGroup", notification.group);
             }
+
+            if (notification.type === "CHAT_REQUEST" && reqResponse === "accept") {
+                // update user groups for live update
+                console.log("NOTIFICATION", notification)
+                this.$store.dispatch("fetchChatUserList");
+            }
             // remove the notification
             this.$store.dispatch("removeNotification", notification.id);
+
+            // this.checkNotificationsLength();
+
+            if (!this.hasNotifications) {
+                this.toggleShowNotifications();
+            }
         },
-        async removeEventNotif() {
-            // TODO
-        },
+     
         isDataValid(resp) {
             return resp.type === "Success" ? true : false;
         },
