@@ -114,7 +114,7 @@ export default {
         async getUsersIFollow() {
             await this.$store.dispatch("getMyUserID");
 
-            const response = await fetch('http://localhost:8081/following?userId=' + this.$store.state.id, {
+            const response = await fetch('http://localhost:8081/chatList?userId=' + this.$store.state.id, {
                 credentials: 'include'
             });
 
@@ -138,25 +138,24 @@ export default {
         openChat(e, obj) {
             // console.log("Trying to add a chatbox")
             // console.log(e.target.textContent)
-            const found = this.chats.some(chat => chat.name === e.target.textContent);
+            const found = this.openChats.some(chat => chat.name === e.target.textContent);
             if (found) {
                 return
             };
 
             if (this.$refs.messagingWrapper.clientWidth + 300 > window.innerWidth) {
-                this.chats.shift();
+                this.openChats.shift();
             }
-            this.chats.push({
+
+            this.$store.dispatch("addNewChat", {
                 "name": e.target.textContent,
                 ...obj
-            });
-            this.$store.commit("updateOpenChats", this.chats)
+            })
 
             this.$store.dispatch("removeUnreadMessages", { receiverId: obj.receiverId, type: obj.type })
 
             if (Array.isArray(this.unreadMsgsFromDB)) {
                 this.unreadMsgsFromDB = this.unreadMsgsFromDB.filter((msg) => msg.id !== obj.receiverId)
-
             }
         },
 
