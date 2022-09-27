@@ -5,6 +5,7 @@ export default {
         newGroupChatMessages: [],
 
         unreadMessages: [],
+        unreadMsgsStatsFromDB: [],
         openChats: [],
         chatUserList: [],
     }),
@@ -51,7 +52,19 @@ export default {
             })
 
             return userUnreadMsgs.length
-        }
+        },
+
+        getUnreadMsgsCountFromDB: (state) => (userId) => {
+            if (state.unreadMsgsStatsFromDB === null) {
+                return 0
+            }
+            const userMsgObj = state.unreadMsgsStatsFromDB.find((msg) => msg.id === userId)
+            if (userMsgObj === undefined) {
+                return 0
+            }
+
+            return userMsgObj.unreadMsgCount
+        },
     },
 
     mutations: {
@@ -71,6 +84,10 @@ export default {
             state.unreadMessages = unreadMsgs
         },
 
+        updateUnreadMsgsFromDBCount(state, unreadMsgsFromDBStats) {
+            state.unreadMsgsStatsFromDB = unreadMsgsFromDBStats
+        },
+
         updateChatUserList(state, userList) {
             state.chatUserList = userList
         }
@@ -78,6 +95,16 @@ export default {
     },
 
     actions: {
+        async fetchUnreadMessages({state}) {
+            const response = await fetch('http://localhost:8081/unreadMessages', {
+                credentials: 'include'
+            });
+            const data = await response.json();
+            console.log("/unReadmessages data", data)
+            state.unreadMsgsStatsFromDB = data.chatStats;
+
+        },
+
         async markMessageRead(context, chatMessage) {
             const response = await fetch('http://localhost:8081/messageRead', {
                 credentials: 'include',

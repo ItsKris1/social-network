@@ -1,5 +1,4 @@
 <template>
-
     <div class="messaging-wrapper" ref="messagingWrapper">
         <ChatBox v-for="chat in openChats" v-bind="chat" @closeChat="removeChat" :key="chat.receiverId"></ChatBox>
 
@@ -70,8 +69,6 @@ export default {
             showContent: false,
             chats: [],
             usersIFollow: [],
-            unreadMsgsFromDB: [],
-
         }
     },
 
@@ -86,24 +83,26 @@ export default {
     created() {
         this.$store.dispatch("fetchChatUserList");
         this.$store.dispatch("getUserGroups");
-        this.fetchUnreadMessages();
+        this.$store.dispatch("fetchUnreadMessages");
     },
 
     computed: {
         ...mapState({
             userGroups: state => state.groups.userGroups,
             openChats: state => state.chat.openChats,
-            chatUserList: state => state.chat.chatUserList
+            chatUserList: state => state.chat.chatUserList,
+            unreadMsgsStatsFromDB: state => state.chat. unreadMsgsStatsFromDB,
+           
         }),
 
-        ...mapGetters(['getUnreadMessagesCount', 'getUnreadGroupMessagesCount']),
+        ...mapGetters(['getUnreadMessagesCount', 'getUnreadGroupMessagesCount', 'getUnreadMsgsCountFromDB']),
 
         hasUnreadMessages() {
             if (this.$store.state.chat.unreadMessages.length > 0) {
                 return true
             }
 
-            if (this.unreadMsgsFromDB !== null && this.unreadMsgsFromDB.length > 0) {
+            if (this.unreadMsgsStatsFromDB !== null && this.unreadMsgsStatsFromDB.length > 0) {
                 return true
             }
 
@@ -126,17 +125,7 @@ export default {
 
         },
 
-        async fetchUnreadMessages() {
-            const response = await fetch('http://localhost:8081/unreadMessages', {
-                credentials: 'include'
-            });
-            const data = await response.json();
-            // console.log("/unReadmessages data", data)
-            this.unreadMsgsFromDB = data.chatStats;
-
-        },
-
-
+    
         openChat(e, obj) {
             // console.log("Trying to add a chatbox")
             // console.log(e.target.textContent)
@@ -156,45 +145,31 @@ export default {
 
             this.$store.dispatch("removeUnreadMessages", { receiverId: obj.receiverId, type: obj.type })
 
-            if (Array.isArray(this.unreadMsgsFromDB)) {
-                this.unreadMsgsFromDB = this.unreadMsgsFromDB.filter((msg) => msg.id !== obj.receiverId)
+            if (Array.isArray(this.unreadMsgsStatsFromDB)) {
+                console.log("Trying to clear..", this.unreadMsgsStatsFromDB)
+                // // id -> senderID
+                let unreadMsgsStatsFromDB = this.unreadMsgsStatsFromDB.filter((msgStats) => msgStats.id !== obj.receiverId);
+                console.log("After clearing", unreadMsgsStatsFromDB);
+                this.$store.commit("updateUnreadMsgsFromDBCount", unreadMsgsStatsFromDB)
+                // this.$store.dispatch("fetchUnreadMessages");
             }
+
+            // console.log("FFF", this.unreadMsgsStatsFromDB)
         },
 
 
         removeChat(name) {
-            // console.log(name)
-            // console.log("Removing chat")
-            // this.chats = this.chats.filter((chat) => {
-            //     return chat.name !== name
-            // })
-
             this.$store.dispatch("removeChat", name)
         },
-
-
-        unreadMsgsFromDBCount(userId) {
-
-            if (this.unreadMsgsFromDB === null) {
-                return 0
-            }
-            const userMsgObj = this.unreadMsgsFromDB.find((msg) => msg.id === userId)
-            if (userMsgObj === undefined) {
-                return 0
-            }
-
-            return userMsgObj.unreadMsgCount
-        },
-
 
 
         // adds to the previous unread messages
         // unread messages from database and current session
         totalUnreadMessagesCount(receiverId, type) {
             if (type === "PERSON") {
-                return this.getUnreadMessagesCount(receiverId) + this.unreadMsgsFromDBCount(receiverId)
+                return this.getUnreadMessagesCount(receiverId) + this.getUnreadMsgsCountFromDB(receiverId)
             } else {
-                return this.getUnreadGroupMessagesCount(receiverId) + this.unreadMsgsFromDBCount(receiverId)
+                return this.getUnreadGroupMessagesCount(receiverId) + this.getUnreadMsgsCountFromDB(receiverId)
             }
         },
 

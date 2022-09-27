@@ -134,6 +134,8 @@ export default {
                 // update user groups for live update
                 // console.log("NOTIFICATION", notification)
                 this.$store.dispatch("fetchChatUserList");
+                this.$store.dispatch("fetchUnreadMessages");
+                
             }
             // remove the notification
             this.$store.dispatch("removeNotification", notification.id);
