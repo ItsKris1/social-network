@@ -61,10 +61,11 @@ func (client *Client) SendNotification(notif models.Notification) {
 	client.send <- message.encode()
 }
 
-func (client *Client) SendChatMessage(msg models.ChatMessage) {
+func (client *Client) SendChatMessage(msg models.ChatMessage, flag string) {
 	message := WsMessage{
 		Action:      ChatAction,
 		ChatMessage: msg,
+		Message: flag,
 	}
 
 	client.send <- message.encode()
