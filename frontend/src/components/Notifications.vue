@@ -130,9 +130,9 @@ export default {
                 this.$store.dispatch("addUserGroup", notification.group);
             }
 
-            if (notification.type === "CHAT_REQUEST" && reqResponse === "accept") {
+            if (notification.type === "CHAT_REQUEST" || notification.type == "FOLLOW" && reqResponse === "accept") {
                 // update user groups for live update
-                console.log("NOTIFICATION", notification)
+                // console.log("NOTIFICATION", notification)
                 this.$store.dispatch("fetchChatUserList");
             }
             // remove the notification
