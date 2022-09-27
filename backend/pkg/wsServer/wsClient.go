@@ -46,6 +46,8 @@ func (client *Client) SendNotification(notif models.Notification) {
 	case "GROUP_REQUEST":
 		notif.User, _ = client.repos.UserRepo.GetDataMin(notif.Content)
 		notif.Group, _ = client.repos.GroupRepo.GetData(notif.TargetID)
+	case "CHAT_REQUEST":
+		notif.User, _ = client.repos.UserRepo.GetDataMin(notif.Sender)
 	}
 	/* ---------------------------- add message text ---------------------------- */
 	utils.DefineNotificationMsg(&notif)

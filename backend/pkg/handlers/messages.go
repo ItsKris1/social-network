@@ -6,6 +6,7 @@ import (
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
 	ws "social-network/pkg/wsServer"
+	"strings"
 )
 
 // get all previous messages for chat
@@ -40,6 +41,19 @@ func (handler *Handler) Messages(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				utils.RespondWithError(w, "Error on marking message as read", 200)
 				return
+			}
+		}
+		// if no messages so far, check if request made and add message
+		if len(messages) == 0 {
+			requetExists, err := handler.repos.NotifRepo.CheckIfChatRequestExists(msgIn.SenderId, msgIn.ReceiverId)
+			if err != nil {
+				utils.RespondWithError(w, "Error on checking chat history", 200)
+				return
+			}
+			if requetExists {
+				msgContent, _ := handler.repos.NotifRepo.GetContentFromChatRequest(msgIn.SenderId, msgIn.ReceiverId)
+				newMessage:=models.ChatMessage{ID:"0",SenderId: msgIn.SenderId, ReceiverId: msgIn.ReceiverId, Content:msgContent, Type:"PERSON" }
+				messages = append(messages, newMessage)
 			}
 		}
 	} else if msgIn.Type == "GROUP" {
@@ -82,9 +96,63 @@ func (handler *Handler) NewMessage(wsServer *ws.Server, w http.ResponseWriter, r
 		utils.RespondWithError(w, "Error on reading the incomming message", 200)
 		return
 	}
-
-	/* -------------------- attach sender id and generate new id ------------------- */
+	
+	/* -------------------- attach sender id ------------------------------------ */
 	msg.SenderId = r.Context().Value(utils.UserKey).(string)
+
+	// check if receiver is following current user
+	isFollowingBack, err := handler.repos.UserRepo.IsFollowing(msg.SenderId, msg.ReceiverId)
+	if err != nil {
+		utils.RespondWithError(w, "Error on saving checking status", 200)
+		return
+	}
+	// if he is private and have no chat history, create notification insted of saving msg
+	if !isFollowingBack{
+		status, err :=  handler.repos.UserRepo.GetStatus(msg.ReceiverId)
+		if err != nil {
+			utils.RespondWithError(w, "Error on saving checking status", 200)
+			return
+		}
+		hasHistory, err := handler.repos.MsgRepo.HasHistory(msg.SenderId, msg.ReceiverId)
+		if err != nil {
+			utils.RespondWithError(w, "Error on checking chat history", 200)
+			return
+		}
+		if status == "PRIVATE" && !hasHistory{
+			// check if request is already made
+			requestExists, err :=  handler.repos.NotifRepo.CheckIfChatRequestExists(msg.SenderId, msg.ReceiverId);
+			if err != nil {
+				utils.RespondWithError(w, "Internal server error", 200)
+				return
+			}
+			if requestExists{
+				utils.RespondWithError(w, "Chat request already saved.\n Wait for user to respond to your request.", 200)
+				return
+			}
+			// save msg in notification table
+			newNotif := models.Notification{
+				ID:       utils.UniqueId(),
+				TargetID: msg.ReceiverId,
+				Type: "CHAT_REQUEST",
+				Content: msg.Content,
+				Sender: msg.SenderId,
+			}
+			err = handler.repos.NotifRepo.Save(newNotif)
+			if err != nil {
+				utils.RespondWithError(w, "Internal server error", 200)
+				return
+			}
+			// NOTIFY  RECEIVER ABOUT THE NEW CHAT REQUEST IF ONLINE
+			for client := range wsServer.Clients {
+				if client.ID == newNotif.TargetID {
+					client.SendNotification(newNotif)
+				}
+			}
+			utils.RespondWithSuccess(w, "New request saved", 200)
+				return
+		}
+	}
+	/* --------------------------- generate message id -------------------------- */
 	msg.ID = utils.UniqueId()
 	/* ---------------------------- save in database ---------------------------- */
 	err = handler.repos.MsgRepo.Save(msg)
@@ -184,4 +252,52 @@ func (handler *Handler) MessageRead(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	utils.RespondWithSuccess(w, "Message marked as read successfuly", 200)
+}
+
+func (handler *Handler) ResponseChatRequest(w http.ResponseWriter, r *http.Request) {
+	w = utils.ConfigHeader(w)
+	if r.Method != "POST" {
+		utils.RespondWithError(w, "Error on form submittion", 200)
+		return
+	}
+	/* ---------------------------- read incoming data --------------------------- */
+	// Try to decode the JSON request to a new response
+	type Response struct {
+		RequestID string `json:"requestId"`
+		Response  string `json:"response"` // ACCEPT or DECLINE
+	}
+	var resp Response
+	err := json.NewDecoder(r.Body).Decode(&resp)
+	if err != nil {
+		utils.RespondWithError(w, "Error on form submittion", 200)
+		return
+	}
+	if strings.ToUpper(resp.Response) == "ACCEPT" {
+		notifData, err := handler.repos.NotifRepo.GetCahtNotifById(resp.RequestID)
+		if err != nil {
+			utils.RespondWithError(w, "Error on getting notification", 200)
+			return
+		}
+		// save new message
+		newMsg := models.ChatMessage{
+			ID: utils.UniqueId(),
+			SenderId: notifData.Sender,
+			ReceiverId: notifData.TargetID,
+			Type:"PERSON",
+			Content: notifData.Content,
+		}
+		err = handler.repos.MsgRepo.Save(newMsg)
+		if err != nil {
+			utils.RespondWithError(w, "Error on saving message", 200)
+			return
+		}
+	}
+	/* ----------------------- delete pending notification ---------------------- */
+	err = handler.repos.NotifRepo.Delete(resp.RequestID)
+	if err != nil {
+		utils.RespondWithError(w, "Internal server error", 200)
+		return
+	}
+
+	utils.RespondWithSuccess(w, "Response successful", 200)
 }

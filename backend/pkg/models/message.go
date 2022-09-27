@@ -28,4 +28,9 @@ type MsgRepository interface {
 	MarkAsReadGroup(ChatMessage) error
 
 	SaveGroupMsg(ChatMessage) error
+
+	//returns list of user id's that hve chat history with provided user
+	GetChatHistoryIds(userId string)(map[string]bool, error)
+	// responds tru if both users have chat history
+	HasHistory(senderId, receiverId string) (bool, error)
 }

@@ -297,3 +297,50 @@ func (handler *Handler) ResponseFollowRequest(w http.ResponseWriter, r *http.Req
 	// notify websocket about notification changes
 	utils.RespondWithSuccess(w, "Response successful", 200)
 }
+
+/* -------------------------------------------------------------------------- */
+/*                                  chat List                                 */
+/* -------------------------------------------------------------------------- */
+func (handler *Handler) ChatList(w http.ResponseWriter, r *http.Request) {
+	w = utils.ConfigHeader(w)
+	// get userId from request
+	query := r.URL.Query()
+	userId := query.Get("userId")
+	// request all  following users
+	followers, errUsers := handler.repos.UserRepo.GetFollowing(userId)
+	if errUsers != nil {
+		utils.RespondWithError(w, "Error on getting data", 200)
+		return
+	}
+	// get users_ids that have a chat history
+	ids,errIds := handler.repos.MsgRepo.GetChatHistoryIds(userId)
+	if errIds != nil {
+		utils.RespondWithError(w, "Error on getting chat history", 200)
+		return
+	}
+	// loop over chat history ids
+	// compare with followers
+	// if not found in folllowers, fetch user data and add to the list
+	for currentId := range ids{
+		isPresent := ContainsUser(followers, currentId)
+		if !isPresent{
+			user, err:= handler.repos.UserRepo.GetDataMin(currentId)
+			if err != nil {
+				utils.RespondWithError(w, "Error on getting chat history data", 200)
+				return
+			}
+			followers = append(followers, user)
+		}
+	}
+
+	utils.RespondWithUsers(w, followers, 200)
+}
+/* --------------------------------- helper --------------------------------- */
+func ContainsUser(list []models.User, id string) bool {
+   for _, value := range list {
+      if value.ID == id {
+         return true
+      }
+   }
+   return false
+}

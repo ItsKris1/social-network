@@ -29,22 +29,6 @@
                             {{ totalUnreadMessagesCount(user.id, 'PERSON') }}</p>
 
                     </li>
-
-
-                    <li v-for="user in usersIDontFollow">
-                        <div class="user">
-                            <div class="user-picture small"></div>
-                            <div class="item-text"
-                                 @click.stop="openChat($event, { receiverId: user.id, type: 'PERSON' })">
-                                {{ user.nickname }}</div>
-                        </div>
-
-                        <p class="unreadMessagesCount"
-                           v-if="totalUnreadMessagesCount(user.id, 'PERSON') !== 0">
-                            {{ totalUnreadMessagesCount(user.id, 'PERSON') }}</p>
-
-                    </li>
-
                 </ul>
 
                 <ul class="item-list" v-if="userGroups !== null">
