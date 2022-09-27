@@ -116,7 +116,7 @@ func (repo *MsgRepository) GetUnreadGroup(userId string) ([]models.ChatStats, er
 func (repo *MsgRepository)GetChatHistoryIds(userId string)(map[string]bool, error){
 	var idmap  = make(map[string]bool)
 	// select ids if current is receiver
-	rowsReceiver, err := repo.DB.Query("SELECT sender_id FROM messages WHERE receiver_id = ? ;", userId)
+	rowsReceiver, err := repo.DB.Query("SELECT sender_id FROM messages WHERE receiver_id = ? AND type = 'PERSON';", userId)
 	if err != nil {
 		return idmap, err
 	}
@@ -126,7 +126,7 @@ func (repo *MsgRepository)GetChatHistoryIds(userId string)(map[string]bool, erro
 		idmap[id] = true
 	}
 	// select ids if current is sender
-	rowsSender, err := repo.DB.Query("SELECT receiver_id FROM messages WHERE sender_id = ? ;", userId)
+	rowsSender, err := repo.DB.Query("SELECT receiver_id FROM messages WHERE sender_id = ? AND type = 'PERSON';", userId)
 	if err != nil {
 		return idmap, err
 	}
