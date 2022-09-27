@@ -130,6 +130,7 @@ export default {
 
         checkFollowRequest(action) {
             if (action === "followedUser") {
+                this.$store.dispatch("fetchChatUserList");
                 this.updateProfileData()
                 this.toggleFollowingThisUser();
 
