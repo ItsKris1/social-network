@@ -41,6 +41,25 @@ func (handler *Handler) UserGroups(w http.ResponseWriter, r *http.Request) {
 	utils.RespondWithGroups(w, groups, 200)
 }
 
+// returns all groups that specified user is a member of or admin
+func (handler *Handler) OtherUserGroups(w http.ResponseWriter, r *http.Request) {
+	w = utils.ConfigHeader(w)
+	// access user id
+	query := r.URL.Query()
+	userId := query.Get("userId")
+	if userId == "" { //check if user id provided in request
+		utils.RespondWithError(w, "Error on getting data", 200)
+		return
+	}
+	// request user Groups
+	groups, errGroups := handler.repos.GroupRepo.GetUserGroups(userId)
+	if errGroups != nil {
+		utils.RespondWithError(w, "Error on getting data", 200)
+		return
+	}
+	utils.RespondWithGroups(w, groups, 200)
+}
+
 // returns info about group - > name, description, id and administrator id
 // also includes group status for current user -> admin / member or pending member request
 func (handler *Handler) GroupInfo(w http.ResponseWriter, r *http.Request) {
@@ -152,7 +171,7 @@ func (handler *Handler) GroupEvents(w http.ResponseWriter, r *http.Request) {
 		going, _ := handler.repos.EventRepo.IsParticipating(events[i].ID, userId)
 		if going {
 			events[i].Going = "YES"
-		}else{
+		} else {
 			events[i].Going = "NO"
 		}
 	}
@@ -369,7 +388,7 @@ func (handler *Handler) NewGroupPost(w http.ResponseWriter, r *http.Request) {
 	utils.RespondWithSuccess(w, "New post created", 200)
 }
 
-//handle when new user wants to join the group
+// handle when new user wants to join the group
 func (handler *Handler) NewGroupRequest(wsServer *ws.Server, w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)
 	// access current user id
@@ -429,7 +448,7 @@ func (handler *Handler) NewGroupRequest(wsServer *ws.Server, w http.ResponseWrit
 	utils.RespondWithSuccess(w, "Request saved successfuly", 200)
 }
 
-//NOT TESTED
+// NOT TESTED
 // handle response from group administrator for requests to join group
 // waits for requestId and response -accept/decline
 func (handler *Handler) ResponseGroupRequest(wsServer *ws.Server, w http.ResponseWriter, r *http.Request) {
@@ -549,7 +568,7 @@ func (handler *Handler) NewGroupInvite(wsServer *ws.Server, w http.ResponseWrite
 	utils.RespondWithSuccess(w, "Invitations saved", 200)
 }
 
-//NOT TESTED
+// NOT TESTED
 func (handler *Handler) ResponseInviteRequest(w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)
 	if r.Method != "POST" {

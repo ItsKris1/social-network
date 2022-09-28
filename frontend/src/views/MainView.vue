@@ -3,7 +3,7 @@
 
     <div id="layout">
         <NewPost />
-        <Groups />
+        <Groups :groups="userGroups"/>
         <AllPosts />
     </div>
 
@@ -16,10 +16,17 @@ import AllPosts from '@/components/AllPosts.vue'
 import Groups from '@/components/Groups.vue'
 import NewGroup from '@/components/NewGroup.vue'
 import MultiselectDropdown from '@/components/MultiselectDropdown.vue'
+import { mapState } from 'vuex';
 
 export default {
     name: 'MainView',
     components: { NavBarOn, NewPost, AllPosts, Groups, NewGroup, MultiselectDropdown },
+    created() {
+        this.$store.dispatch('getUserGroups');
+    },
+    computed: mapState({
+        userGroups: state => state.groups.userGroups,
+    }),
 }
 
 </script>

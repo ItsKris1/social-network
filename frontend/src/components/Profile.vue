@@ -20,11 +20,6 @@
                         <!-- Follow/unfollow button -->
                         <component v-else :is="displayBtn" v-bind="{ user }" @follow="checkFollowRequest" @unfollow="unfollow"></component>
 
-                        <!-- Send message button -->
-                        <!-- <button v-if="showSendButton"
-                                class="btn" @click="addChat">Send message
-                            <i class="uil uil-message"></i></button> -->
-
                     </div>
 
                 </div>
@@ -32,6 +27,9 @@
                     <Following :following="following"/>
                     <Followers :followers="followers" />
                 </div>
+
+                <Groups :groups="profileGroups" v-if="showProfileData"/>
+
 
             </div>
 
@@ -59,9 +57,10 @@ import Followers from './Followers.vue'
 import FollowBtn from './FollowBtn.vue'
 import PrivacyBtn from './PrivacyBtn.vue'
 import UnfollowBtn from './UnfollowBtn.vue'
+import Groups from './Groups.vue'
 export default {
     name: 'Profile',
-    components: { AllMyPosts, Followers, Following, FollowBtn, PrivacyBtn, UnfollowBtn },
+    components: { AllMyPosts, Followers, Following, FollowBtn, PrivacyBtn, UnfollowBtn, Groups },
     data() {
         return {
             // flag: false,
@@ -70,8 +69,11 @@ export default {
             followers: [],
             following: [],
             posts:[],
+
+            profileGroups: null,
         }
     },
+
     created() {
         this.updateProfileData()
     },
@@ -104,6 +106,7 @@ export default {
             this.getFollowers()
             this.getFollowing()
             this.checkProfile()
+            this.getProfileGroups();
         },
         async getUserData() {
             await fetch("http://localhost:8081/userData?userId=" + this.$route.params.id, {
@@ -114,6 +117,19 @@ export default {
                     this.user = json.users[0];
                 });
 
+        },
+
+        async getProfileGroups() {
+            const response = await fetch("http://localhost:8081/otherUserGroups?userId=" + this.$route.params.id, {
+                credentials: 'include',
+            });
+            const data = await response.json();
+
+            if (data.type == "Error") {
+                console.log("/getProfileGroups error: ", data.message)
+            } else {
+                this.profileGroups = data.groups;
+            }
         },
 
         async getMyUserID() {
@@ -220,8 +236,7 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 50px;
-    max-width: max-content;
-    min-width: min-content;
+    max-width: 250px;
     justify-self: flex-end;
 
 }

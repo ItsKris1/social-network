@@ -5,7 +5,8 @@
             <div class="user-picture medium"
                  :style="{ backgroundImage: `url(http://localhost:8081/${postData.author.avatar})` }"></div>
             <div class="post-content">
-                <p class="post-author">{{ postData.author.nickname }}</p>
+                <router-link :to="{name: 'Profile', params: {id: postData.author.id}}" class="post-author">{{ postData.author.nickname }}</router-link>
+
                 <p class="post-body">{{ postData.content }}</p>
                 <img v-if="postData.image" class="post-image" :src="'http://localhost:8081/' + postData.image" alt="">
                 <button v-if="!isCommentsOpen" @click="toggleComments" class="btn ">Comments</button>
@@ -53,7 +54,7 @@
                     <div class="user-picture medium"
                          :style="{ backgroundImage: `url(http://localhost:8081/${comment.author.avatar})` }"></div>
                     <div class="comment-content">
-                        <p class="comment-author">{{ comment.author.nickname }}</p>
+                        <router-link :to="{name: 'Profile', params: {id: comment.author.id}}" class="comment-author">{{ comment.author.nickname }}</router-link>
                         <p class="comment-body">{{ comment.content }}</p>
                         <img class="comment-image" v-if="comment.image" :src="'http://localhost:8081/' + comment.image"
                              alt="">
