@@ -214,6 +214,7 @@ select {
 .additional-info {
     color: rgb(95, 95, 95);
     font-weight: 400;
+    text-align: center;
 
 }
 
@@ -276,7 +277,7 @@ select {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    width: 100%;
+    /* width: 100%; */
 }
 
 .item-list li {

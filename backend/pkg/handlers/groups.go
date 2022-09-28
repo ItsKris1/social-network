@@ -171,7 +171,7 @@ func (handler *Handler) GroupEvents(w http.ResponseWriter, r *http.Request) {
 		going, _ := handler.repos.EventRepo.IsParticipating(events[i].ID, userId)
 		if going {
 			events[i].Going = "YES"
-		}else{
+		} else {
 			events[i].Going = "NO"
 		}
 	}
@@ -388,7 +388,7 @@ func (handler *Handler) NewGroupPost(w http.ResponseWriter, r *http.Request) {
 	utils.RespondWithSuccess(w, "New post created", 200)
 }
 
-//handle when new user wants to join the group
+// handle when new user wants to join the group
 func (handler *Handler) NewGroupRequest(wsServer *ws.Server, w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)
 	// access current user id
@@ -448,7 +448,7 @@ func (handler *Handler) NewGroupRequest(wsServer *ws.Server, w http.ResponseWrit
 	utils.RespondWithSuccess(w, "Request saved successfuly", 200)
 }
 
-//NOT TESTED
+// NOT TESTED
 // handle response from group administrator for requests to join group
 // waits for requestId and response -accept/decline
 func (handler *Handler) ResponseGroupRequest(wsServer *ws.Server, w http.ResponseWriter, r *http.Request) {
@@ -568,7 +568,7 @@ func (handler *Handler) NewGroupInvite(wsServer *ws.Server, w http.ResponseWrite
 	utils.RespondWithSuccess(w, "Invitations saved", 200)
 }
 
-//NOT TESTED
+// NOT TESTED
 func (handler *Handler) ResponseInviteRequest(w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)
 	if r.Method != "POST" {
