@@ -41,6 +41,25 @@ func (handler *Handler) UserGroups(w http.ResponseWriter, r *http.Request) {
 	utils.RespondWithGroups(w, groups, 200)
 }
 
+// returns all groups that specified user is a member of or admin
+func (handler *Handler) OtherUserGroups(w http.ResponseWriter, r *http.Request) {
+	w = utils.ConfigHeader(w)
+	// access user id
+	query := r.URL.Query()
+	userId := query.Get("userId")
+	if userId == "" { //check if user id provided in request
+		utils.RespondWithError(w, "Error on getting data", 200)
+		return
+	}
+	// request user Groups
+	groups, errGroups := handler.repos.GroupRepo.GetUserGroups(userId)
+	if errGroups != nil {
+		utils.RespondWithError(w, "Error on getting data", 200)
+		return
+	}
+	utils.RespondWithGroups(w, groups, 200)
+}
+
 // returns info about group - > name, description, id and administrator id
 // also includes group status for current user -> admin / member or pending member request
 func (handler *Handler) GroupInfo(w http.ResponseWriter, r *http.Request) {
