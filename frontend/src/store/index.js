@@ -11,7 +11,7 @@ export default createStore({
   //------------------------------------- state is like a variables, which hold a values.
   state: {
     id: "", // id is currently logged in user ID
-    wsConn: null,
+    wsConn: {}, // changed from null to {} for logout fix. (vic) 
 
     profileInfo: {},
     myFollowers: null,
@@ -59,6 +59,9 @@ export default createStore({
     },
     allGroups(state) {
       return state.groups.allGroups;
+    },
+    followers(state){
+      return state.myFollowers
     },
     filterUsers: (state) => (searchquery) => {
       if (searchquery === "") {

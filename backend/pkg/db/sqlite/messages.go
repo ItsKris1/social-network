@@ -112,3 +112,39 @@ func (repo *MsgRepository) GetUnreadGroup(userId string) ([]models.ChatStats, er
 	}
 	return messages, nil
 }
+
+func (repo *MsgRepository)GetChatHistoryIds(userId string)(map[string]bool, error){
+	var idmap  = make(map[string]bool)
+	// select ids if current is receiver
+	rowsReceiver, err := repo.DB.Query("SELECT sender_id FROM messages WHERE receiver_id = ? AND type = 'PERSON';", userId)
+	if err != nil {
+		return idmap, err
+	}
+	for rowsReceiver.Next() {
+		var id string
+		rowsReceiver.Scan(&id)
+		idmap[id] = true
+	}
+	// select ids if current is sender
+	rowsSender, err := repo.DB.Query("SELECT receiver_id FROM messages WHERE sender_id = ? AND type = 'PERSON';", userId)
+	if err != nil {
+		return idmap, err
+	}
+	for rowsSender.Next() {
+		var id string
+		rowsSender.Scan(&id)
+		idmap[id] = true
+	}
+	return idmap, nil
+}
+func (repo *MsgRepository)HasHistory(senderId, receiverId string) (bool, error){
+	row := repo.DB.QueryRow("SELECT COUNT() FROM messages WHERE sender_id = ? AND receiver_id = ? OR sender_id = ? AND receiver_id = ?;", senderId, receiverId,receiverId, senderId)
+	var result int
+	if err := row.Scan(&result); err != nil {
+		return false, err
+	}
+	if result == 0 {
+		return false, nil
+	}
+	return true, nil
+}

@@ -33,9 +33,9 @@
                         <p class="additional-info" v-else>No file chosen
                         </p>
 
-                        <label for="upload-image">
+                        <label :for="'upload-img-'+postData.id" >
                             <input type="file" accept="image/png, image/gif, image/jpeg" style=""
-                                   @change="checkPicture" ref="fileUpload" id="upload-image" />
+                                   @change="checkPicture" ref="fileUpload" :id="'upload-img-'+postData.id" />
 
                             <div></div>
                         </label>
@@ -112,13 +112,15 @@ export default {
             })
             this.$store.dispatch('fetchPosts')
             this.$store.dispatch('fetchMyPosts')
-
+            this.$store.dispatch('getGroupPosts')
+            if (this.$route.path != "/main"){
+                this.$parent.$parent.getPosts()
+            }
             this.comment.body = "";
             this.removeImage();
             console.log('Comment submitted.');
         },
         showPostId(postId) {
-
             console.log('post id: ', postId);
         },
         checkPicture(e) {
@@ -150,7 +152,6 @@ export default {
 
 
         },
-
 
         removeImage() {
             this.comment.image = {};

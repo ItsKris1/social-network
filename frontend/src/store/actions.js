@@ -35,7 +35,7 @@ export default {
                 this.commit("updateMyPosts", myposts);
                 // console.log(myposts);
             });
-        console.log("here")
+        // console.log("here")
 
         // .then((json) => console.log("get posts -", json));
     },
@@ -66,6 +66,7 @@ export default {
                 // console.log("userinfo -", json);
             });
     },
+
     async getAllUsers() {
         await fetch("http://localhost:8081/allUsers", {
             credentials: "include",
@@ -163,10 +164,7 @@ export default {
 
     createWebSocketConn({ commit, dispatch, state }) {
         const ws = new WebSocket("ws://localhost:8081/ws");
-        ws.addEventListener("open", () => {
-            // console.log("WS: Connection has established")
-        })
-
+      
         ws.addEventListener("message", (e) => {
             // console.log("New message")
             const data = JSON.parse(e.data);
@@ -174,42 +172,50 @@ export default {
                 // only broadcast messages when participants(sender and reciever) chat is open
 
                 const isParticipantsChatOpen = state.chat.openChats.some((chat) => {
-                    // chat is open with receiver
-                    if (chat.receiverId === data.chatMessage.receiverId) {
+                    // Chat is open with the person who sent the message
+                    if (data.chatMessage.type === "PERSON" && data.chatMessage.senderId  === chat.receiverId) {
                         return true
                     }
 
-                    // chat is open with sender
-                    // check type cuz we may have a scenario where we have the chat open with sender
-                    // but not the group and that will cause to broadcast the message to GROUP chat;
-                    if (data.chatMessage.type === "PERSON" && chat.receiverId === data.chatMessage.senderId) {
+                    if (data.chatMessage.type === "GROUP" && data.chatMessage.receiverId === chat.receiverId) {
                         return true
                     }
+
+
                 })
                 if (isParticipantsChatOpen) {
                     // console.log("Dispatching a message..")
                     dispatch("addNewChatMessage", data.chatMessage)
                     dispatch("markMessageRead", data.chatMessage)
                 } else {
-                    // console.log("Unread msg..")
+                    // console.log("Unread msg..", data.chatMessage)
+                    if (data.message === "NEW") {
+                        dispatch("fetchChatUserList");
+                    }
+    
                     dispatch("addUnreadChatMessage", data.chatMessage)
                 }
             } else if (data.action == "notification") {
-                // console.log(data.notification)
-                dispatch("addNewNotification", data.notification)
-            }else if(data.action == "groupAccept"){
-                console.log("you have been accepted, in group with id: ", data.message)
+                console.log("NEW NOTIF DATA", data.notification);
+                dispatch("addNewNotification", data.notification);
+
+            } else if(data.action == "groupAccept"){
+                dispatch("getUserGroups");
+                // console.log("you have been accepted, in group with id: ", data.message)
             }
 
         })
 
-        ws.addEventListener("close", (e) => {
-            console.log("Connection closed");
-        })
-
-
-
         commit("updateWebSocketConn", ws)
+        // ws.addEventListener("close", (e) => {
+        //     console.log("Connection closed");
+        // })
+
+          // ws.addEventListener("open", () => {
+        //     // console.log("WS: Connection has established")
+        // })
+
+        
     }
 
 }

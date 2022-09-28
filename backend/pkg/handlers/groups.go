@@ -147,6 +147,15 @@ func (handler *Handler) GroupEvents(w http.ResponseWriter, r *http.Request) {
 	for i := 0; i < len(events); i++ {
 		events[i].Author, _ = handler.repos.UserRepo.GetDataMin(events[i].AuthorID)
 	}
+	/* -------------------- attach participation to each event ------------------- */
+	for i := 0; i < len(events); i++ {
+		going, _ := handler.repos.EventRepo.IsParticipating(events[i].ID, userId)
+		if going {
+			events[i].Going = "YES"
+		}else{
+			events[i].Going = "NO"
+		}
+	}
 	utils.RespondWithEvents(w, events, 200)
 }
 

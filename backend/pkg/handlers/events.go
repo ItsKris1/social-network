@@ -92,6 +92,9 @@ func (handler *Handler) NewEvent(wsServer *ws.Server, w http.ResponseWriter, r *
 	utils.RespondWithEvents(w, []models.Event{event}, 200)
 }
 
+// requestId: notification.id,
+// eventId: notification.event.id,
+// response: reqResponse,
 // Handles clients reaction to participation in event
 // waits for POST req with eventID as "id" and user status "going" with response YES or NO
 func (handler *Handler) Participate(w http.ResponseWriter, r *http.Request) {
@@ -100,38 +103,59 @@ func (handler *Handler) Participate(w http.ResponseWriter, r *http.Request) {
 		utils.RespondWithError(w, "Error on form submittion", 200)
 		return
 	}
-	// get current user
-	userId := r.Context().Value(utils.UserKey).(string)
-	/* ---------------------------- read incoming data --------------------------- */
-	// Try to decode the JSON request to Event
-	var event models.Event
-	err := json.NewDecoder(r.Body).Decode(&event)
+	/* --------------------------- read incoming data --------------------------- */
+	type Response struct {
+		EventID   string `json:"eventId"`
+		RequestID string `json:"requestId"` //notif id
+		Response  string `json:"response"` //YES || NO
+	}
+	var response Response
+	err := json.NewDecoder(r.Body).Decode(&response)
 	if err != nil {
 		utils.RespondWithError(w, "Error on form submittion", 200)
 		return
 	}
+	// get current user
+	userId := r.Context().Value(utils.UserKey).(string)
+
 	/* ---------------- check that event id and response provided --------------- */
-	if len(event.ID) == 0 || len(event.Going) == 0 {
+	if len(response.EventID) == 0 || len(response.Response) == 0 {
 		utils.RespondWithError(w, "Provided incomplete data", 200)
 		return
 	}
+
 	/* ------------------- check if response alredy registerd ------------------- */
-	isParticipating, err := handler.repos.EventRepo.IsParticipating(event.ID, userId)
+	isParticipating, err := handler.repos.EventRepo.IsParticipating(response.EventID, userId)
 	if err != nil {
 		utils.RespondWithError(w, "Internal server error", 200)
 		return
 	}
 	/* ----------------------------- handle response ---------------------------- */
-	if strings.ToUpper(event.Going) == "YES" && !isParticipating {
-		if err = handler.repos.EventRepo.AddParticipant(event.ID, userId); err != nil {
+	if response.Response == "YES" && !isParticipating {
+		if err = handler.repos.EventRepo.AddParticipant(response.EventID, userId); err != nil {
 			utils.RespondWithError(w, "Internal server error", 200)
 			return
 		}
-	} else if strings.ToUpper(event.Going) == "NO" && isParticipating {
-		if err = handler.repos.EventRepo.RemoveParticipant(event.ID, userId); err != nil {
+	} else if strings.ToUpper(response.Response) == "NO" && isParticipating {
+		if err = handler.repos.EventRepo.RemoveParticipant(response.EventID, userId); err != nil {
 			utils.RespondWithError(w, "Internal server error", 200)
 			return
 		}
+	}
+	/* --------------------------- remove notificaton -------------------------- */
+	if len(response.RequestID) !=0 {//participation activated form notification
+		if err = handler.repos.NotifRepo.Delete(response.RequestID); err != nil {
+			utils.RespondWithError(w, "Internal server error", 200)
+			return
+		}
+	}else{ //participation activated without noification
+		// delete notification if exists
+		notif := models.Notification{Type: "EVENT", TargetID: userId, Content:response.EventID}
+		if err = handler.repos.NotifRepo.DeleteByType(notif); err!=nil{
+			utils.RespondWithError(w, "Internal server error", 200)
+			return
+		}
+
 	}
 	utils.RespondWithSuccess(w, "Data saved successfully", 200)
 }
