@@ -4,10 +4,11 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strings"
 )
 
 // Patht to default image location
-const defaultImage = "imageUpload\\default.png"
+const defaultImage = "imageUpload/default.svg"
 
 // Creates new file and reads image bytes into it
 // returns path to new image
@@ -35,7 +36,8 @@ func SaveAvatar(r *http.Request) string {
 		return defaultImage
 	}
 	localFile.Write(fileData)
-	return localFile.Name()
+	newFilename := strings.Split(localFile.Name(), "\\")[1]
+	return "imageUpload/"+newFilename
 }
 
 /* ------------------------- for posts and comments ------------------------- */

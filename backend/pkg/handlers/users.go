@@ -1,9 +1,11 @@
 package handlers
 
 import (
+	"encoding/json"
 	"net/http"
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
+	ws "social-network/pkg/wsServer"
 	"strings"
 )
 
@@ -72,6 +74,9 @@ func (handler *Handler) UserData(w http.ResponseWriter, r *http.Request) {
 		user, err = handler.repos.UserRepo.GetProfileMax(userId)
 	} else {
 		user, err = handler.repos.UserRepo.GetProfileMin(userId)
+		/* -------------------- check if follow status is pending ------------------- */
+		notif := models.Notification{Type: "FOLLOW", Content: currentUserId, TargetID: userId}
+		user.FollowRequestPending, err = handler.repos.NotifRepo.CheckIfExists(notif)
 	}
 	if err != nil {
 		utils.RespondWithError(w, "Error on getting data", 200)
@@ -135,8 +140,9 @@ func (handler *Handler) UserStatus(w http.ResponseWriter, r *http.Request) {
 // Find all followers
 func (handler *Handler) GetFollowers(w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)
-	// access user id
-	userId := r.Context().Value(utils.UserKey).(string)
+	// get userId from request
+	query := r.URL.Query()
+	userId := query.Get("userId")
 	// request all  following users
 	followers, errUsers := handler.repos.UserRepo.GetFollowers(userId)
 	if errUsers != nil {
@@ -149,8 +155,9 @@ func (handler *Handler) GetFollowers(w http.ResponseWriter, r *http.Request) {
 // Find all who clinet is following
 func (handler *Handler) GetFollowing(w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)
-	// access user id
-	userId := r.Context().Value(utils.UserKey).(string)
+	// get userId from request
+	query := r.URL.Query()
+	userId := query.Get("userId")
 	// request all  following users
 	followers, errUsers := handler.repos.UserRepo.GetFollowing(userId)
 	if errUsers != nil {
@@ -160,14 +167,19 @@ func (handler *Handler) GetFollowing(w http.ResponseWriter, r *http.Request) {
 	utils.RespondWithUsers(w, followers, 200)
 }
 
-func (handler *Handler) Follow(w http.ResponseWriter, r *http.Request) {
+func (handler *Handler) Follow(wsServer *ws.Server, w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)
 	// access user id
 	currentUserId := r.Context().Value(utils.UserKey).(string)
 	// get status from request
 	query := r.URL.Query()
 	reqUserId := query.Get("userId")
-
+	/* ----------------- safety check -> if request already made ---------------- */
+	alreadyFollowing, _ := handler.repos.UserRepo.IsFollowing(reqUserId, currentUserId)
+	if alreadyFollowing {
+		utils.RespondWithError(w, "User already is following", 200)
+		return
+	}
 	// get target user profile status -> public or private
 	reqUserStatus, err := handler.repos.UserRepo.GetStatus(reqUserId)
 	if err != nil {
@@ -183,14 +195,48 @@ func (handler *Handler) Follow(w http.ResponseWriter, r *http.Request) {
 		}
 	} else if reqUserStatus == "PRIVATE" {
 		//SAVE IN NOTIFICATIONS as pending folllow request
-		notification := models.Notification{ID: utils.UniqueId(), TargetID: reqUserId, Type: "FOLLOW", Content: currentUserId}
+		notification := models.Notification{
+			ID:       utils.UniqueId(),
+			TargetID: reqUserId,
+			Type:     "FOLLOW",
+			Content:  currentUserId,
+			Sender:   currentUserId,
+		}
 		err := handler.repos.NotifRepo.Save(notification)
 		if err != nil {
 			utils.RespondWithError(w, "Error on save", 200)
 			return
 		}
+		//if user online send notification about follow request
+		for client := range wsServer.Clients {
+			if client.ID == reqUserId {
+				client.SendNotification(notification)
+			}
+		}
+
 	}
 	utils.RespondWithSuccess(w, "Following successful", 200)
+}
+
+
+func (handler *Handler) CancelFollowRequest(w http.ResponseWriter, r *http.Request) {
+	w = utils.ConfigHeader(w)
+	// access user id
+	currentUserId := r.Context().Value(utils.UserKey).(string)
+	// get status from request
+	query := r.URL.Query()
+	reqUserId := query.Get("userId")
+	// delete notification corresponding to follow request
+	notif := models.Notification{
+		Type:     "FOLLOW",
+		TargetID: reqUserId,
+		Content:  currentUserId,
+	}
+	if err := handler.repos.NotifRepo.DeleteByType(notif); err != nil {
+		utils.RespondWithError(w, "Error on canceling request", 200)
+		return
+	}
+	utils.RespondWithSuccess(w, "Follow request canceled successfuly", 200)
 }
 
 func (handler *Handler) Unfollow(w http.ResponseWriter, r *http.Request) {
@@ -206,4 +252,48 @@ func (handler *Handler) Unfollow(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	utils.RespondWithSuccess(w, "Unfollowing successful", 200)
+}
+
+//not tested
+// wait for POST request with notification Id and response -"ACCEPT" or "DECLINE"
+func (handler *Handler) ResponseFollowRequest(w http.ResponseWriter, r *http.Request) {
+	w = utils.ConfigHeader(w)
+	if r.Method != "POST" {
+		utils.RespondWithError(w, "Error on form submittion", 200)
+		return
+	}
+	/* ---------------------------- read incoming data --------------------------- */
+	// Try to decode the JSON request to a new response
+	type Response struct {
+		RequestID string `json:"requestId"`
+		Response  string `json:"response"` // ACCEPT or DECLINE
+	}
+	var resp Response
+	err := json.NewDecoder(r.Body).Decode(&resp)
+	if err != nil {
+		utils.RespondWithError(w, "Error on form submittion", 200)
+		return
+	}
+	// get other user id from notification
+	followerId, err := handler.repos.NotifRepo.GetUserFromRequest(resp.RequestID)
+	userId := r.Context().Value(utils.UserKey).(string)
+	if err != nil {
+		utils.RespondWithError(w, "Internal server error", 200)
+		return
+	}
+	if strings.ToUpper(resp.Response) == "ACCEPT" {
+		err = handler.repos.UserRepo.SaveFollower(userId, followerId)
+		if err != nil {
+			utils.RespondWithError(w, "Internal server error", 200)
+			return
+		}
+	}
+	/* ----------------------- delete pending notification ---------------------- */
+	err = handler.repos.NotifRepo.Delete(resp.RequestID)
+	if err != nil {
+		utils.RespondWithError(w, "Internal server error", 200)
+		return
+	}
+	// notify websocket about notification changes
+	utils.RespondWithSuccess(w, "Response successful", 200)
 }

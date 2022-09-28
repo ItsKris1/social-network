@@ -6,14 +6,6 @@ import (
 	"social-network/pkg/models"
 )
 
-// type CustomMessage struct {
-// 	Type    string         `json:"type"`    // msg type ex. errorr, success
-// 	Message string         `json:"message"` // message itself
-// 	Groups  []models.Group `json:"groups"`
-// 	Posts   []models.Post  `json:"posts"`
-// 	Users   []models.User  `json:"users"`
-// 	// additional properties/ data types can be added
-// }
 type ResponseMessage struct {
 	Type    string `json:"type"`
 	Message string `json:"message"` // message itself
@@ -31,6 +23,26 @@ type UserMessage struct {
 type GroupMessage struct {
 	Type   string         `json:"type"`
 	Groups []models.Group `json:"groups"`
+}
+
+type EventMessage struct {
+	Type   string         `json:"type"`
+	Events []models.Event `json:"events"`
+}
+
+type NotifMessage struct {
+	Type          string                `json:"type"`
+	Notifications []models.Notification `json:"notifications"`
+}
+
+type ChatMsgMessage struct {
+	Type     string               `json:"type"`
+	Messages []models.ChatMessage `json:"chatMessage"`
+}
+
+type ChatStatMessage struct {
+	Type      string             `json:"type"`
+	ChatStats []models.ChatStats `json:"chatStats"`
 }
 
 // Error takes writer, message, status code and additional error property
@@ -70,6 +82,38 @@ func RespondWithUsers(w http.ResponseWriter, users []models.User, code int) {
 func RespondWithPosts(w http.ResponseWriter, posts []models.Post, code int) {
 	w.WriteHeader(code)
 	err := PostMessage{Posts: posts, Type: "Success"}
+	jsonResp, _ := json.Marshal(err)
+	w.Write(jsonResp)
+}
+
+// responds with success events
+func RespondWithEvents(w http.ResponseWriter, events []models.Event, code int) {
+	w.WriteHeader(code)
+	err := EventMessage{Events: events, Type: "Success"}
+	jsonResp, _ := json.Marshal(err)
+	w.Write(jsonResp)
+}
+
+// responds with success notifs
+func RespondWithNotifications(w http.ResponseWriter, notifs []models.Notification, code int) {
+	w.WriteHeader(code)
+	err := NotifMessage{Notifications: notifs, Type: "Success"}
+	jsonResp, _ := json.Marshal(err)
+	w.Write(jsonResp)
+}
+
+// responds with success chat msg
+func RespondWithMessages(w http.ResponseWriter, msgs []models.ChatMessage, code int) {
+	w.WriteHeader(code)
+	err := ChatMsgMessage{Messages: msgs, Type: "Success"}
+	jsonResp, _ := json.Marshal(err)
+	w.Write(jsonResp)
+}
+
+// responds with success chat stats
+func RespondWithChatStats(w http.ResponseWriter, msgs []models.ChatStats, code int) {
+	w.WriteHeader(code)
+	err := ChatStatMessage{ChatStats: msgs, Type: "Success"}
 	jsonResp, _ := json.Marshal(err)
 	w.Write(jsonResp)
 }

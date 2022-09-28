@@ -1,8 +1,12 @@
  <template>
-    <!-- <button @click="showAllPosts">showFetch</button> -->
-    <div id="all_posts" v-if="allPosts !== undefined">
-        <Post v-for="post in allPosts" :key="post.id" v-bind:postData="post" />
+    <div id="all_posts">
+        <Post
+              v-if="allPosts !== undefined"
+              v-for="post in allPosts" :key="post.id" v-bind:postData="post" />
+
+        <p class="additional-info large" v-else>No posts</p>
     </div>
+
 </template>
 
 <script>
@@ -13,14 +17,10 @@ export default {
     created() {
         this.$store.dispatch('fetchPosts')
     },
+
+
     computed: mapGetters(['allPosts']),
     components: { Post },
-    methods: {
-        // showAllPosts() {
-        //     this.$store.dispatch('fetchPosts')
-        //     console.log('All posts: ', this.allPosts);
-        // },
-    },
 }
 </script>
 
@@ -30,5 +30,6 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 50px;
 }
 </style>

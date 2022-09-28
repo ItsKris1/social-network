@@ -3,28 +3,48 @@
     <!-- <button @click="getAllMyPosts">get</button>
     <button @click="showAllMyPosts">show</button> -->
     <!-- <div v-if="this.myposts !== undefined"> -->
-        <Post v-for="post in myPosts" :key="post.id" v-bind:postData="post" />
+    <!-- {{this.posts}} -->
+    <Post v-if="posts" v-for="post in this.posts" :key="post.id" v-bind:postData="post" />
+    <p class="additional-info large" v-else>No posts to show</p>
     <!-- </div> -->
 
 </template>
 
 
 <script>
-import { mapGetters } from 'vuex'
 import Post from './Post.vue'
 export default {
     name: 'AllMyPosts',
-    created() {
-        this.getAllMyPosts()
-    },
     components: { Post },
-    computed: mapGetters(['myPosts']),
+    props: {
+        userid: ""
+    },
+    data() {
+        return {
+            posts: null
+        }
+    },
+    created() {
+        // this.getAllMyPosts()
+        this.getPosts()
+    },
+    // computed: mapGetters(['myPosts']),
+    watch: { //watching changes in route
+        userid() {
+            this.getPosts()
+        }
+    },
     methods: {
-        getAllMyPosts() {
-            this.$store.dispatch('fetchMyPosts')
-        },
-        showAllMyPosts() {
-            console.log('All posts: ', myPosts);
+        async getPosts() {
+            // console.log("USERID", this.userid);
+            await fetch("http://localhost:8081/userPosts?id=" + this.userid, {
+                credentials: "include",
+            })
+                .then((r) => r.json())
+                .then((r) => {
+                    // console.log("response", r);
+                    this.posts = r.posts
+                });
         },
     },
 }

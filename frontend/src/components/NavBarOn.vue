@@ -1,22 +1,23 @@
 <template>
 
     <div id="navbar">
-        <div>
-            <a href="/" id="logo">Social Network</a>
-        </div>
-        <Search />
-        <Notifications />
-        <div id="a">
-            <router-link to="/profile">
-                <!-- <img id="navbarUserPic" :src="'http://localhost:8081/' + user.avatar" alt="profilePic"> -->
 
-                <!-- <span id="navBarName">{{ user.nickname }}</span> -->
-                <span id="navBarName">My profile</span>
-
-            </router-link>
+        <div id="nav-titleSearch">
+            <router-link to="/main" id="nav-title">Social Network</router-link>
+            <Search />
         </div>
-        <!-- <img @click="logout" id="logoutBtn" src="../assets/logout.png"> -->
-        <span @click="logout" id="logoutBtn">Log out</span>
+        <ul class="nav-links">
+
+            <li id="notifications-link">
+                <Notifications />
+            </li>
+            <li>
+                <router-link v-if="typeof user.id !== 'undefined'"
+                             :to="{ name: 'Profile', params: { id: user.id } }">My profile</router-link>
+            </li>
+            <li @click="logout">Log out</li>
+        </ul>
+
     </div>
 
 </template>
@@ -48,7 +49,6 @@ export default {
 
         },
         async logout() {
-            // Test code
             await fetch('http://localhost:8081/logout', {
                 credentials: 'include',
                 headers: {
@@ -57,8 +57,8 @@ export default {
             })
                 .then((response => response.json()))
                 .then((json => { console.log(json) }))
-            // end of test code
-            console.log("logout")
+            // console.log("logout")
+            this.$store.state.wsConn.close(1000, "user logged out");
             this.$router.push("/");
         }
     },
@@ -68,68 +68,95 @@ export default {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200&family=Water+Brush&display=swap');
-
 #navbar {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 10px;
-    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    min-width: min-content;
 
-    background: #4B5283;
-    font-family: 'Poppins';
-    color: #EEEEEE;
-    
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 10px 40px;
+    background-color: var(--color-blue);
+    color: var(--color-white);
+
+    position: relative;
+
+
+
+
 }
 
-#logo {
-    /* font-family: Inter; */
-    
+
+#navbar a {
+    color: var(--color-white);
+}
+
+
+
+
+
+#nav-title {
     font-size: 24px;
-    font-weight: 649;
-    line-height: 29px;
-    letter-spacing: 0em;
-    text-align: center;
-    font-variation-settings: 'slnt' 0;
-    text-decoration: none;
-    color: #EEEEEE;
-}
-
-#logoutBtn {
-    /* width: 16px;
-    height: 20px; */
-    cursor: pointer;
-}
-
-#navbarUserPic {
-    height: 47px;
-    width: 47px;
-    border-radius: 50%;
-    margin-right: 8px;
-}
-
-#a {
-    display: flex;
-    align-items: center;
-}
-
-#navBarName {
-    font-family: 'Poppins';
-    font-style: normal;
     font-weight: 400;
-    font-size: 16px;
-    line-height: 146.02%;
-    /* or 23px */
-
-    display: flex;
-    align-items: center;
-    text-align: center;
-    text-decoration: none;
-
-    color: #E4E3E3;
+    position: relative;
 }
-a:link { text-decoration: none; }
-a:visited { text-decoration: none; }
-a:hover { text-decoration: none; }
-a:active { text-decoration: none; }
+
+
+.nav-links li {
+    font-weight: 300;
+    display: inline-block;
+    margin-left: 20px;
+    cursor: pointer;
+
+    position: relative;
+}
+
+
+#nav-titleSearch {
+    display: flex;
+    gap: 25px;
+    flex-grow: 1;
+    align-items: center;
+
+
+}
+
+
+#navbar li:not(#notifications-link)::after,
+#nav-title::after {
+    content: "";
+    height: 2.5px;
+    width: 0;
+    display: block;
+    position: absolute;
+
+    transition: all 0.35s ease-out;
+}
+
+#navbar li:not(#notifications-link):hover::after,
+#nav-title:hover::after {
+    width: 100%;
+    background-color: rgb(132, 148, 236);
+}
+
+a:link {
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+a:active {
+    text-decoration: none;
+}
 </style>

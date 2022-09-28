@@ -1,42 +1,68 @@
 <template>
 
-    <div id="post">
-        <!-- <button @click="showPostId(postData.id)">Show post id!</button> -->
-        <div>
-            <img id="post_image" :src="'http://localhost:8081/' + postData.author.avatar" alt="user-avatar">
-        </div>
-        <div>
-            <div><b>{{ postData.author.nickname }}</b></div>
-            <div v-if="postData.image">
-                <img id="postImage" :src="'http://localhost:8081/' + postData.image" alt="">
+    <div class="post-wrapper">
+        <div class="post">
+            <div class="user-picture medium"
+                 :style="{ backgroundImage: `url(http://localhost:8081/${postData.author.avatar})` }"></div>
+            <div class="post-content">
+                <p class="post-author">{{ postData.author.nickname }}</p>
+                <p class="post-body">{{ postData.content }}</p>
+                <img v-if="postData.image" class="post-image" :src="'http://localhost:8081/' + postData.image" alt="">
+                <button v-if="!isCommentsOpen" @click="toggleComments" class="btn ">Comments</button>
+
             </div>
 
-            <div>{{ postData.content }}</div>
-            <button v-if="!isCommentsOpen" @click="toggleComments">View comments</button>
-            <div v-if="isCommentsOpen">
-                <textarea v-model="this.comment.body" name="" id="" cols="30" rows="5" placeholder="Add your comment here"></textarea>
-                <div>
-                    <button @click="toggleComments">Hide comments</button>
-                    <div class="comment-img">
-                        <label for="comment-image">
-                            <img src="../assets/addimg.png" />
-                        </label>
-                        <input id="comment-image" @change="checkPicture" type="file"
-                            accept="image/png, image/gif, image/jpeg" />
-                    </div>
-                    <button @click="submitComment(postData.id)">Add comment</button>
-                </div>
-                <div id="commentsDiv" v-for=" comment in postData.comments">
-                    <div><b>{{ comment.authorNickname }}</b></div>
-                    <div>{{ comment.content }}</div>
+        </div>
 
-                    <div v-if="comment.image">
-                        <img id="commentImage" :src="'http://localhost:8081/'+comment.image" alt="">
+        <div v-if="isCommentsOpen">
+
+            <div class="create-comment">
+                <textarea v-model="this.comment.body" name="" id="" cols="30" rows="4"
+                          placeholder="Add your comment here"></textarea>
+
+                <div class="btns-wrapper">
+                    <button class="btn outline hideCommentBtn" @click="toggleComments">Hide
+                        comments</button>
+
+                    <div class="add-image">
+                        <div class="selected-image" v-if="fileAdded">
+                            <p class="additional-info">{{ comment.image.name }}</p>
+                            <i class="uil uil-times close" @click="removeImage"></i>
+                        </div>
+
+                        <p class="additional-info" v-else>No file chosen
+                        </p>
+
+                        <label for="upload-image">
+                            <input type="file" accept="image/png, image/gif, image/jpeg" style=""
+                                   @change="checkPicture" ref="fileUpload" id="upload-image" />
+
+                            <div></div>
+                        </label>
+
+                    </div>
+
+                </div>
+
+                <button class="btn submitCommentBtn" @click="submitComment(postData.id)">Comment</button>
+
+            </div>
+
+            <div class="comments" v-if="postData.comments">
+                <div class="comment" lang="en" v-for="comment in postData.comments">
+                    <div class="user-picture medium"
+                         :style="{ backgroundImage: `url(http://localhost:8081/${comment.author.avatar})` }"></div>
+                    <div class="comment-content">
+                        <p class="comment-author">{{ comment.author.nickname }}</p>
+                        <p class="comment-body">{{ comment.content }}</p>
+                        <img class="comment-image" v-if="comment.image" :src="'http://localhost:8081/' + comment.image"
+                             alt="">
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 </template>
 
 
@@ -48,8 +74,9 @@ export default {
             isCommentsOpen: false,
             comment: {
                 body: "",
-                image: null
-            }
+                image: {}
+            },
+
         }
     },
     props: {
@@ -60,6 +87,13 @@ export default {
             }
         }
     },
+
+    computed: {
+        fileAdded() {
+            return this.comment.image.name !== undefined
+        },
+    },
+
     methods: {
         toggleComments() {
             this.isCommentsOpen = !this.isCommentsOpen
@@ -78,6 +112,9 @@ export default {
             })
             this.$store.dispatch('fetchPosts')
             this.$store.dispatch('fetchMyPosts')
+
+            this.comment.body = "";
+            this.removeImage();
             console.log('Comment submitted.');
         },
         showPostId(postId) {
@@ -91,6 +128,7 @@ export default {
             }
             const file = files[0]
 
+            // console.log("File", file)
             const [extension] = file.type.split("/")
             if ((!(extension == "image"))) {
                 console.log('File is not an image.');
@@ -109,33 +147,119 @@ export default {
                 return
             }
             this.comment.image = file;
+
+
         },
+
+
+        removeImage() {
+            this.comment.image = {};
+            this.$refs.fileUpload.value = "";
+        }
     }
 }
 </script>
 
 
-<style>
-#post_image {
-    height: 47px;
-    width: 47px;
-    border-radius: 50%;
-    margin-right: 8px;
+<style scoped>
+/* POST & COMMENT */
+.post-wrapper {
+    display: inline-block;
+    box-shadow: var(--container-shadow);
+    padding: 30px;
+    background-color: var(--color-white);
+    /* width: 550px; */
+    width: 100%;
+    border-radius: 10px;
 }
 
-#post {
+
+.post {
     display: flex;
+    gap: 10px;
 }
 
-#postImage, #commentImage {
-    height: 20%;
-    width: 20%;
-}
-#commentsDiv{
-    border-top: double;
-}
-.comment-img>input{
-    display: none;
+
+.post-author,
+.comment-author {
+    font-weight: 500;
 }
 
+.post-content,
+.comment-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    flex-grow: 1;
+}
+
+.post-image,
+.comment-image {
+    width: 100%;
+    margin: 10px 0 10px 0;
+    border-radius: 5px;
+}
+
+.post-body,
+.comment-body {
+    overflow-wrap: anywhere;
+}
+
+.post-content button {
+    align-self: flex-end;
+    margin-top: 10px;
+}
+
+
+.comments>* {
+    display: flex;
+    gap: 10px;
+    border-top: 1px solid #DDDDDD;
+    padding-top: 30px;
+}
+
+.comments {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+
+.create-comment {
+    padding-left: 58px;
+}
+
+.create-comment textarea {
+    margin: 10px 0;
+}
+
+
+.btns-wrapper {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+}
+
+
+.hideCommentBtn {
+    flex-shrink: 0;
+}
+
+.submitCommentBtn {
+    margin-left: auto;
+    margin-top: 10px;
+}
+
+.additional-info {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    font-size: 14px;
+}
 </style>

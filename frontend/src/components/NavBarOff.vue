@@ -1,9 +1,8 @@
 <template>
-
     <div id="navbar">
-        <a href="/" id="logo">Social Network</a>
-    </div>
+        <router-link to="/" id="nav-title">Social Network</router-link>
 
+    </div>
 </template>
 
 
@@ -19,21 +18,35 @@ export default {
 <style scoped>
 #navbar {
     display: flex;
-    /* justify-content: space-around; */
-    margin-top: 10px;
-    margin-bottom: 10px;
+    padding: 10px 40px;
+    background-color: var(--color-blue);
     align-items: center;
+    justify-content: space-between;
+    font-weight: 300;
+    color: var(--color-white);
+    margin-bottom: 0;
+
 }
 
-#logo {
-    font-family: Inter;
+#nav-title {
     font-size: 24px;
-    font-weight: 649;
-    line-height: 29px;
-    letter-spacing: 0em;
-    text-align: center;
-    font-variation-settings: 'slnt' 0;
+    color: var(--color-white);
     text-decoration: none;
+    font-weight: 400;
+    position: relative;
+}
 
+#nav-title::after {
+    content: "";
+    height: 2.5px;
+    width: 0;
+    display: block;
+    background-color: rgb(132, 148, 236);
+    position: absolute;
+    transition: width 0.35s ease-out;
+}
+
+#nav-title:hover::after {
+    width: 100%;
 }
 </style>

@@ -37,6 +37,8 @@ func InitRepositories(db *sql.DB) *models.Repositories {
 		PostRepo:    &PostRepository{DB: db},
 		CommentRepo: &CommentRepository{DB: db},
 		NotifRepo:   &NotifRepository{DB: db},
+		EventRepo:   &EventRepository{DB: db},
+		MsgRepo:     &MsgRepository{DB: db},
 	}
 }
 
