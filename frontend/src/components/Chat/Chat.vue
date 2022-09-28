@@ -67,17 +67,10 @@ export default {
     data() {
         return {
             showContent: false,
-            // chats: [],
-            // usersIFollow: [],
         }
     },
 
-    mounted() {
-        // console.log("Mounted!")
-    },
-
     unmounted() {
-        console.log("Unmounted!")
         this.$store.commit("updateUnreadMessages", [])
         this.$store.dispatch("clearOpenChats")
     },
@@ -86,8 +79,6 @@ export default {
         this.$store.dispatch("fetchChatUserList");
         this.$store.dispatch("getUserGroups");
         this.$store.dispatch("fetchUnreadMessages");
-        // console.log("Finished taking stuff")
-        console.log(this.openChats);
     },
 
     computed: {

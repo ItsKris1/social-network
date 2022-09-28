@@ -91,7 +91,7 @@ export default {
                 credentials: 'include'
             });
             const data = await response.json();
-            console.log("/unReadmessages data", data)
+            // console.log("/unReadmessages data", data)
             if (data.type === "Error") {
                 state.unreadMsgsStatsFromDB = null;
             } else {
@@ -101,26 +101,21 @@ export default {
 
         },
 
-        async markMessageRead(context, chatMessage) {
-            const response = await fetch('http://localhost:8081/messageRead', {
-                credentials: 'include',
-                method: 'POST',
-                body: JSON.stringify({
-                    id: chatMessage.id,
-                    type: chatMessage.type
-                })
-            })
+        // async markMessageRead(context, chatMessage) {
+        //     const response = await fetch('http://localhost:8081/messageRead', {
+        //         credentials: 'include',
+        //         method: 'POST',
+        //         body: JSON.stringify({
+        //             id: chatMessage.id,
+        //             type: chatMessage.type
+        //         })
+        //     })
 
            
-            const data = await response.json();
+        //     const data = await response.json();
 
-            // console.log("/messageRead data", data)
-             // console.log(chatMessage)
-            // console.log("msgObj", {
-            //     id: chatMessage.id,
-            //     type: chatMessage.type
-            // })
-        },
+   
+        // },
 
 
         addNewChatMessage({ commit, state }, payload) {

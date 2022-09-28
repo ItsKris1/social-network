@@ -54,15 +54,11 @@ export default {
             allNotifications: state => state.notifications.allNotifications
         }),
         hasNotifications() {
-            // console.log(this.allNotifications)
             if (this.allNotifications === null) {
-                console.log("All notifications is null")
                 return false;
             } else {
-                console.log("All notifications is not null")
                 return this.allNotifications.length > 0;
             }
-            // return this.allNotifications !== null && this.allNotifications.length > 0;
         }
     },
     unmounted() {
@@ -106,7 +102,7 @@ export default {
                 this.$store.commit("updateAllNotifications", data.notifications);
             }
            
-            console.log("/notifications data", data)
+            // console.log("/notifications data", data)
         },
         async handleRequest(notification, reqResponse) {
             let endpoint;

@@ -59,7 +59,7 @@ export default {
                     response: response
                 })
             }).then(r => r.json()).then(json => {
-                // console.log(json)
+                console.log(json)
                 if (json.type === "Success"){
                     this.getJoinRequests()
                     this.$toast.open({
