@@ -1,22 +1,24 @@
 # Functional
-[x] Has the requirement for the allowed packages been respected?
+Has the requirement for the allowed packages been respected? [x] 
 
-Open the project
-[x] Is the file system for the backend well organized?
+Is the file system for the backend well organized? [x] 
 
-Open the project
-[x] Is the file system for the frontend well organized?
+Is the file system for the frontend well organized? [x] 
 
 # Database
-[x] Is SQLite being used in the project as the database?
-[ ] Does the app implement a migration system?
-[ ] Is that migration file system well organized? (like the example from the subject)
+Is SQLite being used in the project as the database? [x] 
+
+Does the app implement a migration system? [ ] 
+
+Is that migration file system well organized? (like the example from the subject) [ ] 
 
 Start the social network application, then enter the database using the command "sqlite3 <database_name.db>".
-[ ] Are the migrations being applied by the migration system?
+
+Are the migrations being applied by the migration system? [ ]
 
 # Authentication
 [x] Does the app implement sessions for the authentication of the users?
+
 [x] Are the correct form elements being used in the registration? (Email, Password, First Name, Last Name, Date of Birth, Avatar/Image (Optional), Nickname (Optional), About Me (Optional))
 
 Try to register a user.
@@ -50,7 +52,7 @@ Open two browsers(ex: Chrome and Firefox), log in as two different private users
 After following another user successfully try to unfollow him.
 [x] Were you able to do so?
 
-#Profile
+# Profile
 Try opening your own profile.
 [x] Does the profile displays every information requested in the register form, apart from the password?
 
@@ -86,6 +88,7 @@ Try creating a comment.
 
 Try creating a post.
 [x] Can you specify the type of privacy of the post (private, public, almost private)?
+
 [x] If you choose the almost private privacy option, can you specify the users that are allowed to see the post?
 
 # Groups
@@ -97,8 +100,11 @@ Open two browsers, log in with different users on each browser, follow each othe
 
 Using the same browsers and the same users, with one of the users create a group and with the other try to make a group entering request.
 [x] Did the owner of the group received a request that he/she can refuse/accept?
+
 [x] Can a user make group invitations, after being part of the group (being the user different from the creator of the group)?
+
 [x] Can a user make a group entering request (a request to enter a group)?
+
 [x] After being part of a group, can the user create posts and comment already created posts?
 
 Try to create an event in a group.
@@ -110,6 +116,7 @@ Using the same browsers and the same users, after both of them becoming part of 
 # Chat
 Try and open two browsers (ex: Chrome and Firefox), log in with different users in each one. Then with one of the users try to send a private message to the other user.
 [x] Did the other user received the message in realtime?
+
 Using the two browsers with the users start a chat between the two of them.
 [x] Did the chat between the users went well? (did not crash the server)
 
@@ -118,8 +125,10 @@ Try and open three browsers (ex: Chrome and Firefox or a private browser), log i
 
 Using the three browsers with the users, enter with each user a common group. Then start sending messages to the common chat room using one of the users.
 [x] Did all the users that are common to the group receive the message in realtime?
+
 Using the three browsers with the users, continue chatting between the users in the group.
 [x] Did the chat between the users went well? (did not crash the server)
+
 Accepting a user request to join the group doesnt actually add that user to group but other than that it works well.
 [x] Can you confirm that it is possible to send emojis via chat to other users?
 
@@ -138,17 +147,23 @@ Open two browsers, log in with different users on each browser, create a group w
 Open two browsers, log in with different users on each browser, become part of the same group with both users and with one of the users create an event.
 [x] Did the other user received a notification regarding the creation of the event?
 
-#Docker
+# Docker
 Try and run the application, then use the docker command "docker ps -a"
 [x] Can you confirm that there are two containers, one for the backend and the other for the frontend?
 
 # Bonus
 [ ] +Can you log in using Github or other type of external OAuthenticator (open standard for access delegation)?
+
 [ ] +Did the student created a migration to fill the database?
+
 [ ] +If you unfollow a user, do you get a confirmation pop-up?
+
 [ ] +If you change your profile from public to private (or vice versa), do you get a confirmation pop-up?
+
 [x] +Is there other notification apart from the ones explicit on the subject?
+
 [x] +Does the project present a script to build the images and containers? (using a script to simplify the build)
+
 [x] +Do you think in general this project is well done?
 
 
