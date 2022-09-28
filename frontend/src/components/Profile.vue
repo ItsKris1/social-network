@@ -1,5 +1,4 @@
 <template>
-
     <div v-if="user && this.$store.state.id !== ''">
         <div id="layout-profile">
 
@@ -9,7 +8,7 @@
                     </div>
                     <div class="user-profile__info">
                         <h2 class="username">{{user.firstName}} {{user.lastName}}</h2>
-                        <h3 class="username">{{ user.nickname }}</h3>
+                        <h3 v-if="showNickname" class="username">{{ user.nickname }}</h3>
                         <p class="user-email" v-if="user.login">{{ user.login }}</p>
                         <p class="user-dateOfBirth" v-if="user.dateOfBirth">{{ user.dateOfBirth }}</p>
                     </div>
@@ -19,19 +18,19 @@
                         <PrivacyBtn v-if="isMyProfile" :status="user.status" />
 
                         <!-- Follow/unfollow button -->
-                        <component v-else :is="displayBtn" v-bind="{ user }" @follow="checkFollowRequest"></component>
+                        <component v-else :is="displayBtn" v-bind="{ user }" @follow="checkFollowRequest" @unfollow="unfollow"></component>
 
                         <!-- Send message button -->
-                        <button v-if="showSendButton"
-                                class="btn">Send message
-                            <i class="uil uil-message"></i></button>
+                        <!-- <button v-if="showSendButton"
+                                class="btn" @click="addChat">Send message
+                            <i class="uil uil-message"></i></button> -->
 
                     </div>
 
                 </div>
                 <div class="multiple-item-list" v-if="showProfileData">
-                    <Following />
-                    <Followers />
+                    <Following :following="following"/>
+                    <Followers :followers="followers" />
                 </div>
 
             </div>
@@ -42,7 +41,7 @@
                     <h2 class="about-title">About me</h2>
                     <p class="about-text">{{ user.about }}</p>
                 </div>
-                <AllMyPosts v-bind:userid="this.user.id" />
+                <AllMyPosts :posts="this.posts"/>
 
             </div>
 
@@ -60,19 +59,21 @@ import Followers from './Followers.vue'
 import FollowBtn from './FollowBtn.vue'
 import PrivacyBtn from './PrivacyBtn.vue'
 import UnfollowBtn from './UnfollowBtn.vue'
-// import { mapGetters } from 'vuex'
 export default {
     name: 'Profile',
     components: { AllMyPosts, Followers, Following, FollowBtn, PrivacyBtn, UnfollowBtn },
     data() {
         return {
+            // flag: false,
             user: null,
             isMyProfile: false,
+            followers: [],
+            following: [],
+            posts:[],
         }
     },
     created() {
-        this.getUserData()
-        this.checkProfile()
+        this.updateProfileData()
     },
     computed: {
         showProfileData() {
@@ -88,13 +89,22 @@ export default {
             } else {
                 return FollowBtn
             }
+        },
+        showNickname(){
+            if (this.user.nickname == this.user.firstName + " "+ this.user.lastName){
+                return false
+            }
+            return true
         }
     },
-
-
-
-
     methods: {
+        updateProfileData(){
+            this.getUserData()
+            this.getPosts()
+            this.getFollowers()
+            this.getFollowing()
+            this.checkProfile()
+        },
         async getUserData() {
             await fetch("http://localhost:8081/userData?userId=" + this.$route.params.id, {
                 credentials: "include",
@@ -102,7 +112,6 @@ export default {
                 .then((r) => r.json())
                 .then((json) => {
                     this.user = json.users[0];
-                    // console.log("User", this.user)
                 });
 
         },
@@ -121,7 +130,8 @@ export default {
 
         checkFollowRequest(action) {
             if (action === "followedUser") {
-                this.getUserData();
+                this.$store.dispatch("fetchChatUserList");
+                this.updateProfileData()
                 this.toggleFollowingThisUser();
 
             }
@@ -129,13 +139,58 @@ export default {
 
         toggleFollowingThisUser() {
             this.user.following = !this.user.following
+        },
+        unfollow(){
+            this.updateProfileData();
+            this.$store.dispatch("fetchChatUserList");
+        },
+        async getFollowers() {
+            await fetch('http://localhost:8081/followers?userId=' + this.$route.params.id, {
+                credentials: 'include'
+            })
+                .then((response => response.json()))
+                .then((json => {
+                    this.followers = json.users
+                }))
+        },
+        async getFollowing() {
+            await fetch('http://localhost:8081/following?userId=' + this.$route.params.id, {
+                credentials: 'include'
+            })
+                .then((response => response.json()))      
+                .then((json => {
+                    this.following = json.users
+                }))
+
+        },
+        async getPosts() {
+            await fetch("http://localhost:8081/userPosts?id=" + this.$route.params.id, {
+                credentials: "include",
+            })
+                .then((r) => r.json())
+                .then((r) => {
+                    this.posts = r.posts
+                });
+                // this.flag = false
+        },
+        
+        addChat() {
+            // check if user doesnt have a chat with that person already
+            // ....
+
+            let newChat = {
+                name: this.user.nickname,
+                receiverId: this.user.id,
+                type: "PERSON"
+            };
+
+            this.$store.dispatch("addNewChat", newChat);
         }
     },
     watch: { //watching changes in route
         $route() {
             if (this.$route.name === "Profile") {
-                this.getUserData();
-                this.checkProfile();
+                this.updateProfileData()
             }
 
         }

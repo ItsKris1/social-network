@@ -4,7 +4,7 @@
         <div class="left-section">
             <GroupMembers v-bind:isMember="isMemberOfGroup" />
             <GroupEvents v-if="this.isMemberOfGroup" />
-            <GroupJoinRequests v-bind:isAdmin="this.isAdmin"/>         
+                 
         </div>
 
         <div class="middle-section">
@@ -18,6 +18,9 @@
                 information.
             </p>            
         </div>
+      
+        <GroupJoinRequests v-bind:isAdmin="this.isAdmin" class="right-section"/>  
+     
     </div>
 </template>
 
@@ -54,7 +57,6 @@ export default {
     },
     methods: {
         async getGroupInfo() {
-            console.log("OOO");
             await fetch("http://localhost:8081/groupInfo?groupId=" + this.$route.params.id, {
                 credentials: "include"
             })
@@ -79,9 +81,9 @@ export default {
 <style scoped>
 .content {
     margin-top: 50px;
-
+    padding: 0 30px;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(min-content, 550px) minmax(min-content, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 550px) minmax(0, 1fr);
     column-gap: 50px;
 }
 
@@ -92,6 +94,7 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 35px;
+
 
 }
 
@@ -105,17 +108,10 @@ export default {
 
 .right-section {
     justify-self: flex-start;
+    min-width: 250px;
+  
 }
 
-
-#requests .item-list {
-    gap: 10px;
-}
-
-#requests .item-list li {
-    justify-content: space-between;
-    gap: 20px;
-}
 
 .box {
     height: 300px;
@@ -123,16 +119,15 @@ export default {
     border: 2px solid blue;
 }
 
-@media only screen and (max-width: 1176px) {
-
+@media only screen and (max-width: 1250px) {
     .content {
-        grid-template-columns: repeat(2, max-content);
+        grid-template-columns: minmax(min-content, max-content) minmax(min-content, 550px);
         grid-template-rows: repeat(2, minmax(auto, max-content));
         row-gap: 35px;
         justify-content: center;
         grid-template-areas:
-            "groups middle-section"
-            "requests middle-section"
+            "left-section middle-section"
+            "right-section middle-section"
             "... middle-section";
 
     }
@@ -143,11 +138,11 @@ export default {
     }
 
     .left-section {
-        grid-area: groups;
+        grid-area: left-section;
     }
 
     .right-section {
-        grid-area: requests;
+        grid-area: right-section;
     }
 
 }

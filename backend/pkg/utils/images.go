@@ -12,7 +12,7 @@ const defaultImage = "imageUpload/default.svg"
 
 // Creates new file and reads image bytes into it
 // returns path to new image
-//returns default avatar or provided one
+// returns default avatar or provided one
 func SaveAvatar(r *http.Request) string {
 	// Read data from request
 	file, fileHeader, errRead := r.FormFile("avatar")
@@ -24,7 +24,7 @@ func SaveAvatar(r *http.Request) string {
 	contentType := fileHeader.Header["Content-Type"][0]
 	// Create empty local file with correct file extension
 	localFile, err := createTempFile(contentType)
-	// If type not ecognized return default image path
+	// If type not recognized return default image path
 	if err != nil {
 		return defaultImage
 	}
@@ -36,8 +36,7 @@ func SaveAvatar(r *http.Request) string {
 		return defaultImage
 	}
 	localFile.Write(fileData)
-	newFilename := strings.Split(localFile.Name(), "\\")[1]
-	return "imageUpload/"+newFilename
+	return strings.Replace(localFile.Name(), "\\", "/", -1)
 }
 
 /* ------------------------- for posts and comments ------------------------- */
@@ -67,7 +66,7 @@ func SaveImage(r *http.Request) string {
 		return ""
 	}
 	localFile.Write(fileData)
-	return localFile.Name()
+	return strings.Replace(localFile.Name(), "\\", "/", -1)
 }
 
 // creates empty local file based on filt type

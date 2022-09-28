@@ -13,7 +13,7 @@
 
         </div>
 
-        <form @submit.prevent="sendMessage" autocomplete="off" class="send-message">
+        <form @submit.prevent="sendMessage" autocomplete="off" class="send-message" @keyup.enter="sendMessage">
             <input type="text" name="sent-message" id="sent-message__input" placeholder="Send a message"
                    ref="sendMessageInput">
             <button type="submit"><i class="uil uil-message"></i></button>
@@ -70,8 +70,6 @@ export default {
                 })
             });
             const data = await response.json();
-            // console.log("/previous messages data", data)
-            // if response is NULL assign an empty array
             this.previousMessages = data.chatMessage ? data.chatMessage : [];
         },
         async sendMessage() {
@@ -84,14 +82,20 @@ export default {
                 content: sendMessageInput.value,
                 type: this.type
             };
-            await fetch("http://localhost:8081/newMessage", {
+            let response = await fetch("http://localhost:8081/newMessage", {
                 body: JSON.stringify(msgObj),
                 method: "POST",
                 credentials: "include"
             });
-            // const data = await response.json();
-            // console.log("/newMessage data", data)
-            this.$store.dispatch("addNewChatMessage", { ...msgObj, senderId: this.myID });
+            const data = await response.json();
+            if (data.type == "Success"){
+                this.$store.dispatch("addNewChatMessage", { ...msgObj, senderId: this.myID });
+            }else{
+                this.$toast.open({
+                message: data.message,
+                type: "warning", //One of success, info, warning, error, default
+              });
+            }
             sendMessageInput.value = "";
         },
         clearChatNewMessages() {

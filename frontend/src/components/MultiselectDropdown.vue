@@ -6,7 +6,7 @@
         <p class="custom-label">{{ labelName }}</p>
 
         <ul class="checkedOptionsList" v-if="dropdownCheckedOptions.length !== 0">
-            <li v-for="checkedOption in dropdownCheckedOptions"> {{ checkedOption }}</li>
+            <li v-for="checkedOption in dropdownCheckedOptions"> {{ checkedOption.nickname }}</li>
         </ul>
 
         <div class="dropdown">
@@ -18,10 +18,10 @@
             <ul class="item-list" v-show="showDropdown">
                 <li v-if="content !== null" v-for="option in content">
                     <input type="checkbox"
-                           :id="option"
+                           :id="option.id"
                            :value="option"
                            v-model="dropdownCheckedOptions" />
-                    <label :for="option">{{ option }}</label>
+                    <label :for="option.id">{{ option.nickname }}</label>
 
                 </li>
 
@@ -42,24 +42,15 @@ export default {
         return {
             dropdownCheckedOptions: [],
             showDropdown: false,
-            clearSome: false,
+            clearedDropdown: false,
         }
     },
 
 
     watch: {
-        clearInput() {
-            if (this.clearInput) {
-                // console.log("Ay MD")
-                this.dropdownCheckedOptions = [];
-                this.showDropdown = false;
-                this.$emit("inputCleared");
-            }
-
-        },
-
         dropdownCheckedOptions(newValue) {
-            if (this.clearSome) {
+            // if dropdown was cleared do nothing
+            if (this.clearedDropdown) {
                 return
             }
             this.$emit('update:checkedOptions', newValue)
@@ -67,23 +58,13 @@ export default {
 
 
         checkedOptions(newValue) {
-            // console.log("ye")
-            // console.log(newValue.target)
-            // console.log(newValue === {})
-            // console.log("Empty!")
-
             if (Object.keys(newValue).length === 0) {
-                this.dropdownCheckedOptions = [];
-                this.clearSome = true;
+                this.dropdownCheckedOptions = []; // clear dropdown
+                this.clearedDropdown = true;
                 this.showDropdown = false;
-
             }
         }
     },
-
-    unmounted() {
-        // console.log("Unmounted!")
-    }
 }
 
 </script>

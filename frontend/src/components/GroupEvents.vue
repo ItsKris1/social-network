@@ -6,14 +6,30 @@
                 <img class="small" src="../assets/icons/event.svg" alt="">
                 <div class="item-text" style="cursor:pointer" @click="this.showEvent(event)">{{ event.title }}</div>
 
-                <Modal v-if="this.eventIsOpen" @closeModal="closeEvent">
+                <Modal v-if="this.eventIsOpen" @closeModal="toggleEventModal">
                     <template #title>
                         {{ this.eventData.title }}
                     </template>
                     <template #body>
                         <div>{{ this.eventData.date }}</div>
                         <div>{{ this.eventData.content }}</div>
+                        <form @submit.prevent="participateRespond(); toggleEventModal();" id="event-desc">
+                            <div class="form-input">
+                            <label for="goingEvent">Going</label>
 
+                            <div class="select-wrapper">
+                                <img src="../assets/icons/angle-down.svg" class="dropdown-arrow">
+                                <select v-model="this.formData.going" name="goingEvent" id="goingEvent" required>
+                                    <option value="" selected hidden>{{this.eventData.going}}</option>
+                                    <option value="YES">Yes</option>
+                                    <option value="NO">No</option>
+                                </select>
+
+                            </div>
+
+                        </div>
+                        </form>
+                        <button class="btn form-submit" form="event-desc">Confirm</button>
                     </template>
                 </Modal>
             </li>
@@ -71,17 +87,19 @@ export default {
             isOpen: false,
             eventIsOpen: false,
             eventData: {
+                id:"",
                 title: "",
                 date: "",
                 content: "",
                 going: "",
             },
             formData: {
+                id:"",
                 title: "",
                 content: "",
                 date: null,
                 going: ""
-            }
+            },
         };
     },
     created() {
@@ -99,9 +117,35 @@ export default {
             })
                 .then((response => response.json()))
                 .then((json => {
-                    // console.log("All Events:", json);
                     this.groupEvents = json.events
                 }));
+        },
+        async participateRespond(){
+            const response = await fetch(`http://localhost:8081/participate`, {
+                credentials: "include",
+                method: "POST",
+                body: JSON.stringify({
+                    eventId: this.eventData.id,
+                    response: this.formData.going,
+                })
+            });
+            const data = await response.json();
+            if (data.type == "Success"){
+                // reload events
+                this.getGroupEvents();
+                // reload notifications
+                this.fetchNotifications()
+            }
+            
+        },
+        async fetchNotifications() {
+            const response = await fetch("http://localhost:8081/notifications", {
+                credentials: "include"
+            });
+            const data = await response.json();
+            this.notificationsFromDB = data;
+            this.$store.commit("updateAllNotifications", data.notifications);
+            // console.log("/notifications data", data)
         },
         async createNewEvent() {
 
@@ -126,6 +170,7 @@ export default {
             if (this.isOpen) {
                 // clear form data
                 this.formData = {
+                    id:"",
                     title: "",
                     content: "",
                     date: null,
@@ -134,14 +179,29 @@ export default {
             }
             this.isOpen = !this.isOpen;
         },
+        toggleEventModal() {
+            console.log("toggle", this.eventIsOpen)
+            if (this.eventIsOpen) {
+                // clear form data
+                this.formData = {
+                    id:"",
+                    title: "",
+                    content: "",
+                    date: null,
+                    going: ""
+                }
+            }
+            this.eventIsOpen = !this.eventIsOpen;
+        },
 
         showEvent(event) {
+            this.eventData.id = event.id
             this.eventData.title = event.title
             this.eventData.date = event.date
             this.eventData.content = event.content
             this.eventData.going = event.going
 
-            this.eventIsOpen = true
+            this.eventIsOpen = true  
         },
         closeEvent() {
             this.eventIsOpen = false

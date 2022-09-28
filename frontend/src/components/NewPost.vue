@@ -28,7 +28,7 @@
                     <MultiselectDropdown v-if="newpost.privacy === 'almost-private'"
                                          v-model:checkedOptions="newpost.checkedFollowers"
                                          placeholder="Select followers"
-                                         :content="getMyFollowersNames" />
+                                         :content="getMyFollowersList" />
                 </div>
 
                 <div class="form-input">
@@ -85,8 +85,8 @@ export default {
     },
 
     computed: {
-        getMyFollowersNames() {
-            return this.$store.getters.getMyFollowersNames;
+        getMyFollowersList() {
+            return this.$store.getters.followers;
         },
 
     },
@@ -125,14 +125,13 @@ export default {
         },
 
         async submitPost() {
-
             let formData = new FormData();
             formData.set("body", this.newpost.body)
             formData.set("image", this.newpost.image)
             formData.set("privacy", this.newpost.privacy)
-            formData.set("checkedfollowers", this.newpost.checkedFollowers)
-
-
+            if (this.newpost.checkedFollowers != null){
+                formData.set("checkedfollowers", this.newpost.checkedFollowers.map(x => x.id))
+            }
             const response = await fetch('http://localhost:8081/newPost', {
                 method: 'POST',
                 credentials: 'include',

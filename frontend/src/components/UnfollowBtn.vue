@@ -26,7 +26,6 @@ export default {
             })
                 .then((r) => r.json())
                 .then(json => {
-                    console.log("server response:", json)
                     this.$emit("unfollow")
 
                 })

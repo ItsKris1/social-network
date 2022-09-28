@@ -7,10 +7,8 @@
         </span>
         <div class="item-list__wrapper" id="notifications" v-show="showNotifications">
             <ul class="item-list">
-                <li v-for="notification in allNotifications"
-                    v-if="
-                    isDataValid(notificationsFromDB) &&
-                    allNotifications.length > 0">
+                <li v-for="notification in allNotifications" :key="notification.id"
+                    v-if="hasNotifications">
 
                     <div class="row1 ">
                         <img class="" src="../assets/icons/default-profile.svg">
@@ -18,8 +16,8 @@
                     </div>
 
                     <div class="row2" v-if="notification.type === 'EVENT'">
-                        <i class="uil uil-times"
-                           @click.stop="removeEventNotif(notification)"></i>
+                         <i class="uil uil-times decline" @click.stop="handleEventRequest(notification, 'NO')"></i>
+                        <i class="uil uil-check accept" @click.stop="handleEventRequest(notification, 'YES')"></i>
                     </div>
 
                     <div class="row2" v-else>
@@ -46,35 +44,64 @@ export default {
         return {
             showNotifications: false,
             notificationsFromDB: {},
-            // allNotifications: [],
         };
     },
     async created() {
         await this.fetchNotifications();
-        // await this.initAllNotifications();
     },
     computed: {
         ...mapState({
             allNotifications: state => state.notifications.allNotifications
         }),
         hasNotifications() {
-            return this.allNotifications.length > 0;
+            if (this.allNotifications === null) {
+                return false;
+            } else {
+                return this.allNotifications.length > 0;
+            }
         }
     },
     unmounted() {
         this.$store.commit("updateAllNotifications", []);
     },
     methods: {
+        async handleEventRequest(notification, reqResponse){
+            const response = await fetch(`http://localhost:8081/participate`, {
+                credentials: "include",
+                method: "POST",
+                body: JSON.stringify({
+                    requestId: notification.id,
+                    eventId: notification.event.id,
+                    response: reqResponse,
+                })
+            });
+            const data = await response.json();
+            if (data.type == "Success"){
+                // remove the notification
+                this.$store.dispatch("removeNotification", notification.id);
+            }
+
+            if (!this.hasNotifications) {
+                this.toggleShowNotifications();
+            }
+        },
         toggleShowNotifications() {
             this.showNotifications = !this.showNotifications;
         },
+
         async fetchNotifications() {
             const response = await fetch("http://localhost:8081/notifications", {
                 credentials: "include"
             });
             const data = await response.json();
-            this.notificationsFromDB = data;
-            this.$store.commit("updateAllNotifications", data.notifications);
+            if (data.type === "Error") {
+                this.notificationsFromDB = null;
+                this.$store.commit("updateAllNotifications", null);
+            } else {
+                this.notificationsFromDB = data;
+                this.$store.commit("updateAllNotifications", data.notifications);
+            }
+           
             // console.log("/notifications data", data)
         },
         async handleRequest(notification, reqResponse) {
@@ -88,6 +115,9 @@ export default {
                     break;
                 case "GROUP_REQUEST":
                     endpoint = "responseGroupRequest"
+                    break;
+                case "CHAT_REQUEST":
+                    endpoint = "responseChatRequest"
                     break;
             }
             const response = await fetch(`http://localhost:8081/${endpoint}`, {
@@ -105,12 +135,26 @@ export default {
                 // update user groups for live update
                 this.$store.dispatch("addUserGroup", notification.group);
             }
+
+            if (notification.type === "CHAT_REQUEST" || notification.type == "FOLLOW" && reqResponse === "accept") {
+                // update user groups for live update
+                // console.log("NOTIFICATION", notification)
+                this.$store.dispatch("fetchChatUserList");
+                this.$store.dispatch("fetchUnreadMessages");
+                
+            }
+
+            // if (notification.type === "GROUP_INVITE" && reqResponse === "accept")
             // remove the notification
             this.$store.dispatch("removeNotification", notification.id);
+
+            // this.checkNotificationsLength();
+
+            if (!this.hasNotifications) {
+                this.toggleShowNotifications();
+            }
         },
-        async removeEventNotif() {
-            // TODO
-        },
+     
         isDataValid(resp) {
             return resp.type === "Success" ? true : false;
         },

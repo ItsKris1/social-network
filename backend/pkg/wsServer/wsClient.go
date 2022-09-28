@@ -42,9 +42,12 @@ func (client *Client) SendNotification(notif models.Notification) {
 	case "EVENT":
 		notif.Event, _ = client.repos.EventRepo.GetData(notif.Content)
 		notif.User, _ = client.repos.UserRepo.GetDataMin(notif.Sender)
+		notif.Group,_ = client.repos.GroupRepo.GetData(notif.Event.GroupID)
 	case "GROUP_REQUEST":
 		notif.User, _ = client.repos.UserRepo.GetDataMin(notif.Content)
 		notif.Group, _ = client.repos.GroupRepo.GetData(notif.TargetID)
+	case "CHAT_REQUEST":
+		notif.User, _ = client.repos.UserRepo.GetDataMin(notif.Sender)
 	}
 	/* ---------------------------- add message text ---------------------------- */
 	utils.DefineNotificationMsg(&notif)
@@ -58,10 +61,11 @@ func (client *Client) SendNotification(notif models.Notification) {
 	client.send <- message.encode()
 }
 
-func (client *Client) SendChatMessage(msg models.ChatMessage) {
+func (client *Client) SendChatMessage(msg models.ChatMessage, flag string) {
 	message := WsMessage{
 		Action:      ChatAction,
 		ChatMessage: msg,
+		Message: flag,
 	}
 
 	client.send <- message.encode()

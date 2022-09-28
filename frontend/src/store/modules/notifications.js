@@ -1,6 +1,6 @@
 export default {
     state: () => ({
-        allNotifications: [],
+        allNotifications: null,
     }),
 
     mutations: {

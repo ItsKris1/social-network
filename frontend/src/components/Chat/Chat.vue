@@ -1,7 +1,6 @@
 <template>
-
     <div class="messaging-wrapper" ref="messagingWrapper">
-        <ChatBox v-for="chat in chats" v-bind="chat" @closeChat="removeChat" :key="chat.receiverId"></ChatBox>
+        <ChatBox v-for="chat in openChats" v-bind="chat" @closeChat="removeChat" :key="chat.receiverId"></ChatBox>
 
         <div class=" messaging" @click="toggleShowContent">
 
@@ -13,10 +12,9 @@
             </div>
 
             <div class="messaging-content" v-show="showContent">
-                <ul class="item-list"
-                    v-if="usersIFollow.type && usersIFollow.users !== null">
+                <ul class="item-list">
 
-                    <li v-for="user in usersIFollow.users">
+                    <li v-for="user in chatUserList">
                         <div class="user">
                             <div class="user-picture small"></div>
                             <div class="item-text"
@@ -29,7 +27,6 @@
                             {{ totalUnreadMessagesCount(user.id, 'PERSON') }}</p>
 
                     </li>
-
                 </ul>
 
                 <ul class="item-list" v-if="userGroups !== null">
@@ -51,7 +48,7 @@
 
                 </ul>
 
-                <p class="additional-info" v-if="usersIFollow.users === null && userGroups === null">
+                <p class="additional-info" v-if="chatUserList === null && userGroups === null">
                     No one to message with :(</p>
             </div>
 
@@ -70,38 +67,37 @@ export default {
     data() {
         return {
             showContent: false,
-            chats: [],
-            usersIFollow: [],
-            unreadMsgsFromDB: [],
-
         }
     },
 
-    mounted() { },
-
     unmounted() {
         this.$store.commit("updateUnreadMessages", [])
+        this.$store.dispatch("clearOpenChats")
     },
 
     created() {
-        this.getUsersIFollow();
+        this.$store.dispatch("fetchChatUserList");
         this.$store.dispatch("getUserGroups");
-        this.fetchUnreadMessages();
+        this.$store.dispatch("fetchUnreadMessages");
     },
 
     computed: {
         ...mapState({
-            userGroups: state => state.groups.userGroups
+            userGroups: state => state.groups.userGroups,
+            openChats: state => state.chat.openChats,
+            chatUserList: state => state.chat.chatUserList,
+            unreadMsgsStatsFromDB: state => state.chat. unreadMsgsStatsFromDB,
+           
         }),
 
-        ...mapGetters(['getUnreadMessagesCount', 'getUnreadGroupMessagesCount']),
+        ...mapGetters(['getUnreadMessagesCount', 'getUnreadGroupMessagesCount', 'getUnreadMsgsCountFromDB']),
 
         hasUnreadMessages() {
             if (this.$store.state.chat.unreadMessages.length > 0) {
                 return true
             }
 
-            if (this.unreadMsgsFromDB !== null && this.unreadMsgsFromDB.length > 0) {
+            if (this.unreadMsgsStatsFromDB !== null && this.unreadMsgsStatsFromDB.length > 0) {
                 return true
             }
 
@@ -114,7 +110,7 @@ export default {
         async getUsersIFollow() {
             await this.$store.dispatch("getMyUserID");
 
-            const response = await fetch('http://localhost:8081/following?userId=' + this.$store.state.id, {
+            const response = await fetch('http://localhost:8081/chatList?userId=' + this.$store.state.id, {
                 credentials: 'include'
             });
 
@@ -124,76 +120,46 @@ export default {
 
         },
 
-        async fetchUnreadMessages() {
-            const response = await fetch('http://localhost:8081/unreadMessages', {
-                credentials: 'include'
-            });
-            const data = await response.json();
-            // console.log("/unReadmessages data", data)
-            this.unreadMsgsFromDB = data.chatStats;
-
-        },
-
-
+    
         openChat(e, obj) {
             // console.log("Trying to add a chatbox")
             // console.log(e.target.textContent)
-            const found = this.chats.some(chat => chat.name === e.target.textContent);
+            const found = this.openChats.some(chat => chat.name === e.target.textContent);
             if (found) {
                 return
             };
 
             if (this.$refs.messagingWrapper.clientWidth + 300 > window.innerWidth) {
-                this.chats.shift();
+                this.openChats.shift();
             }
-            this.chats.push({
+
+            this.$store.dispatch("addNewChat", {
                 "name": e.target.textContent,
                 ...obj
-            });
-            this.$store.commit("updateOpenChats", this.chats)
+            })
 
             this.$store.dispatch("removeUnreadMessages", { receiverId: obj.receiverId, type: obj.type })
 
-            if (Array.isArray(this.unreadMsgsFromDB)) {
-                this.unreadMsgsFromDB = this.unreadMsgsFromDB.filter((msg) => msg.id !== obj.receiverId)
-
+            if (Array.isArray(this.unreadMsgsStatsFromDB)) {
+                let unreadMsgsStatsFromDB = this.unreadMsgsStatsFromDB.filter((msgStats) => msgStats.id !== obj.receiverId);
+                this.$store.commit("updateUnreadMsgsFromDBCount", unreadMsgsStatsFromDB)
             }
+
         },
 
 
         removeChat(name) {
-            // console.log(name)
-            // console.log("Removing chat")
-            this.chats = this.chats.filter((chat) => {
-                return chat.name !== name
-            })
-
-            this.$store.commit("updateOpenChats", this.chats)
+            this.$store.dispatch("removeChat", name)
         },
-
-
-        unreadMsgsFromDBCount(userId) {
-
-            if (this.unreadMsgsFromDB === null) {
-                return 0
-            }
-            const userMsgObj = this.unreadMsgsFromDB.find((msg) => msg.id === userId)
-            if (userMsgObj === undefined) {
-                return 0
-            }
-
-            return userMsgObj.unreadMsgCount
-        },
-
 
 
         // adds to the previous unread messages
         // unread messages from database and current session
         totalUnreadMessagesCount(receiverId, type) {
             if (type === "PERSON") {
-                return this.getUnreadMessagesCount(receiverId) + this.unreadMsgsFromDBCount(receiverId)
+                return this.getUnreadMessagesCount(receiverId) + this.getUnreadMsgsCountFromDB(receiverId)
             } else {
-                return this.getUnreadGroupMessagesCount(receiverId) + this.unreadMsgsFromDBCount(receiverId)
+                return this.getUnreadGroupMessagesCount(receiverId) + this.getUnreadMsgsCountFromDB(receiverId)
             }
         },
 
@@ -203,6 +169,15 @@ export default {
         },
 
 
+    },
+
+
+    watch: {
+        $route() {
+            // console.log("Route changed!")
+            // keep chat list updated while user navigates around the website
+            this.$store.dispatch("fetchChatUserList");
+        }
     }
 }
 </script>
