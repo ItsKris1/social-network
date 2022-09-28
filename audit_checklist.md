@@ -110,9 +110,8 @@ Using the same browsers and the same users, after both of them becoming part of 
 # Chat
 Try and open two browsers (ex: Chrome and Firefox), log in with different users in each one. Then with one of the users try to send a private message to the other user.
 [x] Did the other user received the message in realtime?
-*funny behivior -> if user A follows user B, he can send B a message, but if B doesn't follow back, he can see that there is new message(by red indicator) but can't access or see it becaus ethe other user is not in the chat list (it may be with private users)*
 Using the two browsers with the users start a chat between the two of them.
-[ ] Did the chat between the users went well? (did not crash the server)
+[x] Did the chat between the users went well? (did not crash the server)
 
 Try and open three browsers (ex: Chrome and Firefox or a private browser), log in with different users in each one. Then with one of the users try to send a private message to one of the other users.
 [x] Did only the targeted user received the message?
@@ -121,6 +120,7 @@ Using the three browsers with the users, enter with each user a common group. Th
 [x] Did all the users that are common to the group receive the message in realtime?
 Using the three browsers with the users, continue chatting between the users in the group.
 [ ] Did the chat between the users went well? (did not crash the server)
+Accepting a user request to join the group doesnt actually add that user to group but other than that it works well.
 [x] Can you confirm that it is possible to send emojis via chat to other users?
 
 # Notifications
