@@ -6,6 +6,7 @@ export default {
 
         unreadMessages: [],
         unreadMsgsStatsFromDB: [],
+        
         openChats: [],
         chatUserList: [],
     }),
@@ -20,29 +21,19 @@ export default {
                 })
             } else {
                 messages = newGroupChatMessages.filter((msg) => {
-                    // console.log(msg.receiverId === receiverId)
                     return (msg.receiverId === receiverId)
                 })
-
-                // console.log("Group messages returned", messages)
             }
 
             return messages
-            // return newChatMessages.filter((e) => {
-            //   return (e.receiverId === receiverId && e.senderId === id) || (e.receiverId === id && e.senderId === receiverId)
-            // })
         },
 
 
         getUnreadMessagesCount: ({ unreadMessages }, getters, { id }) => (userId) => {
-            // console.log("uid", userId)
             const userUnreadMsgs = unreadMessages.filter((msg) => {
-                // console.log(msg.receiverId)
                 return msg.senderId === userId && msg.receiverId === id
             })
 
-
-            // console.log(userUnreadMsgs.length)
             return userUnreadMsgs.length
         },
 
@@ -101,7 +92,12 @@ export default {
             });
             const data = await response.json();
             console.log("/unReadmessages data", data)
-            state.unreadMsgsStatsFromDB = data.chatStats;
+            if (data.type === "Error") {
+                state.unreadMsgsStatsFromDB = null;
+            } else {
+                state.unreadMsgsStatsFromDB = data.chatStats;
+
+            }
 
         },
 
@@ -115,14 +111,15 @@ export default {
                 })
             })
 
-            console.log(chatMessage)
-            console.log("msgObj", {
-                id: chatMessage.id,
-                type: chatMessage.type
-            })
+           
             const data = await response.json();
 
-            console.log("/messageRead data", data)
+            // console.log("/messageRead data", data)
+             // console.log(chatMessage)
+            // console.log("msgObj", {
+            //     id: chatMessage.id,
+            //     type: chatMessage.type
+            // })
         },
 
 
@@ -147,7 +144,6 @@ export default {
 
         removeUnreadMessages({ state, commit }, payload) {
             let unreadMsgs;
-            // console.log(payload)
             if (payload.type === "GROUP") {
                 unreadMsgs = state.unreadMessages.filter((msg) => {
                     if (msg.receiverId === payload.receiverId) {
@@ -184,22 +180,19 @@ export default {
             commit("updateOpenChats", newChats);
         },
 
-
-        addChatUser() {
-
+        clearOpenChats({commit}) {
+            commit("updateOpenChats", [])
         },
 
-        async fetchChatUserList({rootState, commit, dispatch}) {
-            if (rootState.id == "") {
-                await dispatch("getMyUserID");
-            }
 
+        async fetchChatUserList({rootState, commit, dispatch}) {
+            await dispatch("getMyUserID");
+           
             const response = await fetch('http://localhost:8081/chatList?userId=' + rootState.id, {
                 credentials: 'include'
             });
 
             const data = await response.json();
-
             commit("updateChatUserList", data.users);
         }
 

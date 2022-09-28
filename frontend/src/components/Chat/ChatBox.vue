@@ -71,8 +71,6 @@ export default {
                 })
             });
             const data = await response.json();
-            console.log("Getting previous messages AKA making messages read", data)
-            // if response is NULL assign an empty array
             this.previousMessages = data.chatMessage ? data.chatMessage : [];
         },
         async sendMessage() {

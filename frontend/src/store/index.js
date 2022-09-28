@@ -130,7 +130,6 @@ export default createStore({
 
     updateMyFollowers(state, followers) {
       state.myFollowers = followers;
-      console.log("myFollowers", state.myFollowers)
     },
 
     updateMyUserID(state, id) {

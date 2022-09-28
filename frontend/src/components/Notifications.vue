@@ -7,10 +7,8 @@
         </span>
         <div class="item-list__wrapper" id="notifications" v-show="showNotifications">
             <ul class="item-list">
-                <li  v-for="notification in allNotifications" :key="notification.id"
-                    v-if="
-                    isDataValid(notificationsFromDB) &&
-                    allNotifications.length > 0">
+                <li v-for="notification in allNotifications" :key="notification.id"
+                    v-if="hasNotifications">
 
                     <div class="row1 ">
                         <img class="" src="../assets/icons/default-profile.svg">
@@ -46,19 +44,25 @@ export default {
         return {
             showNotifications: false,
             notificationsFromDB: {},
-            // allNotifications: [],
         };
     },
     async created() {
         await this.fetchNotifications();
-        // await this.initAllNotifications();
     },
     computed: {
         ...mapState({
             allNotifications: state => state.notifications.allNotifications
         }),
         hasNotifications() {
-            return this.allNotifications.length > 0;
+            // console.log(this.allNotifications)
+            if (this.allNotifications === null) {
+                console.log("All notifications is null")
+                return false;
+            } else {
+                console.log("All notifications is not null")
+                return this.allNotifications.length > 0;
+            }
+            // return this.allNotifications !== null && this.allNotifications.length > 0;
         }
     },
     unmounted() {
@@ -94,9 +98,15 @@ export default {
                 credentials: "include"
             });
             const data = await response.json();
-            this.notificationsFromDB = data;
-            this.$store.commit("updateAllNotifications", data.notifications);
-            // console.log("/notifications data", data)
+            if (data.type === "Error") {
+                this.notificationsFromDB = null;
+                this.$store.commit("updateAllNotifications", null);
+            } else {
+                this.notificationsFromDB = data;
+                this.$store.commit("updateAllNotifications", data.notifications);
+            }
+           
+            console.log("/notifications data", data)
         },
         async handleRequest(notification, reqResponse) {
             let endpoint;

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
@@ -52,7 +53,7 @@ func (handler *Handler) Messages(w http.ResponseWriter, r *http.Request) {
 			}
 			if requetExists {
 				msgContent, _ := handler.repos.NotifRepo.GetContentFromChatRequest(msgIn.SenderId, msgIn.ReceiverId)
-				newMessage:=models.ChatMessage{ID:"0",SenderId: msgIn.SenderId, ReceiverId: msgIn.ReceiverId, Content:msgContent, Type:"PERSON" }
+				newMessage := models.ChatMessage{ID: "0", SenderId: msgIn.SenderId, ReceiverId: msgIn.ReceiverId, Content: msgContent, Type: "PERSON"}
 				messages = append(messages, newMessage)
 			}
 		}
@@ -83,7 +84,7 @@ func (handler *Handler) Messages(w http.ResponseWriter, r *http.Request) {
 	utils.RespondWithMessages(w, messages, 200)
 }
 
-//new chat message wits for POST requet with SENDER, RECEIVER AND TYPE
+// new chat message wits for POST requet with SENDER, RECEIVER AND TYPE
 // function saves new message and responds
 // to sender with regular http response
 // to recievers through websocket connection
@@ -96,21 +97,32 @@ func (handler *Handler) NewMessage(wsServer *ws.Server, w http.ResponseWriter, r
 		utils.RespondWithError(w, "Error on reading the incomming message", 200)
 		return
 	}
-	
+
 	/* -------------------- attach sender id ------------------------------------ */
 	msg.SenderId = r.Context().Value(utils.UserKey).(string)
 
-	var newChatFlag = ""; //flag is raised with valu "NEW" if tha chat does not exist for user yet
+	var newChatFlag = "" //flag is raised with valu "NEW" if tha chat does not exist for user yet
 
 	// check if receiver is following current user
+	fmt.Println("MSG OBJ", msg)
 	isFollowingBack, err := handler.repos.UserRepo.IsFollowing(msg.SenderId, msg.ReceiverId)
 	if err != nil {
+		// fmt.Println("Here occurs an error!")
 		utils.RespondWithError(w, "Error on saving checking status", 200)
 		return
 	}
-	// if he is private and have no chat history, create notification insted of saving msg
-	if !isFollowingBack{
-		status, err :=  handler.repos.UserRepo.GetStatus(msg.ReceiverId)
+
+	isGroupMember, err := handler.repos.GroupRepo.IsMember(msg.ReceiverId, msg.SenderId)
+	if err != nil {
+		utils.RespondWithError(w, "Error on checking if user is member", 200)
+		return
+	}
+
+	// fmt.Println("Is user member?", isGroupMember)
+
+	// if he is private and have no chat history and not group member, create notification insted of saving msg
+	if !isFollowingBack && !isGroupMember {
+		status, err := handler.repos.UserRepo.GetStatus(msg.ReceiverId)
 		if err != nil {
 			utils.RespondWithError(w, "Error on saving checking status", 200)
 			return
@@ -120,14 +132,14 @@ func (handler *Handler) NewMessage(wsServer *ws.Server, w http.ResponseWriter, r
 			utils.RespondWithError(w, "Error on checking chat history", 200)
 			return
 		}
-		if status == "PRIVATE" && !hasHistory{
+		if status == "PRIVATE" && !hasHistory {
 			// check if request is already made
-			requestExists, err :=  handler.repos.NotifRepo.CheckIfChatRequestExists(msg.SenderId, msg.ReceiverId);
+			requestExists, err := handler.repos.NotifRepo.CheckIfChatRequestExists(msg.SenderId, msg.ReceiverId)
 			if err != nil {
 				utils.RespondWithError(w, "Internal server error", 200)
 				return
 			}
-			if requestExists{
+			if requestExists {
 				utils.RespondWithError(w, "Chat request already saved.\n Wait for user to respond to your request.", 200)
 				return
 			}
@@ -135,9 +147,9 @@ func (handler *Handler) NewMessage(wsServer *ws.Server, w http.ResponseWriter, r
 			newNotif := models.Notification{
 				ID:       utils.UniqueId(),
 				TargetID: msg.ReceiverId,
-				Type: "CHAT_REQUEST",
-				Content: msg.Content,
-				Sender: msg.SenderId,
+				Type:     "CHAT_REQUEST",
+				Content:  msg.Content,
+				Sender:   msg.SenderId,
 			}
 			err = handler.repos.NotifRepo.Save(newNotif)
 			if err != nil {
@@ -151,8 +163,8 @@ func (handler *Handler) NewMessage(wsServer *ws.Server, w http.ResponseWriter, r
 				}
 			}
 			utils.RespondWithSuccess(w, "New request saved", 200)
-				return
-		}else if status == "PUBLIC" && !hasHistory{
+			return
+		} else if status == "PUBLIC" && !hasHistory {
 			newChatFlag = "NEW"
 		}
 	}
@@ -201,7 +213,7 @@ func (handler *Handler) NewMessage(wsServer *ws.Server, w http.ResponseWriter, r
 	}
 }
 
-//respond with list of messages, that user has missed
+// respond with list of messages, that user has missed
 // in response include message_id, senderId (group id or user id) type -> group or person
 func (handler *Handler) UnreadMessages(w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)
@@ -284,11 +296,11 @@ func (handler *Handler) ResponseChatRequest(w http.ResponseWriter, r *http.Reque
 		}
 		// save new message
 		newMsg := models.ChatMessage{
-			ID: utils.UniqueId(),
-			SenderId: notifData.Sender,
+			ID:         utils.UniqueId(),
+			SenderId:   notifData.Sender,
 			ReceiverId: notifData.TargetID,
-			Type:"PERSON",
-			Content: notifData.Content,
+			Type:       "PERSON",
+			Content:    notifData.Content,
 		}
 		err = handler.repos.MsgRepo.Save(newMsg)
 		if err != nil {

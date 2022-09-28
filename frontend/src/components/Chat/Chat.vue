@@ -48,7 +48,7 @@
 
                 </ul>
 
-                <p class="additional-info" v-if="usersIFollow.users === null && userGroups === null">
+                <p class="additional-info" v-if="chatUserList === null && userGroups === null">
                     No one to message with :(</p>
             </div>
 
@@ -67,23 +67,27 @@ export default {
     data() {
         return {
             showContent: false,
-            chats: [],
-            usersIFollow: [],
+            // chats: [],
+            // usersIFollow: [],
         }
     },
 
-    mounted() { },
+    mounted() {
+        // console.log("Mounted!")
+    },
 
     unmounted() {
         console.log("Unmounted!")
-        console.log(" ")
         this.$store.commit("updateUnreadMessages", [])
+        this.$store.dispatch("clearOpenChats")
     },
 
     created() {
         this.$store.dispatch("fetchChatUserList");
         this.$store.dispatch("getUserGroups");
         this.$store.dispatch("fetchUnreadMessages");
+        // console.log("Finished taking stuff")
+        console.log(this.openChats);
     },
 
     computed: {
@@ -146,15 +150,10 @@ export default {
             this.$store.dispatch("removeUnreadMessages", { receiverId: obj.receiverId, type: obj.type })
 
             if (Array.isArray(this.unreadMsgsStatsFromDB)) {
-                console.log("Trying to clear..", this.unreadMsgsStatsFromDB)
-                // // id -> senderID
                 let unreadMsgsStatsFromDB = this.unreadMsgsStatsFromDB.filter((msgStats) => msgStats.id !== obj.receiverId);
-                console.log("After clearing", unreadMsgsStatsFromDB);
                 this.$store.commit("updateUnreadMsgsFromDBCount", unreadMsgsStatsFromDB)
-                // this.$store.dispatch("fetchUnreadMessages");
             }
 
-            // console.log("FFF", this.unreadMsgsStatsFromDB)
         },
 
 
@@ -179,6 +178,15 @@ export default {
         },
 
 
+    },
+
+
+    watch: {
+        $route() {
+            // console.log("Route changed!")
+            // keep chat list updated while user navigates around the website
+            this.$store.dispatch("fetchChatUserList");
+        }
     }
 }
 </script>

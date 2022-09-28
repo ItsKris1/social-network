@@ -109,7 +109,7 @@ Using the same browsers and the same users, after both of them becoming part of 
 
 # Chat
 Try and open two browsers (ex: Chrome and Firefox), log in with different users in each one. Then with one of the users try to send a private message to the other user.
-[ ] Did the other user received the message in realtime?
+[x] Did the other user received the message in realtime?
 *funny behivior -> if user A follows user B, he can send B a message, but if B doesn't follow back, he can see that there is new message(by red indicator) but can't access or see it becaus ethe other user is not in the chat list (it may be with private users)*
 Using the two browsers with the users start a chat between the two of them.
 [ ] Did the chat between the users went well? (did not crash the server)
@@ -147,7 +147,7 @@ Try and run the application, then use the docker command "docker ps -a"
 [ ] +Did the student created a migration to fill the database?
 [ ] +If you unfollow a user, do you get a confirmation pop-up?
 [ ] +If you change your profile from public to private (or vice versa), do you get a confirmation pop-up?
-[ ] +Is there other notification apart from the ones explicit on the subject?
+[x] +Is there other notification apart from the ones explicit on the subject?
 [x] +Does the project present a script to build the images and containers? (using a script to simplify the build)
 [x] +Do you think in general this project is well done?
 
