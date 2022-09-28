@@ -33,9 +33,9 @@
                         <p class="additional-info" v-else>No file chosen
                         </p>
 
-                        <label for="upload-image">
+                        <label :for="'upload-img-'+postData.id" >
                             <input type="file" accept="image/png, image/gif, image/jpeg" style=""
-                                   @change="checkPicture" ref="fileUpload" id="upload-image" />
+                                   @change="checkPicture" ref="fileUpload" :id="'upload-img-'+postData.id" />
 
                             <div></div>
                         </label>
