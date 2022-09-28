@@ -40,7 +40,6 @@ export default {
     },
     created() {
         this.getPreviousMessages();
-        console.log("Adding new chat!")
     },
     unmounted() {
         this.clearChatNewMessages();

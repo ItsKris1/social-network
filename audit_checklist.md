@@ -119,7 +119,7 @@ Try and open three browsers (ex: Chrome and Firefox or a private browser), log i
 Using the three browsers with the users, enter with each user a common group. Then start sending messages to the common chat room using one of the users.
 [x] Did all the users that are common to the group receive the message in realtime?
 Using the three browsers with the users, continue chatting between the users in the group.
-[ ] Did the chat between the users went well? (did not crash the server)
+[x] Did the chat between the users went well? (did not crash the server)
 Accepting a user request to join the group doesnt actually add that user to group but other than that it works well.
 [x] Can you confirm that it is possible to send emojis via chat to other users?
 

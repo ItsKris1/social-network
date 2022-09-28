@@ -143,6 +143,8 @@ export default {
                 this.$store.dispatch("fetchUnreadMessages");
                 
             }
+
+            // if (notification.type === "GROUP_INVITE" && reqResponse === "accept")
             // remove the notification
             this.$store.dispatch("removeNotification", notification.id);
 

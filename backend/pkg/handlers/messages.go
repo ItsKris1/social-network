@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
@@ -104,10 +103,8 @@ func (handler *Handler) NewMessage(wsServer *ws.Server, w http.ResponseWriter, r
 	var newChatFlag = "" //flag is raised with valu "NEW" if tha chat does not exist for user yet
 
 	// check if receiver is following current user
-	fmt.Println("MSG OBJ", msg)
 	isFollowingBack, err := handler.repos.UserRepo.IsFollowing(msg.SenderId, msg.ReceiverId)
 	if err != nil {
-		// fmt.Println("Here occurs an error!")
 		utils.RespondWithError(w, "Error on saving checking status", 200)
 		return
 	}
@@ -118,10 +115,14 @@ func (handler *Handler) NewMessage(wsServer *ws.Server, w http.ResponseWriter, r
 		return
 	}
 
-	// fmt.Println("Is user member?", isGroupMember)
+	isGroupAdmin, err := handler.repos.GroupRepo.IsAdmin(msg.ReceiverId, msg.SenderId)
+	if err != nil {
+		utils.RespondWithError(w, "Error on checking if user is admin", 200)
+		return
+	}
 
 	// if he is private and have no chat history and not group member, create notification insted of saving msg
-	if !isFollowingBack && !isGroupMember {
+	if !isFollowingBack && !isGroupMember && !isGroupAdmin {
 		status, err := handler.repos.UserRepo.GetStatus(msg.ReceiverId)
 		if err != nil {
 			utils.RespondWithError(w, "Error on saving checking status", 200)

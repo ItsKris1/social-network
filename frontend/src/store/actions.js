@@ -164,10 +164,7 @@ export default {
 
     createWebSocketConn({ commit, dispatch, state }) {
         const ws = new WebSocket("ws://localhost:8081/ws");
-        ws.addEventListener("open", () => {
-            // console.log("WS: Connection has established")
-        })
-
+      
         ws.addEventListener("message", (e) => {
             // console.log("New message")
             const data = JSON.parse(e.data);
@@ -200,20 +197,25 @@ export default {
                 }
             } else if (data.action == "notification") {
                 console.log("NEW NOTIF DATA", data.notification);
-                dispatch("addNewNotification", data.notification)
-            }else if(data.action == "groupAccept"){
-                console.log("you have been accepted, in group with id: ", data.message)
+                dispatch("addNewNotification", data.notification);
+
+            } else if(data.action == "groupAccept"){
+                dispatch("getUserGroups");
+                // console.log("you have been accepted, in group with id: ", data.message)
             }
 
         })
 
-        ws.addEventListener("close", (e) => {
-            console.log("Connection closed");
-        })
-
-
-
         commit("updateWebSocketConn", ws)
+        // ws.addEventListener("close", (e) => {
+        //     console.log("Connection closed");
+        // })
+
+          // ws.addEventListener("open", () => {
+        //     // console.log("WS: Connection has established")
+        // })
+
+        
     }
 
 }

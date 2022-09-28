@@ -101,23 +101,6 @@ export default {
 
         },
 
-        // async markMessageRead(context, chatMessage) {
-        //     const response = await fetch('http://localhost:8081/messageRead', {
-        //         credentials: 'include',
-        //         method: 'POST',
-        //         body: JSON.stringify({
-        //             id: chatMessage.id,
-        //             type: chatMessage.type
-        //         })
-        //     })
-
-           
-        //     const data = await response.json();
-
-   
-        // },
-
-
         addNewChatMessage({ commit, state }, payload) {
             let newMessages;
 
