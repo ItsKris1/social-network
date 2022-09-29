@@ -23,14 +23,18 @@ https://github.com/01-edu/public/tree/master/subjects/social-network/audit
 
 
 ### Stack
+Frontend
 - Vue
 - HTML & CSS
 <br>
+Backend
 - Go
 - SQLite3
 
 ### Authors
-- Kris
-- Zane
+Backend team
 - Laura
+- Zane
+Frontend team
+- Kris
 - Vic
