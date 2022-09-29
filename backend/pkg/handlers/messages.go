@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
@@ -174,6 +175,9 @@ func (handler *Handler) NewMessage(wsServer *ws.Server, w http.ResponseWriter, r
 	/* ---------------------------- save in database ---------------------------- */
 	err = handler.repos.MsgRepo.Save(msg)
 	if err != nil {
+		fmt.Println("MSG", msg)
+		fmt.Println("ERR", err)
+
 		utils.RespondWithError(w, "Error on saving message", 200)
 		return
 	}

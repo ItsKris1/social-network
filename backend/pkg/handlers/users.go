@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"social-network/pkg/models"
 	"social-network/pkg/utils"
@@ -41,7 +42,8 @@ func (handler *Handler) CurrentUser(w http.ResponseWriter, r *http.Request) {
 
 // Returns user data based on public / private profile and user_id from request
 // waits for GET request with query "userId" ->user client is looking for
-//  can be used both on own profile and other users
+//
+//	can be used both on own profile and other users
 func (handler *Handler) UserData(w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)
 	// access user id
@@ -62,6 +64,7 @@ func (handler *Handler) UserData(w http.ResponseWriter, r *http.Request) {
 		// check if current user following user he is looking for
 		following, err = handler.repos.UserRepo.IsFollowing(userId, currentUserId)
 		if err != nil {
+			fmt.Println("Throwing an err!", err)
 			utils.RespondWithError(w, "Error on getting data", 200)
 			return
 		}
@@ -73,12 +76,13 @@ func (handler *Handler) UserData(w http.ResponseWriter, r *http.Request) {
 	if currentUser || following || status == "PUBLIC" { // get full data set
 		user, err = handler.repos.UserRepo.GetProfileMax(userId)
 	} else {
-		user, err = handler.repos.UserRepo.GetProfileMin(userId)
+		user, _ = handler.repos.UserRepo.GetProfileMin(userId)
 		/* -------------------- check if follow status is pending ------------------- */
 		notif := models.Notification{Type: "FOLLOW", Content: currentUserId, TargetID: userId}
 		user.FollowRequestPending, err = handler.repos.NotifRepo.CheckIfExists(notif)
 	}
 	if err != nil {
+		fmt.Println("Throwing an err!12", err)
 		utils.RespondWithError(w, "Error on getting data", 200)
 		return
 	}
@@ -218,7 +222,6 @@ func (handler *Handler) Follow(wsServer *ws.Server, w http.ResponseWriter, r *ht
 	utils.RespondWithSuccess(w, "Following successful", 200)
 }
 
-
 func (handler *Handler) CancelFollowRequest(w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)
 	// access user id
@@ -254,7 +257,7 @@ func (handler *Handler) Unfollow(w http.ResponseWriter, r *http.Request) {
 	utils.RespondWithSuccess(w, "Unfollowing successful", 200)
 }
 
-//not tested
+// not tested
 // wait for POST request with notification Id and response -"ACCEPT" or "DECLINE"
 func (handler *Handler) ResponseFollowRequest(w http.ResponseWriter, r *http.Request) {
 	w = utils.ConfigHeader(w)
@@ -313,7 +316,7 @@ func (handler *Handler) ChatList(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// get users_ids that have a chat history
-	ids,errIds := handler.repos.MsgRepo.GetChatHistoryIds(userId)
+	ids, errIds := handler.repos.MsgRepo.GetChatHistoryIds(userId)
 	if errIds != nil {
 		utils.RespondWithError(w, "Error on getting chat history", 200)
 		return
@@ -321,10 +324,10 @@ func (handler *Handler) ChatList(w http.ResponseWriter, r *http.Request) {
 	// loop over chat history ids
 	// compare with followers
 	// if not found in folllowers, fetch user data and add to the list
-	for currentId := range ids{
+	for currentId := range ids {
 		isPresent := ContainsUser(followers, currentId)
-		if !isPresent{
-			user, err:= handler.repos.UserRepo.GetDataMin(currentId)
+		if !isPresent {
+			user, err := handler.repos.UserRepo.GetDataMin(currentId)
 			if err != nil {
 				utils.RespondWithError(w, "Error on getting chat history data", 200)
 				return
@@ -335,12 +338,13 @@ func (handler *Handler) ChatList(w http.ResponseWriter, r *http.Request) {
 
 	utils.RespondWithUsers(w, followers, 200)
 }
+
 /* --------------------------------- helper --------------------------------- */
 func ContainsUser(list []models.User, id string) bool {
-   for _, value := range list {
-      if value.ID == id {
-         return true
-      }
-   }
-   return false
+	for _, value := range list {
+		if value.ID == id {
+			return true
+		}
+	}
+	return false
 }

@@ -16,7 +16,7 @@
             </button>
 
             <ul class="item-list" v-show="showDropdown">
-                <li v-if="content !== null" v-for="option in content">
+                <li v-if="content !== null && content.length !== 0" v-for="option in content">
                     <input type="checkbox"
                            :id="option.id"
                            :value="option"
@@ -25,7 +25,7 @@
 
                 </li>
 
-                <p class="additional-info" v-else>No followers</p>
+                <p class="additional-info" v-else>No users to show</p>
             </ul>
         </div>
 

@@ -166,7 +166,6 @@ export default {
         const ws = new WebSocket("ws://localhost:8081/ws");
       
         ws.addEventListener("message", (e) => {
-            // console.log("New message")
             const data = JSON.parse(e.data);
             if (data.action == "chat") {
                 // only broadcast messages when participants(sender and reciever) chat is open
@@ -184,11 +183,9 @@ export default {
 
                 })
                 if (isParticipantsChatOpen) {
-                    // console.log("Dispatching a message..")
                     dispatch("addNewChatMessage", data.chatMessage)
                     dispatch("markMessageRead", data.chatMessage)
                 } else {
-                    // console.log("Unread msg..", data.chatMessage)
                     if (data.message === "NEW") {
                         dispatch("fetchChatUserList");
                     }
@@ -196,26 +193,15 @@ export default {
                     dispatch("addUnreadChatMessage", data.chatMessage)
                 }
             } else if (data.action == "notification") {
-                console.log("NEW NOTIF DATA", data.notification);
                 dispatch("addNewNotification", data.notification);
 
             } else if(data.action == "groupAccept"){
                 dispatch("getUserGroups");
-                // console.log("you have been accepted, in group with id: ", data.message)
             }
 
         })
 
-        commit("updateWebSocketConn", ws)
-        // ws.addEventListener("close", (e) => {
-        //     console.log("Connection closed");
-        // })
-
-          // ws.addEventListener("open", () => {
-        //     // console.log("WS: Connection has established")
-        // })
-
-        
+        commit("updateWebSocketConn", ws)  
     }
 
 }

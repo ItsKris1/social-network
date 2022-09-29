@@ -114,6 +114,8 @@ export default {
             })
                 .then((r) => r.json())
                 .then((json) => {
+                    console.log("/getUserData", json)
+                    console.log("id", this.$route.params.id)
                     this.user = json.users[0];
                 });
 
