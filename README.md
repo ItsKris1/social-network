@@ -1,4 +1,4 @@
-### Project description
+## Project description
 Facebook-like social network that will contain the following features:
 - Followers
 - Profile
@@ -7,7 +7,7 @@ Facebook-like social network that will contain the following features:
 - Notification
 - Chats
 
-### Run the project
+## Run the project
 To test the project you need to have [NodeJS](https://nodejs.org/en/) installed.
 1. Start frontend server by going to **/frontend** directory and running those commands
 -  `npm run serve`
@@ -17,12 +17,12 @@ To test the project you need to have [NodeJS](https://nodejs.org/en/) installed.
 
 
 
-### Audit questions
+## Audit questions
 https://github.com/01-edu/public/tree/master/subjects/social-network/audit
 
 
 
-### Stack
+## Stack
 Frontend
 - Vue
 - HTML & CSS
