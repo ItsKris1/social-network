@@ -31,7 +31,7 @@ Backend
 - Go
 - SQLite3
 
-### Authors
+## Authors
 Backend team
 - Laura
 - Zane
