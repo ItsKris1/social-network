@@ -10,9 +10,11 @@ Facebook-like social network that will contain the following features:
 ## Run the project
 To test the project you need to have [NodeJS](https://nodejs.org/en/) installed.
 1. Start frontend server by going to **/frontend** directory and running those commands
--  `npm run serve`
+-  `npm run serve --port 8080`
 -  `npm install`
 2. Start backend server by going to **/backend** directory and run `go run server.go`
+3. Start desktop app by going to **/desktop-app** directory and run 
+   - `npm run electron:serve --port 8082`
 
 
 
