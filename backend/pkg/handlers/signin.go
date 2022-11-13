@@ -11,7 +11,7 @@ import (
 )
 
 func (handler *Handler) Signin(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	if r.Method != "POST" {
 		utils.RespondWithError(w, "Error on form submittion", 200)
 		return
@@ -60,7 +60,7 @@ func (handler *Handler) Signin(w http.ResponseWriter, r *http.Request) {
 // responds with success if session valid
 // updates session access time in db
 func (handler *Handler) SessionActive(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	// Get cookie value from request
 	sessionId, errCookie := utils.GetCookie(r)
 	if errCookie != nil {

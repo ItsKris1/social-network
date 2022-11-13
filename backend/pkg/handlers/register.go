@@ -10,7 +10,7 @@ import (
 
 // Register user endpont -> validate inputs / save in db / start session
 func (handler *Handler) Register(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 
 	if r.Method != "POST" {
 		utils.RespondWithError(w, "Error on form submittion", 400)

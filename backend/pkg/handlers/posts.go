@@ -9,7 +9,7 @@ import (
 
 /* ------------------------ fetch all posts for user ------------------------ */
 func (handler *Handler) AllPosts(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	// access user id
 	userId := r.Context().Value(utils.UserKey).(string)
 	//request all posts
@@ -32,7 +32,7 @@ func (handler *Handler) AllPosts(w http.ResponseWriter, r *http.Request) {
 }
 
 func (handler *Handler) UserPosts(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	// access current user id
 	currentUserId := r.Context().Value(utils.UserKey).(string)
 
@@ -64,7 +64,7 @@ func (handler *Handler) UserPosts(w http.ResponseWriter, r *http.Request) {
 
 /* ----------------------------- create new post ---------------------------- */
 func (handler *Handler) NewPost(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	if r.Method != "POST" {
 		utils.RespondWithError(w, "Error on form submittion", 200)
 		return

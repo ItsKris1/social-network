@@ -10,7 +10,7 @@ import (
 )
 
 func (handler *Handler) NewEvent(wsServer *ws.Server, w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	if r.Method != "POST" {
 		utils.RespondWithError(w, "Error on form submittion", 200)
 		return
@@ -98,7 +98,7 @@ func (handler *Handler) NewEvent(wsServer *ws.Server, w http.ResponseWriter, r *
 // Handles clients reaction to participation in event
 // waits for POST req with eventID as "id" and user status "going" with response YES or NO
 func (handler *Handler) Participate(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	if r.Method != "POST" {
 		utils.RespondWithError(w, "Error on form submittion", 200)
 		return

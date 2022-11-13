@@ -14,7 +14,7 @@ import (
 // waits for POST request with RECEIVER as target and TYPE
 // respondes with all messages through simple http response
 func (handler *Handler) Messages(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	/* ------------------- // get incoming data in msg format ------------------- */
 	var msgIn models.ChatMessage
 	err := json.NewDecoder(r.Body).Decode(&msgIn)
@@ -89,7 +89,7 @@ func (handler *Handler) Messages(w http.ResponseWriter, r *http.Request) {
 // to sender with regular http response
 // to recievers through websocket connection
 func (handler *Handler) NewMessage(wsServer *ws.Server, w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	/* --------------------------- read incoming data --------------------------- */
 	var msg models.ChatMessage
 	err := json.NewDecoder(r.Body).Decode(&msg)
@@ -221,7 +221,7 @@ func (handler *Handler) NewMessage(wsServer *ws.Server, w http.ResponseWriter, r
 // respond with list of messages, that user has missed
 // in response include message_id, senderId (group id or user id) type -> group or person
 func (handler *Handler) UnreadMessages(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 
 	userId := r.Context().Value(utils.UserKey).(string)
 	/* ---------- collect chat stats from db for prvate and group chats --------- */
@@ -246,7 +246,7 @@ func (handler *Handler) UnreadMessages(w http.ResponseWriter, r *http.Request) {
 // handler needs data about msg ->  id and type
 // and it marks it as read in database
 func (handler *Handler) MessageRead(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	/* --------------------------- read incoming data --------------------------- */
 	var msg models.ChatMessage
 	err := json.NewDecoder(r.Body).Decode(&msg)
@@ -276,7 +276,7 @@ func (handler *Handler) MessageRead(w http.ResponseWriter, r *http.Request) {
 }
 
 func (handler *Handler) ResponseChatRequest(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	if r.Method != "POST" {
 		utils.RespondWithError(w, "Error on form submittion", 200)
 		return

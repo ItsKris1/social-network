@@ -15,7 +15,7 @@ import (
 /* -------------------------------------------------------------------------- */
 
 func (handler *Handler) AllGroups(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	// access user id
 	userId := r.Context().Value(utils.UserKey).(string)
 	// request all groups + relations
@@ -29,7 +29,7 @@ func (handler *Handler) AllGroups(w http.ResponseWriter, r *http.Request) {
 
 // returns all groups that current user is a member of or admin
 func (handler *Handler) UserGroups(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	// access user id
 	userId := r.Context().Value(utils.UserKey).(string)
 	// request user Groups
@@ -43,7 +43,7 @@ func (handler *Handler) UserGroups(w http.ResponseWriter, r *http.Request) {
 
 // returns all groups that specified user is a member of or admin
 func (handler *Handler) OtherUserGroups(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	// access user id
 	query := r.URL.Query()
 	userId := query.Get("userId")
@@ -63,7 +63,7 @@ func (handler *Handler) OtherUserGroups(w http.ResponseWriter, r *http.Request) 
 // returns info about group - > name, description, id and administrator id
 // also includes group status for current user -> admin / member or pending member request
 func (handler *Handler) GroupInfo(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	// get group id from request
 	query := r.URL.Query()
 	groupId := query.Get("groupId")
@@ -107,7 +107,7 @@ func (handler *Handler) GroupInfo(w http.ResponseWriter, r *http.Request) {
 
 // returns list of all group members and administrator
 func (handler *Handler) GroupMembers(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	// get group id from request
 	query := r.URL.Query()
 	groupId := query.Get("groupId")
@@ -127,7 +127,7 @@ func (handler *Handler) GroupMembers(w http.ResponseWriter, r *http.Request) {
 // GET request with group_id included in query
 // in case if user is not a member of the group, returns error
 func (handler *Handler) GroupEvents(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	// access current user id
 	userId := r.Context().Value(utils.UserKey).(string)
 	// get group id from request
@@ -180,7 +180,7 @@ func (handler *Handler) GroupEvents(w http.ResponseWriter, r *http.Request) {
 
 // returns all posts that belongs to group
 func (handler *Handler) GroupPosts(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	// access current user id
 	userId := r.Context().Value(utils.UserKey).(string)
 	// get group id from request
@@ -223,7 +223,7 @@ func (handler *Handler) GroupPosts(w http.ResponseWriter, r *http.Request) {
 // returns pending requests to join to group, only for admin
 // for others respond with error
 func (handler *Handler) GroupRequests(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	// access current user id
 	userId := r.Context().Value(utils.UserKey).(string)
 	// get group id from request
@@ -260,7 +260,7 @@ func (handler *Handler) GroupRequests(w http.ResponseWriter, r *http.Request) {
 }
 
 func (handler *Handler) CancelGroupRequests(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	// access current user id
 	currentUserId := r.Context().Value(utils.UserKey).(string)
 	// get group id from request
@@ -288,7 +288,7 @@ func (handler *Handler) CancelGroupRequests(w http.ResponseWriter, r *http.Reque
 /* -------------------------------------------------------------------------- */
 
 func (handler *Handler) NewGroup(wsServer *ws.Server, w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	if r.Method != "POST" {
 		utils.RespondWithError(w, "Error on form submittion", 200)
 		return
@@ -347,7 +347,7 @@ func (handler *Handler) NewGroup(wsServer *ws.Server, w http.ResponseWriter, r *
 
 // NOT TESTED
 func (handler *Handler) NewGroupPost(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	if r.Method != "POST" {
 		utils.RespondWithError(w, "Error on form submittion", 200)
 		return
@@ -390,7 +390,7 @@ func (handler *Handler) NewGroupPost(w http.ResponseWriter, r *http.Request) {
 
 // handle when new user wants to join the group
 func (handler *Handler) NewGroupRequest(wsServer *ws.Server, w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	// access current user id
 	userId := r.Context().Value(utils.UserKey).(string)
 	// get group id from request
@@ -452,7 +452,7 @@ func (handler *Handler) NewGroupRequest(wsServer *ws.Server, w http.ResponseWrit
 // handle response from group administrator for requests to join group
 // waits for requestId and response -accept/decline
 func (handler *Handler) ResponseGroupRequest(wsServer *ws.Server, w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	if r.Method != "POST" {
 		utils.RespondWithError(w, "Error on data submittion", 200)
 		return
@@ -518,7 +518,7 @@ func (handler *Handler) ResponseGroupRequest(wsServer *ws.Server, w http.Respons
 // NOT TESTED
 // waits for POST request with groupId and Invitation list included
 func (handler *Handler) NewGroupInvite(wsServer *ws.Server, w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	if r.Method != "POST" {
 		utils.RespondWithError(w, "Error on form submittion", 200)
 		return
@@ -570,7 +570,7 @@ func (handler *Handler) NewGroupInvite(wsServer *ws.Server, w http.ResponseWrite
 
 // NOT TESTED
 func (handler *Handler) ResponseInviteRequest(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	if r.Method != "POST" {
 		utils.RespondWithError(w, "Error on form submittion", 200)
 		return

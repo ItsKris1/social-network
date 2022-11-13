@@ -15,7 +15,7 @@ import (
 /* -------------------------------------------------------------------------- */
 // Find all users and they relation with current user
 func (handler *Handler) AllUsers(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	// access user id
 	userId := r.Context().Value(utils.UserKey).(string)
 	// request all users exccept current + relations
@@ -29,7 +29,7 @@ func (handler *Handler) AllUsers(w http.ResponseWriter, r *http.Request) {
 
 // Returns user nickname, id and path to avatar
 func (handler *Handler) CurrentUser(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	// access user id
 	userId := r.Context().Value(utils.UserKey).(string)
 	user, err := handler.repos.UserRepo.GetDataMin(userId)
@@ -45,7 +45,7 @@ func (handler *Handler) CurrentUser(w http.ResponseWriter, r *http.Request) {
 //
 //	can be used both on own profile and other users
 func (handler *Handler) UserData(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	// access user id
 	currentUserId := r.Context().Value(utils.UserKey).(string)
 	// get user id from request
@@ -100,7 +100,7 @@ func (handler *Handler) UserStatus(w http.ResponseWriter, r *http.Request) {
 	statusList := []string{"PUBLIC", "PRIVATE"} //possible status
 	var client models.User
 
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	// access user id
 	client.ID = r.Context().Value(utils.UserKey).(string)
 	// get status from request
@@ -143,7 +143,7 @@ func (handler *Handler) UserStatus(w http.ResponseWriter, r *http.Request) {
 /* -------------------------------------------------------------------------- */
 // Find all followers
 func (handler *Handler) GetFollowers(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	// get userId from request
 	query := r.URL.Query()
 	userId := query.Get("userId")
@@ -158,7 +158,7 @@ func (handler *Handler) GetFollowers(w http.ResponseWriter, r *http.Request) {
 
 // Find all who clinet is following
 func (handler *Handler) GetFollowing(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	// get userId from request
 	query := r.URL.Query()
 	userId := query.Get("userId")
@@ -172,7 +172,7 @@ func (handler *Handler) GetFollowing(w http.ResponseWriter, r *http.Request) {
 }
 
 func (handler *Handler) Follow(wsServer *ws.Server, w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	// access user id
 	currentUserId := r.Context().Value(utils.UserKey).(string)
 	// get status from request
@@ -223,7 +223,7 @@ func (handler *Handler) Follow(wsServer *ws.Server, w http.ResponseWriter, r *ht
 }
 
 func (handler *Handler) CancelFollowRequest(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	// access user id
 	currentUserId := r.Context().Value(utils.UserKey).(string)
 	// get status from request
@@ -243,7 +243,7 @@ func (handler *Handler) CancelFollowRequest(w http.ResponseWriter, r *http.Reque
 }
 
 func (handler *Handler) Unfollow(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	// access user id
 	currentUserId := r.Context().Value(utils.UserKey).(string)
 	// get status from request
@@ -260,7 +260,7 @@ func (handler *Handler) Unfollow(w http.ResponseWriter, r *http.Request) {
 // not tested
 // wait for POST request with notification Id and response -"ACCEPT" or "DECLINE"
 func (handler *Handler) ResponseFollowRequest(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	if r.Method != "POST" {
 		utils.RespondWithError(w, "Error on form submittion", 200)
 		return
@@ -305,7 +305,7 @@ func (handler *Handler) ResponseFollowRequest(w http.ResponseWriter, r *http.Req
 /*                                  chat List                                 */
 /* -------------------------------------------------------------------------- */
 func (handler *Handler) ChatList(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	// get userId from request
 	query := r.URL.Query()
 	userId := query.Get("userId")

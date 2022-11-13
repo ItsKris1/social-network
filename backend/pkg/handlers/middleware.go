@@ -13,7 +13,7 @@ import (
 // also update expiration time in database
 func (handler *Handler) Auth(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w = utils.ConfigHeader(w)
+		w = utils.ConfigHeader(w,r)
 		// Get cookie value from request
 		sessionId, errCookie := utils.GetCookie(r)
 		if errCookie != nil {

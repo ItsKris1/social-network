@@ -9,7 +9,7 @@ import (
 
 // handler for logout/ validate user by id and delete session
 func (handler *Handler) Logout(w http.ResponseWriter, r *http.Request) {
-	w = utils.ConfigHeader(w)
+	w = utils.ConfigHeader(w,r)
 	// access user id
 	userId := r.Context().Value(utils.UserKey).(string)
 	// delete session
