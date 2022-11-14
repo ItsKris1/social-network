@@ -60,6 +60,9 @@ export default{
 .item-list:nth-child(3){
     margin-top:10px;
 }
+.item-list li {
+    justify-content: space-between;
+}
 @media screen and (max-width: 700px) {
   .user-container {
     width: 75px;

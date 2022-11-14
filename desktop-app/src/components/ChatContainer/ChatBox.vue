@@ -2,7 +2,7 @@
     <div class="chat-box-container">
         <h2 class="chat-header">{{openChatName}}</h2>
         <ChatContent/>
-        <MessageInput/>
+        <MessageInput v-if="chatOpen"/>
     </div>
 </template>
 
@@ -18,6 +18,14 @@ export default{
                 return openChat.name
             }else{
                 return "Click on user to open chat"
+            }
+        },
+        chatOpen(){
+            let openChat = this.$store.state.chat.openChat
+            if (openChat){
+                return true
+            }else{
+                return false
             }
         }
     }

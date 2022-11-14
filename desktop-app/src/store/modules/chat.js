@@ -2,7 +2,7 @@
 export default {
     state: () => ({
         openChatMessages:[],
-        
+        unreadMessages:{},
         openChat: null,
         chatUserList: [],
     }),
@@ -20,7 +20,11 @@ export default {
         },
         updateChatUserList(state, userList) {
             state.chatUserList = userList
-        }
+        },
+        updateUnreadMessagest(state, msgs) {
+             console.log("Those are UNREAD",msgs)
+            state.unreadMessages = msgs
+        },
     },
     actions: {
         async fetchChatUserList({rootState, commit, dispatch}) {
@@ -71,5 +75,21 @@ export default {
             openMessages.push(payload)
             commit("updateOpenChatMessages", openMessages)
         },
+        addUnreadMessage({ commit, state }, payload){
+            let unreadMessages = state.unreadMessages
+            if(unreadMessages[payload]){
+               unreadMessages[payload] = unreadMessages[payload]+1
+            }else{
+                unreadMessages[payload] = 1
+            }
+            commit("updateUnreadMessagest", unreadMessages)
+        },
+         removeUnreadMessages({ commit, state }, payload){
+            let unreadMessages = state.unreadMessages
+            if(unreadMessages[payload]){
+               delete unreadMessages[payload]
+               commit("updateUnreadMessagest", unreadMessages)
+            }
+        }
     },
 }

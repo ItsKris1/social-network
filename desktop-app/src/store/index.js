@@ -71,30 +71,35 @@ export default createStore({
     },
     createWebSocketConn({ commit, dispatch, state }) {
         const ws = new WebSocket("ws://localhost:8081/ws");
-        console.log("Cretate web socket:", ws)
+        console.log("Create web socket:", ws)
          ws.addEventListener("message", (e) => {
             const data = JSON.parse(e.data);
-            console.log("Message received:", data)
-            if (data.action != "chat") return
-            const isParticipantsChatOpen = state.chat.openChats.some((chat) =>{
-                if (data.chatMessage.type === "PERSON" && data.chatMessage.senderId  === chat.receiverId) {
-                        return true
-                    }
-                if (data.chatMessage.type === "GROUP" && data.chatMessage.receiverId === chat.receiverId) {
-                    return true
+            switch (data.action) {
+              case "chat":
+                var isChatOpen = false
+                var chatId = ""
+                if (data.chatMessage.type === "PERSON"){
+                  chatId = data.chatMessage.senderId
+                  if(state.chat.openChat && data.chatMessage.senderId === state.chat.openChat.receiverId){
+                    isChatOpen = true
+                  }
                 }
-            })
-            if (isParticipantsChatOpen) {
-                // dispatch("addNewChatMessage", data.chatMessage)
-                // dispatch("markMessageRead", data.chatMessage)
-            } else {
-                if (data.message === "NEW") {
-                    dispatch("fetchChatUserList");
+                if (data.chatMessage.type === "GROUP" ){
+                  if (state.chat.openChat && data.chatMessage.receiverId === state.chat.openChat.receiverId){
+                    isChatOpen = true
+                  }
+                  chatId = data.chatMessage.receiverId
                 }
-
-                // dispatch("addUnreadChatMessage", data.chatMessage)
-            }
-            
+                if (isChatOpen){
+                  dispatch('addNewChatMessage', data.chatMessage)
+                }else{
+                  dispatch('addUnreadMessage',chatId )
+                }
+                break;
+              default:
+                console.log("Message:", data)
+                break;
+            }           
          })
          commit("updateWebSocketConn", ws) 
     }

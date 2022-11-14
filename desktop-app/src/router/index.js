@@ -28,6 +28,7 @@ router.beforeEach(async (to) => {
   if (!isAuthenticated && to.name !== "login") {
       return { name: "login" }
   }else if(isAuthenticated && to.name === "login"){
+    console.log("Create websocket!")
     store.dispatch("createWebSocketConn")
     return { name: "chat" }
   }

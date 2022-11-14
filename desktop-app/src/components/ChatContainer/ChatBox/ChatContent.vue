@@ -27,7 +27,7 @@ export default{
         // determines whether to display sender name in chatbox
         displayName(message, index) {
             let isSentMsg = message.senderId === this.myID;
-            if (isSentMsg) {
+            if (isSentMsg || message.type =="PERSON") {
                 return false;
             }
             if (index < 1) {
