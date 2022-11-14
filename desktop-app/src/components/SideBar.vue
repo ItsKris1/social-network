@@ -1,7 +1,7 @@
 <template>
     <div class="sidebar">
         <h2>SN</h2>
-        <div v-if="auth" id="logout">Log Out</div>
+        <div v-if="auth" id="logout"  @click="logout">Log Out</div>
     </div>
 </template>
 
@@ -11,6 +11,20 @@ export default{
    computed:{
     isLoggedIn(){
         return false
+    }
+   },
+   methods:{
+    async logout(){
+        await fetch('http://localhost:8081/logout', {
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json',
+            }
+        })
+        .then((response => response.json()))
+        .then((json => { console.log(json) })) 
+        this.$store.state.wsConn.close(1000, "user logged out");
+        this.$router.push("/");
     }
    }
 

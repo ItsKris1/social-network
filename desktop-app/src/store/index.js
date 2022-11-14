@@ -71,7 +71,7 @@ export default createStore({
     },
     createWebSocketConn({ commit, dispatch, state }) {
         const ws = new WebSocket("ws://localhost:8081/ws");
-
+        console.log("Cretate web socket:", ws)
          ws.addEventListener("message", (e) => {
             const data = JSON.parse(e.data);
             console.log("Message received:", data)

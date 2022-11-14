@@ -1,15 +1,26 @@
 <template>
     <div class="chat-box-container">
-        <h2 class="chat-header">Some user name</h2>
-        <div class="chat-content">content</div>
+        <h2 class="chat-header">{{openChatName}}</h2>
+        <ChatContent/>
         <MessageInput/>
     </div>
 </template>
 
 <script>
 import MessageInput from './ChatBox/MessageInput.vue';
+import ChatContent from './ChatBox/ChatContent.vue'
 export default{
-    components:{MessageInput}
+    components:{MessageInput, ChatContent},
+    computed:{
+        openChatName(){ 
+            let openChat = this.$store.state.chat.openChat
+            if (openChat){
+                return openChat.name
+            }else{
+                return "Click on user to open chat"
+            }
+        }
+    }
 
 }
 </script>
@@ -26,15 +37,5 @@ export default{
 }
 .chat-header{
     color: var(--color-blue);
-}
-.chat-content {
-    flex: 1;
-    color: var(--color-lg-black);
-    font-size: 14px;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
 }
 </style>

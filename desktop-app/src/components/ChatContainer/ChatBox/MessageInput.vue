@@ -1,12 +1,28 @@
 <template>
     <form autocomplete="off" class="send-message">
-        <input type="text" name="sent-message" id="sent-message__input" placeholder="Send a message"
-                   ref="sendMessageInput">
+        <input type="text" name="sent-message" id="sent-message__input" placeholder="Send a message" v-model="message">
         <button type="submit"><i class="uil uil-message"></i></button>
-            <!-- <Emojis :input="this.$refs.sendMessageInput"
-                    :messagebox="this.$refs.contentDiv"></Emojis> -->
+            <EmojiSelector @addEmoji="addEmoji"/>
         </form>
 </template>
+
+<script>
+import EmojiSelector from './EmojiSelector.vue';
+export default {
+    components: { EmojiSelector },
+   data() {
+        return {
+            message:""
+        }
+    },
+    methods:{
+        addEmoji(emoji){
+            this.message += emoji
+        }
+    }
+}
+</script>
+
 
 <style scoped>
 .send-message {

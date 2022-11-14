@@ -1,5 +1,5 @@
 <template>
-    <li class="group">
+    <li class="group" @click="openChat">
         <img src="../../../assets/icons/users-alt.svg" alt=""/>
         <div class="item-text">{{ group.name }}</div>
     </li>
@@ -10,6 +10,17 @@
 export default {
     name:"TargetGroup",
     props: ['group'],
+     data() {
+        return {
+            type:"GROUP"
+        }
+    },
+    methods:{
+        openChat(){
+            this.$store.commit("openNewChat",{id:this.group.id, type: this.type, name:this.group.name})
+            this.$store.dispatch('fecthChatMessages')
+        }
+    }
 }
 </script>
 <style scoped>

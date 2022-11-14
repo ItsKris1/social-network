@@ -24,9 +24,11 @@ const router = createRouter({
 
 router.beforeEach(async (to) => {
   const isAuthenticated = await store.dispatch("isLoggedIn");
+
   if (!isAuthenticated && to.name !== "login") {
       return { name: "login" }
   }else if(isAuthenticated && to.name === "login"){
+    store.dispatch("createWebSocketConn")
     return { name: "chat" }
   }
 })
