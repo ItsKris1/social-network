@@ -1,5 +1,5 @@
 <template>
-    <form autocomplete="off" class="send-message">
+    <form @submit.prevent="sendMessage" autocomplete="off" class="send-message">
         <input type="text" name="sent-message" id="sent-message__input" placeholder="Send a message" v-model="message">
         <button type="submit"><i class="uil uil-message"></i></button>
             <EmojiSelector @addEmoji="addEmoji"/>
@@ -7,7 +7,9 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import EmojiSelector from './EmojiSelector.vue';
+
 export default {
     components: { EmojiSelector },
    data() {
@@ -15,9 +17,23 @@ export default {
             message:""
         }
     },
+    computed:{
+        ...mapState({
+            myID: state => state.id
+        })
+    },
     methods:{
         addEmoji(emoji){
             this.message += emoji
+        },
+        async sendMessage(){
+            if (this.message === "") {return}
+            let result = this.$store.dispatch('sendMessage', this.message)
+            if (result){
+                this.message = "";
+            }else{
+                console.log("Err: message not sent")
+            }
         }
     }
 }

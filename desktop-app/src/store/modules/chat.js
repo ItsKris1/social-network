@@ -1,3 +1,4 @@
+
 export default {
     state: () => ({
         openChatMessages:[],
@@ -45,6 +46,30 @@ export default {
             let previousMessages = data.chatMessage ? data.chatMessage : [];
             console.log("MSg received from db: ", previousMessages)
             commit('updateOpenChatMessages', previousMessages)
-        }
+        },
+        async sendMessage({state,dispatch}, payload){
+            const msgObj = {
+                receiverId: state.openChat.id,
+                content: payload,
+                type: state.openChat.type
+            };
+             let response = await fetch("http://localhost:8081/newMessage", {
+                body: JSON.stringify(msgObj),
+                method: "POST",
+                credentials: "include"
+            });
+            const data = await response.json();
+            if (data.type == "Success"){
+                dispatch("addNewChatMessage", data.chatMessage[0]);
+                return true
+            }else{
+                return false
+            }
+        },
+        addNewChatMessage({ commit, state }, payload) {
+            let openMessages = state.openChatMessages;
+            openMessages.push(payload)
+            commit("updateOpenChatMessages", openMessages)
+        },
     },
 }

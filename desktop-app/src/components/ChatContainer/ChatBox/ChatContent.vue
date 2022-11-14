@@ -8,6 +8,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 export default{
     data() {
         return {
@@ -17,7 +18,10 @@ export default{
     computed:{
         allMessages(){
              return this.$store.state.chat.openChatMessages
-        }
+        },
+        ...mapState({
+            myID: state => state.id
+        })
     },
     methods:{
         // determines whether to display sender name in chatbox
