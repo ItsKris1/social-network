@@ -4,7 +4,9 @@
             <img src="../../../assets/icons/users-alt.svg" alt=""/>
             <div class="item-text">{{ group.name }}</div>
         </div>
-        <p class="unreadMessagesCount" v-if="unreadMessageCount >0">{{unreadMessageCount}}</p>
+        <div class="indicator-container">
+        <p class="unreadMessagesCount" v-if="unreadMessageCount >0"></p>
+    </div>
     </li>
 </template>
 
@@ -41,12 +43,27 @@ export default {
     justify-content: space-between;
     align-items: center;
     gap: 5px;
+    cursor: pointer;
 }
 .unreadMessagesCount {
     padding: 2.5px 5px;
-    color: var(--color-white);
     background-color: brown;
-    font-size: 12px;
-    border-radius: 5px;
+    width:10px;
+    height:10px;
+    border-radius: 50%;
+    justify-self: flex-end;
+}
+.indicator-container{
+    display:flex;
+    gap:5px;
+}
+
+@media screen and (max-width: 700px){
+    .indicator-container{
+        position:absolute;
+        flex-direction: column;
+        right:-15px;
+        bottom:0;
+    }
 }
 </style>

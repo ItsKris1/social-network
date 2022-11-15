@@ -4,7 +4,11 @@
             <div class="user-picture"></div>
             <div class="item-text">{{ user.nickname }}</div>
         </div>
-        <p class="unreadMessagesCount" v-if="unreadMessageCount >0">{{unreadMessageCount}}</p>
+        <div class="indicator-container">
+            <!-- <div class="unreadMessagesCount"></div> -->
+            <div class="unreadMessagesCount" v-if="unreadMessageCount >0"></div>
+            <div class="user-online"></div>
+        </div>
     </li>
 </template>
 
@@ -46,10 +50,30 @@ export default {
 }
 .unreadMessagesCount {
     padding: 2.5px 5px;
-    color: var(--color-white);
     background-color: brown;
-    font-size: 12px;
-    border-radius: 5px;
+    width:10px;
+    height:10px;
+    border-radius: 50%;
     justify-self: flex-end;
+}
+.user-online {
+    padding: 2.5px 5px;
+    background-color: rgb(60, 148, 34);
+    width:10px;
+    height:10px;
+    border-radius: 50%;
+    justify-self: flex-end;
+}
+.indicator-container{
+    display:flex;
+    gap:5px;
+}
+@media screen and (max-width: 700px){
+    .indicator-container{
+        position:absolute;
+        flex-direction: column;
+        right:-15px;
+        bottom:0;
+    }
 }
 </style>

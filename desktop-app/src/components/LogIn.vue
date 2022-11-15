@@ -48,8 +48,10 @@ export default{
                     // create web socket
                      this.$store.dispatch("createWebSocketConn")
                      .then(()=> this.$router.push('/chat'))
+                     this.$toast.success(json.message);
+                }else{
+                  this.$toast.error(json.message);
                 }
-                // else notify about wrong credentials
             })
         }
     }

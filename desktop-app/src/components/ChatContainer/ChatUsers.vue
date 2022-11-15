@@ -71,11 +71,18 @@ export default{
     visibility:hidden;
   }
   .item-list .item-text{
-    visibility:hidden;
+    display:none;
+    /* visibility:hidden; */
   }
   .item-list img, .item-list .user-picture{
    height: 3em;
     width: 3em;
-}
+    
+    }
+    .item-list li{
+        display:block;
+        position:relative;
+    }
+
 }
 </style>
