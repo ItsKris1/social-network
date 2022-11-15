@@ -14,7 +14,6 @@ export default {
     components:{ChatUsers, ChatBox},
     created(){
         // fetch unread messages from back end
-        console.log("MOunted chat")
         this.$store.dispatch("fetchUnreadMessages");
     }
 }

@@ -11,11 +11,9 @@ export default {
     },
     mutations: {
         updateOpenChatMessages(state, msgs) {
-            console.log("Update open chat messages: ",  msgs)
             state.openChatMessages = msgs
         },
         openNewChat(state, openChat) {
-            console.log("Open new chat: ", openChat)
             state.openChat = openChat
         },
         updateChatUserList(state, userList) {

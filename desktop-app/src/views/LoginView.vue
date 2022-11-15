@@ -9,7 +9,6 @@
 <script>
 import LogIn from '@/components/LogIn.vue';
 import SideBar from '@/components/SideBar.vue'
-console.log("I am Home")
 export default {
     name: 'LoginView',
     components:{

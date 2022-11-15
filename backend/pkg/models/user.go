@@ -13,6 +13,7 @@ type User struct {
 	ImagePath   string `json:"avatar"`
 	Status      string `json:"status"`      // private / public
 	CurrentUser bool   `json:"currentUser"` //returns true for current, false otherwise
+	Online bool `json:"online"`
 
 	Follower  bool `json:"follower"`  //if this user is following another user
 	Following bool `json:"following"` //if curr user is following this one

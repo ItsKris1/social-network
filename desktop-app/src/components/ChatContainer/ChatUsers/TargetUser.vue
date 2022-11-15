@@ -7,7 +7,7 @@
         <div class="indicator-container">
             <!-- <div class="unreadMessagesCount"></div> -->
             <div class="unreadMessagesCount" v-if="unreadMessageCount >0"></div>
-            <div class="user-online"></div>
+            <div class="user-online" v-if="userOnline"></div>
         </div>
     </li>
 </template>
@@ -27,6 +27,9 @@ export default {
             let unreadMessages = this.$store.state.chat.unreadMessages
             let count = unreadMessages[this.user.id]? unreadMessages[this.user.id]:0;
             return count
+        },
+        userOnline(){
+            return this.$store.state.usersOnline.has(this.user.id)
         }
     },
     methods:{

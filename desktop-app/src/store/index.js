@@ -9,6 +9,7 @@ export default createStore({
   state:{
       id: "", // id is currently logged in user ID
       wsConn: {},
+      usersOnline : new Set(),
     //   users: {
     //     allusers: [],
     //   },
@@ -37,6 +38,9 @@ export default createStore({
     },
     updateDataLoaded(state, data) {
       state.dataLoaded[data] = true;
+    },
+    updateUsersOnline(state, usersOnline){
+      state.usersOnline = usersOnline
     }
   },
   actions:{
@@ -72,11 +76,13 @@ export default createStore({
     createWebSocketConn({ commit, dispatch, state }) {
         const ws = new WebSocket("ws://localhost:8081/ws");
         console.log("Create web socket:", ws)
+         ws.addEventListener('open', (e)=> {console.log("Open the ws:", e)})
+          ws.addEventListener('close', (e)=> {console.log("Close the ws:", e)})
          ws.addEventListener("message", (e) => {
             const data = JSON.parse(e.data);
+            let onlineUsers = state.usersOnline
             switch (data.action) {
               case "chat":
-                console.log("Received chat message")
                 var isChatOpen = false
                 var chatId = ""
                 if (data.chatMessage.type === "PERSON"){
@@ -92,15 +98,27 @@ export default createStore({
                   chatId = data.chatMessage.receiverId
                 }
                 if (isChatOpen){
-                  console.log("Chat open")
                   dispatch('addNewChatMessage', data.chatMessage)
                 }else{
-                  console.log("Chat closed")
                   dispatch('addUnreadMessage',chatId )
                 }
                 break;
-              default:
-                console.log("Message:", data)
+               case "join":
+                onlineUsers.add(data.message)
+                commit('updateUsersOnline', onlineUsers)
+                break
+                case "left":
+                  onlineUsers.delete(data.message)
+                  commit('updateUsersOnline', onlineUsers)
+                break
+                case "onlineUsers":
+                  data.onlineUsers.forEach(user => {
+                    onlineUsers.add(user)
+                  });
+                  commit('updateUsersOnline', onlineUsers)
+                break
+                  default:
+                console.log("Unhaddaled message in ws. Message:", data.message)
                 break;
             }           
          })
