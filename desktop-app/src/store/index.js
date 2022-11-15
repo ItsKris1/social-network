@@ -76,6 +76,7 @@ export default createStore({
             const data = JSON.parse(e.data);
             switch (data.action) {
               case "chat":
+                console.log("Received chat message")
                 var isChatOpen = false
                 var chatId = ""
                 if (data.chatMessage.type === "PERSON"){
@@ -91,8 +92,10 @@ export default createStore({
                   chatId = data.chatMessage.receiverId
                 }
                 if (isChatOpen){
+                  console.log("Chat open")
                   dispatch('addNewChatMessage', data.chatMessage)
                 }else{
+                  console.log("Chat closed")
                   dispatch('addUnreadMessage',chatId )
                 }
                 break;

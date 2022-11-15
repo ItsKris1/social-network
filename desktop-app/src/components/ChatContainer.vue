@@ -8,9 +8,15 @@
 <script>
 import ChatUsers from "./ChatContainer/ChatUsers.vue"
 import ChatBox from "./ChatContainer/ChatBox.vue"
+
 export default {
     name:"ChatContainer",
-    components:{ChatUsers, ChatBox}
+    components:{ChatUsers, ChatBox},
+    created(){
+        // fetch unread messages from back end
+        console.log("MOunted chat")
+        this.$store.dispatch("fetchUnreadMessages");
+    }
 }
 </script>
 

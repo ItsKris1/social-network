@@ -1,6 +1,6 @@
 <template>
     <div class="chat-box-container">
-        <h2 class="chat-header">{{openChatName}}</h2>
+        <h2 class="chat-box-header">{{openChatName}}</h2>
         <ChatContent/>
         <MessageInput v-if="chatOpen"/>
     </div>
@@ -43,7 +43,7 @@ export default{
     flex-direction: column;
     overflow: hidden;
 }
-.chat-header{
+.chat-box-header{
     color: var(--color-blue);
 }
 </style>

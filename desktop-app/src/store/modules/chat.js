@@ -21,12 +21,27 @@ export default {
         updateChatUserList(state, userList) {
             state.chatUserList = userList
         },
-        updateUnreadMessagest(state, msgs) {
-             console.log("Those are UNREAD",msgs)
+        updateUnreadMessages(state, msgs) {
             state.unreadMessages = msgs
         },
     },
     actions: {
+        async fetchUnreadMessages({state, commit}){
+            const response = await fetch('http://localhost:8081/unreadMessages', {
+                credentials: 'include'
+            });
+            const data = await response.json();
+            if (data.type === "Error") {
+                // state.unreadMsgsStatsFromDB = null;
+            } else if (data.chatStats){
+                let unreadMessages = state.unreadMessages
+                data.chatStats.forEach(msg => {
+                    unreadMessages[msg.id] = msg.unreadMsgCount
+                    
+                });
+                commit("updateUnreadMessages", unreadMessages)
+            }
+        },
         async fetchChatUserList({rootState, commit, dispatch}) {
             await dispatch("getMyUserID");
            
@@ -48,7 +63,6 @@ export default {
             });
             const data = await response.json();
             let previousMessages = data.chatMessage ? data.chatMessage : [];
-            console.log("MSg received from db: ", previousMessages)
             commit('updateOpenChatMessages', previousMessages)
         },
         async sendMessage({state,dispatch}, payload){
@@ -82,13 +96,13 @@ export default {
             }else{
                 unreadMessages[payload] = 1
             }
-            commit("updateUnreadMessagest", unreadMessages)
+            commit("updateUnreadMessages", unreadMessages)
         },
          removeUnreadMessages({ commit, state }, payload){
             let unreadMessages = state.unreadMessages
             if(unreadMessages[payload]){
                delete unreadMessages[payload]
-               commit("updateUnreadMessagest", unreadMessages)
+               commit("updateUnreadMessages", unreadMessages)
             }
         }
     },
