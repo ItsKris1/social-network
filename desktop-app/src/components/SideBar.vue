@@ -24,6 +24,7 @@ export default{
         .then((response => response.json()))
         .then((json => { console.log(json) })) 
         this.$store.state.wsConn.close(1000, "user logged out");
+        this.$store.commit('openNewChat', null)
         this.$router.push("/");
     }
    }

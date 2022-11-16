@@ -17,7 +17,10 @@ export default{
     },
     computed:{
         allMessages(){
-             return this.$store.state.chat.openChatMessages
+            let openChat = this.$store.state.chat.openChat
+            if (!openChat) {return []}
+            let messages = this.$store.state.chatStack[openChat.id]
+             return messages? messages :[];
         },
         ...mapState({
             myID: state => state.id

@@ -10,22 +10,14 @@ export default createStore({
       id: "", // id is currently logged in user ID
       wsConn: {},
       usersOnline : new Set(),
-    //   users: {
-    //     allusers: [],
-    //   },
-    groups: {
-    //   allGroups: [],
-      userGroups: [],
-    },
+      groups: {
+        userGroups: [],
+      },
       dataLoaded: {
       userGroups: false
-    }
+    },
+    chatStack:{}
   },
-   getters:{
-    // getId(state) {
-    //   return state.id;
-    // },
-   },
   mutations: {
     updateMyUserID(state, id) {
       state.id = id;
@@ -41,7 +33,10 @@ export default createStore({
     },
     updateUsersOnline(state, usersOnline){
       state.usersOnline = usersOnline
-    }
+    },
+    updateChatStack(state,stack){
+            state.chatStack = stack
+        }
   },
   actions:{
     async isLoggedIn() {
@@ -73,6 +68,35 @@ export default createStore({
         context.commit("updateUserGroups", data.groups)
         context.commit("updateDataLoaded", "userGroups")
     },
+    async fecthChatStack({state, commit}){
+      let chatStack = {}
+      state.chat.chatUserList.forEach(user => {
+          fetch("http://localhost:8081/messages", {
+                credentials: "include",
+                method: "POST",
+                body: JSON.stringify({type: "PERSON",receiverId: user.id})
+            })
+            .then((res)=> res.json())
+            .then((res)=> chatStack[user.id] = res.chatMessage)
+      });
+      state.groups.userGroups.forEach(group=> {
+          fetch("http://localhost:8081/messages", {
+                credentials: "include",
+                method: "POST",
+                body: JSON.stringify({type: "GROUP",receiverId: group.id})
+            })
+            .then((res)=> res.json())
+            .then((res)=> chatStack[group.id] = res.chatMessage)
+      });
+      commit('updateChatStack', chatStack)
+      console.log("Combined list:", chatStack)
+      },
+      addNewChatMessage({ commit, state }, {payload, id}) {
+        console.log("Add message: ", payload, id)
+        let chatStack = state.chatStack;
+        chatStack[id].push(payload)
+       commit('updateChatStack', chatStack)
+    },
     createWebSocketConn({ commit, dispatch, state }) {
         const ws = new WebSocket("ws://localhost:8081/ws");
         console.log("Create web socket:", ws)
@@ -87,19 +111,18 @@ export default createStore({
                 var chatId = ""
                 if (data.chatMessage.type === "PERSON"){
                   chatId = data.chatMessage.senderId
-                  if(state.chat.openChat && data.chatMessage.senderId === state.chat.openChat.receiverId){
+                  if(data.chatMessage.senderId === state.chat.openChat?.id){
                     isChatOpen = true
                   }
                 }
                 if (data.chatMessage.type === "GROUP" ){
-                  if (state.chat.openChat && data.chatMessage.receiverId === state.chat.openChat.receiverId){
+                  if ( data.chatMessage.receiverId === state.chat.openChat?.id){
                     isChatOpen = true
                   }
                   chatId = data.chatMessage.receiverId
                 }
-                if (isChatOpen){
-                  dispatch('addNewChatMessage', data.chatMessage)
-                }else{
+                dispatch('addNewChatMessage', {payload:data.chatMessage, id:chatId})
+                if (!isChatOpen){
                   dispatch('addUnreadMessage',chatId )
                 }
                 break;

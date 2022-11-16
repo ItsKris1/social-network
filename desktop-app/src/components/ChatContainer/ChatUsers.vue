@@ -29,9 +29,11 @@ export default{
     name:"ChatUsers",
     components:{TargetUser, TargetGroup},
 
-    created(){
-        this.$store.dispatch("fetchChatUserList");
-        this.$store.dispatch("getUserGroups");
+    async created(){
+        this.$store.dispatch("fetchChatUserList")
+        .then(()=>  this.$store.dispatch("getUserGroups"))
+        .then(()=> this.$store.dispatch("fecthChatStack"))
+        
     },
 
      computed:{

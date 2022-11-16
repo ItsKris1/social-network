@@ -49,20 +49,6 @@ export default {
             const data = await response.json();
             commit("updateChatUserList", data.users);
         },
-        async fecthChatMessages({state,commit}){
-            const response = await fetch("http://localhost:8081/messages", {
-                credentials: "include",
-                method: "POST",
-                body: JSON.stringify({
-                    type: state.openChat.type,
-                    receiverId: state.openChat.id
-                })
-                
-            });
-            const data = await response.json();
-            let previousMessages = data.chatMessage ? data.chatMessage : [];
-            commit('updateOpenChatMessages', previousMessages)
-        },
         async sendMessage({state,dispatch}, payload){
             const msgObj = {
                 receiverId: state.openChat.id,
@@ -76,16 +62,12 @@ export default {
             });
             const data = await response.json();
             if (data.type == "Success"){
-                dispatch("addNewChatMessage", data.chatMessage[0]);
+                console.log("Success on sending: ", data.chatMessage[0], data.chatMessage[0].receiverId)
+                dispatch("addNewChatMessage", {payload: data.chatMessage[0], id:state.openChat.id});
                 return true
             }else{
                 return false
             }
-        },
-        addNewChatMessage({ commit, state }, payload) {
-            let openMessages = state.openChatMessages;
-            openMessages.push(payload)
-            commit("updateOpenChatMessages", openMessages)
         },
         addUnreadMessage({ commit, state }, payload){
             let unreadMessages = state.unreadMessages

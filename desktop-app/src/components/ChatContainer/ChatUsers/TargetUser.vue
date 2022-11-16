@@ -36,7 +36,7 @@ export default {
         openChat(){
             this.$store.dispatch('removeUnreadMessages', this.user.id)
             this.$store.commit("openNewChat",{id:this.user.id, type: this.type, name:this.user.nickname})
-            this.$store.dispatch('fecthChatMessages')
+            // this.$store.dispatch('fecthChatMessages')
         },
         
     }

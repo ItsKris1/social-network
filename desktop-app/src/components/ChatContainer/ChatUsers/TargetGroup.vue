@@ -31,7 +31,6 @@ export default {
         openChat(){
             this.$store.dispatch('removeUnreadMessages', this.group.id)
             this.$store.commit("openNewChat",{id:this.group.id, type: this.type, name:this.group.name})
-            this.$store.dispatch('fecthChatMessages')
 
         }
     }
