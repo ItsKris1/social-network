@@ -7,6 +7,7 @@ run.go
 ndc.sh
 ../backend/tempDB.db
 # audit_checklist.md
+package-lock.json
 
 
 

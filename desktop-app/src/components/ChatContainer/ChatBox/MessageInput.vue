@@ -28,6 +28,11 @@ export default {
         },
         async sendMessage(){
             if (this.message === "") {return}
+            let online = this.$store.state.online
+            if (!online){
+                this.$toast.warning("Oh, boy! Can't send a message, you are offline! :(");
+                return
+            }
             let result = this.$store.dispatch('sendMessage', this.message)
             if (result){
                 this.message = "";

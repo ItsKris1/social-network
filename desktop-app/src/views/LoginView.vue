@@ -13,8 +13,8 @@ export default {
     name: 'LoginView',
     components:{
         LogIn,
-        SideBar
-    }
+        SideBar,
+    }  
 }
 </script>
 

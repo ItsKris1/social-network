@@ -1,17 +1,21 @@
 <template>
-    <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
-    <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
     <router-view></router-view>
 </template>
 
 <script>
-// import SideBar from './components/SideBar.vue'
 
 export default {
   name: 'App',
-  components: {
-    // SideBar
-    // HelloWorld
+  mounted(){
+    window.addEventListener("online", () => {
+      this.$store.commit('updateOnlineStatus', true)
+      this.$toast.success("You are connected!");
+    });
+
+    window.addEventListener("offline", () => {
+      this.$store.commit('updateOnlineStatus', false)
+      this.$toast.warning("Oh, boy! You have lost your connection!");
+    });
   }
 }
 </script>

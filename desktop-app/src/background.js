@@ -33,12 +33,14 @@ async function createWindow() {
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
   }
+
   // open new web browser window when click link
   win.webContents.on('new-window', function(e, url) {
   e.preventDefault();
   require('electron').shell.openExternal(url);
 });
 }
+
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {

@@ -16,7 +16,8 @@ export default createStore({
       dataLoaded: {
       userGroups: false
     },
-    chatStack:{}
+    chatStack:{},
+    online:true,
   },
   mutations: {
     updateMyUserID(state, id) {
@@ -36,7 +37,10 @@ export default createStore({
     },
     updateChatStack(state,stack){
             state.chatStack = stack
-        }
+        },
+    updateOnlineStatus(state, online){
+      state.online = online
+    }
   },
   actions:{
     async isLoggedIn() {
@@ -89,10 +93,8 @@ export default createStore({
             .then((res)=> chatStack[group.id] = res.chatMessage)
       });
       commit('updateChatStack', chatStack)
-      console.log("Combined list:", chatStack)
       },
       addNewChatMessage({ commit, state }, {payload, id}) {
-        console.log("Add message: ", payload, id)
         let chatStack = state.chatStack;
         chatStack[id].push(payload)
        commit('updateChatStack', chatStack)
