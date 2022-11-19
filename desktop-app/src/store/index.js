@@ -102,9 +102,9 @@ export default createStore({
     createWebSocketConn({ commit, dispatch, state }) {
         const ws = new WebSocket("ws://localhost:8081/ws");
         console.log("Create web socket:", ws)
-         ws.addEventListener('open', (e)=> {console.log("Open the ws:", e)})
-          ws.addEventListener('close', (e)=> {console.log("Close the ws:", e)})
-         ws.addEventListener("message", (e) => {
+        ws.addEventListener('open', (e)=> {console.log("Open the ws:", e)})
+        ws.addEventListener('close', (e)=> {console.log("Close the ws:", e)}) 
+        ws.addEventListener("message", (e) => {
             const data = JSON.parse(e.data);
             let onlineUsers = state.usersOnline
             switch (data.action) {
