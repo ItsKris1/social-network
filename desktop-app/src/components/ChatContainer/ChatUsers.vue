@@ -51,7 +51,7 @@ export default{
 }
 .user-container{
     height:100vh;
-    width:500px;
+    width:30%;
     background-color:var(--page-bg);
     padding: 15px 15px 15px 15px;
 }

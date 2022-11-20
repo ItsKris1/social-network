@@ -35,13 +35,18 @@ export default{
 
 <style scoped>
 .chat-box-container{
-    width:100%;
+    width:70%;
     height:100vh;
     background-color: var(--color-white);
     padding: 15px 15px 15px 15px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
+}
+@media screen and (max-width: 700px){
+    .chat-box-container{
+        width:calc(100% - 75px);
+    }
 }
 .chat-box-header{
     color: var(--color-blue);

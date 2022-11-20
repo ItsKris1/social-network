@@ -2,16 +2,23 @@
     <div class="chat-wrapper">
         <ChatUsers />
         <ChatBox/>
+        <SearchSection v-if="chatOpen"/>
     </div>
 </template>
 
 <script>
 import ChatUsers from "./ChatContainer/ChatUsers.vue"
 import ChatBox from "./ChatContainer/ChatBox.vue"
+import SearchSection from './ChatContainer/SearchSection.vue'
 
 export default {
     name:"ChatContainer",
-    components:{ChatUsers, ChatBox},
+    components:{ChatUsers, ChatBox, SearchSection},
+    computed:{
+        chatOpen(){
+            return this.$store.state.chat.openChat? true:false;
+        }
+    },
     created(){
         // fetch unread messages from back end
         this.$store.dispatch("fetchUnreadMessages");
