@@ -26,6 +26,13 @@ export default{
             myID: state => state.id
         })
     },
+     watch: {
+        allMessages() {
+            this.$nextTick(() => {
+                this.$refs.contentDiv.scrollTop = this.$refs.contentDiv.scrollHeight;
+            });
+        }
+    },
     methods:{
         // determines whether to display sender name in chatbox
         displayName(message, index) {
