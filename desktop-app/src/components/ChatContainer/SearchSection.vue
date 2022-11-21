@@ -1,17 +1,22 @@
 <template>
     <div class="search-container" :class="toggleClass">
         <div class="search-btn" @click="toggleSearch" :class="toggleClass"></div>
-        <input v-if="sectionOpen" type="text" class="search-input" :class="toggleClass"/>
-        <!-- <div v-if="sectionOpen" class="searchResultContainer">Search results</div> -->
+        <input v-if="sectionOpen" type="text" class="search-input" :class="toggleClass" v-model="searchInput" @keyup="search"/>
+        <search-list v-if="sectionOpen" :results="searchResults"/>
     </div>
 </template>
 
 <script>
+    import SearchList from './SearchSection/SearchList.vue'
+    import Fuse from 'fuse.js'
 export default{
+    components:{SearchList},
    data(){
     return{
         initialOpen:true,
-        sectionOpen: false
+        sectionOpen: true,
+        searchResults:[],
+        searchInput:"",
     }
    },
    computed:{
@@ -27,6 +32,21 @@ export default{
     }
    },
    methods:{
+    search(){
+        let options = {
+            isCaseSensitive: false,
+            minMatchCharLength: 2,
+            includeMatches:true,
+            findAllMatches: true,
+            keys:[
+                "content"
+            ]
+        }
+        let openChat = this.$store.state.chat.openChat
+        let list = this.$store.state.chatStack[openChat.id]
+        const fuse = new Fuse(list, options);
+        this.searchResults = fuse.search(this.searchInput)
+    },
     toggleSearch(){
         this.sectionOpen = !this.sectionOpen;
     },
